@@ -1,0 +1,56 @@
+
+html {
+  color: black;
+  font-family: Source Sans Pro, Arial Unicode MS, Arial, sans-serif;
+  font-size: 100%;
+  text-decoration: none;
+}
+* {
+  color: inherit;
+  background-color: transparent;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid inherit;
+}
+*:focus {
+  outline: none;
+}
+table {
+  border-collapse: collapse;
+}
+td {
+  word-wrap: break-word;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+
+input[type='button']:not(:disabled),
+input[type='image']:not(:disabled),
+button:not(:disabled),
+label:not(disabled) {
+  cursor: pointer;
+}
+input[type='button']:empty, button:empty {
+  vertical-align: bottom;
+}
+
+/*
+ * FireFox adds a little padding to buttons. It's a pain when trying to make different input
+ * elements the same size.
+ */
+button::-moz-focus-inner,
+input::-moz-focus-inner,
+textarea::-moz-focus-inner {
+  padding: 0 !important;
+  border: 0 none !important;
+}
+
+body {
+  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  z-index: 0;
+}
