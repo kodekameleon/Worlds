@@ -1,0 +1,7 @@
+
+.idea
+.nvmrc
+node_modules
+
+# Build
+dist
