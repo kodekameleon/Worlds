@@ -1,0 +1,20 @@
+{
+  "env": {
+    "build": {
+      "presets": [["env", {"modules": false}]],
+      "only": ["./src/", "./test"],
+      "plugins": [
+        ["transform-react-jsx", {"pragma": "minjsx"}],
+        "external-helpers"
+      ]
+    },
+    "test": {
+      "presets": ["env"],
+      "only": ["./src/", "./test"],
+      "plugins": [
+        ["transform-react-jsx",{"pragma": "minjsx"}],
+        "external-helpers"
+      ]
+    }
+  }
+}

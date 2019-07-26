@@ -43,7 +43,7 @@ gulp.task("start", (cb) => {
 //  ======== CLEAN ALL BUILD ARTIFACTS ========
 
 gulp.task("clean", (cb) => {
-  rimraf(target, (err) => {
+  rimraf(`{${target},.nyc_output,coverage}`, (err) => {
     if (err) {
       console.log(`rimraf error: ${err}`);
     }
