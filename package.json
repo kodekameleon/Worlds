@@ -4,7 +4,7 @@
   "description": "World mapping and drawing helper",
   "main": "src/main.html",
   "scripts": {
-    "build-dev": "gulp build",
+    "build": "gulp build",
     "clean": "gulp clean",
     "start": "gulp start",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/kodekameleon/Worlds#readme",
   "devDependencies": {
+    "autoprefixer": "^9.6.1",
     "babel-core": "^6.26.3",
     "babel-plugin-external-helpers": "^6.22.0",
     "babel-plugin-transform-react-jsx": "^6.24.1",
@@ -28,18 +29,24 @@
     "eslint": "^5.4.0",
     "gulp": "^3.9.1",
     "gulp-eslint": "^5.0.0",
-    "gulp-postcss": "^7.0.1",
+    "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.3.0",
     "gulp-sourcemaps": "^2.6.4",
+    "gulp-stylelint": "^9.0.0",
+    "lodash": "^4.17.15",
     "postcss-assets": "^5.0.0",
-    "postcss-import": "^11.1.0",
+    "postcss-import": "^12.0.1",
+    "postcss-reporter": "^6.0.1",
+    "precss": "^4.0.0",
     "pump": "^3.0.0",
     "reload": "^2.3.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.5",
     "rollup-plugin-node-resolve": "^3.3.0",
-    "run-sequence": "^2.2.1"
+    "run-sequence": "^2.2.1",
+    "stylelint": "^10.1.0",
+    "stylelint-config-standard": "^18.3.0"
   },
   "dependencies": {}
 }

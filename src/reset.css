@@ -5,6 +5,7 @@ html {
   font-size: 100%;
   text-decoration: none;
 }
+
 * {
   color: inherit;
   background-color: transparent;
@@ -13,28 +14,22 @@ html {
   padding: 0;
   border: 0 solid inherit;
 }
+
 *:focus {
   outline: none;
 }
+
 table {
   border-collapse: collapse;
 }
+
 td {
   word-wrap: break-word;
   padding: 0;
 }
+
 ul {
   list-style: none;
-}
-
-input[type='button']:not(:disabled),
-input[type='image']:not(:disabled),
-button:not(:disabled),
-label:not(disabled) {
-  cursor: pointer;
-}
-input[type='button']:empty, button:empty {
-  vertical-align: bottom;
 }
 
 /*
@@ -46,6 +41,18 @@ input::-moz-focus-inner,
 textarea::-moz-focus-inner {
   padding: 0 !important;
   border: 0 none !important;
+}
+
+input[type='button']:not(:disabled),
+input[type='image']:not(:disabled),
+button:not(:disabled),
+label:not(:disabled) {
+  cursor: pointer;
+}
+
+input[type='button']:empty,
+button:empty {
+  vertical-align: bottom;
 }
 
 body {
