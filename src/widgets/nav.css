@@ -1,0 +1,133 @@
+
+.navlist {
+  display: inline-block;
+  vertical-align: top;
+  font-family: var(--font-fancy);
+  z-index: 0;
+
+  li {
+    position: relative;
+    vertical-align: top;
+    display: inline-block;
+    margin-right: 2px;
+    font-size: 85%;
+    color: var(--menu-subtle);
+  }
+
+  li.selected {
+    color: var(--menu-hiviz);
+  }
+
+  li::before {
+    content: "";
+    z-index: -1;
+    background: var(--menu-background);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform: skewX(-61.3deg);
+    transition: all 0.6s;
+  }
+
+  li.selected::before {
+    background: var(--menu-background-darker);
+  }
+
+  li:hover::before {
+    background: var(--menu-background-darker);
+  }
+
+  a {
+    display: block;
+    padding: 0.8em 1.8em;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  span {
+    position: relative;
+  }
+
+  span::after {
+    z-index: 8;
+    content: "";
+    background: var(--menu-subtle);
+    position: absolute;
+    bottom: 0;
+    left: -3%;
+    right: 0;
+    margin: auto;
+    width: 0;
+    height: 1px;
+    transition: all 0.6s;
+  }
+
+  li:hover span::after {
+    width: 106%;
+  }
+
+  li:hover span {
+    color: var(--menu-subtle-darker);
+    transition: all 0.6s;
+  }
+}
+
+/*
+
+  li {
+    display: inline-block;
+    position: relative;
+    padding: 0.8em 1.8em;
+    margin-right: 2px;
+    color: var(--menu-subtle);
+    font-size: 85%;
+    vertical-align: top;
+  }
+
+  li::before {
+    content: "";
+    z-index: -1;
+    background: var(--menu-background);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transform: skewX(-61.3deg);
+    transition: all 0.6s;
+  }
+
+  li:hover::before {
+    background: var(--menu-background-darker);
+  }
+
+  a {
+    position: relative;
+  }
+
+  a::after {
+    z-index: 8;
+    content: "";
+    background: var(--menu-subtle);
+    position: absolute;
+    bottom: 0;
+    left: -3%;
+    right: 0;
+    margin: auto;
+    width: 0%;
+    height: 1px;
+    transition: all 0.6s;
+  }
+
+  li:hover a::after {
+    width: 106%;
+  }
+
+  li:hover a {
+    color: var(--menu-subtle-darker);
+    transition: all 0.6s;
+  }
+
+ */

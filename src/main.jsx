@@ -1,33 +1,21 @@
-import * as Start from "./handler.js";
 
-// eslint-disable-next-line
-import {X} from "./x-ui";
+window.addEventListener("load", main);
 
-// eslint-disable-next-line
-import {minjsx} from "./minjsx/minjsx";
+import {Logo} from "./widgets/logo";
+import {NavItem, NavList} from "./widgets";
 
-window.addEventListener("load", Start.start);
+function main() {
+  console.log("starting!");
 
-window.addEventListener("load", () => {
-  console.log("starting");
-
-  const logo = (
-    <div class="logo">
-      <div class="logo-triangle"></div>
-      <div>
-        <div class="logo-image">
-          <div></div>
-        </div>
-        <X class="logo-text">
-          <div>WORLĐS</div>
-          <div>BY KOĐEKAMELEON</div>
-        </X>
-      </div>
+  const root = document.getElementById("root");
+  root.innerHTML = "";
+  root.appendChild(
+    <div>
+      <Logo/>
+      <NavList>
+        <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
+        <NavItem href="#citymaps">CITY MAPS</NavItem>
+      </NavList>
     </div>
   );
-
-  document.body.appendChild(logo);
-});
-
-// var o = <X class="cssclass" a1={"a1"} a2={"a2"}><Y><Q>s</Q></Y><Z></Z></X>;
-// var p = <div></div>;
+}

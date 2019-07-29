@@ -1,0 +1,13 @@
+
+:root {
+  --font-fancy: "Spectral", serif;
+  --font-default: "Roboto", arial, sans-serif;
+  --font-size-default: 100%;
+  --main-background: #fff;
+  --main-text: #666;
+  --menu-background: #ffefd5;
+  --menu-background-darker: #ffe6bd;
+  --menu-hiviz: #85a70a;
+  --menu-subtle: #908282;
+  --menu-subtle-darker: #6c6060;
+}

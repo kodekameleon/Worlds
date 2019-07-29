@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 const _ = require("lodash");
+const path = require("path");
 const gulp = require("gulp");
 const gulp_rename = require("gulp-rename");
 const gulp_postcss = require("gulp-postcss");
@@ -10,8 +11,10 @@ const sequence = require("run-sequence");
 const spawn = require("cross-spawn");
 const rimraf = require("rimraf");
 const rollup = require("rollup");
-const rollup_babel = require("rollup-plugin-babel");
-const rollup_resolve = require("rollup-plugin-node-resolve");
+const rollupBabel = require("rollup-plugin-babel");
+const rollupResolve = require("rollup-plugin-node-resolve");
+const rollupCommonJS = require("rollup-plugin-commonjs");
+const rollupInject = require("rollup-plugin-inject");
 const postcssAssets = require("postcss-assets");
 const postcssImport = require("postcss-import");
 const postcssPrecss = require("precss");
@@ -70,7 +73,7 @@ gulp.task("lint-js", (cb) => {
   const steps = [
     gulp.src(["src/**/*.jsx", "src/**/*.js"]),
     gulp_eslint(),
-    gulp_eslint.format("visualstudio"),
+    gulp_eslint.formatEach("visualstudio"),
     gulp_eslint.failAfterError()
   ];
   pump(steps, cb);
@@ -80,26 +83,7 @@ gulp.task("build-js", ["lint-js"], () => {
   return rollup.rollup({
     input: "src/main.jsx",
     plugins: [
-      rollup_resolve({
-        module: true, // Default: true
-        browser: true,  // Default: false
-        extensions: [".mjs", ".js", ".jsx", ".json"],
-        preferBuiltins: false,  // Default: true
-        modulesOnly: true, // Default: false
-        customResolveOptions: {
-          moduleDirectory: "js_modules"
-        }
-
-        // Lock the module search in this path (like a chroot). Module defined
-        // outside this path will be marked as external
-        // jail: '/my/jail/path', // Default: '/'
-
-        // Set to an array of strings and/or regexps to lock the module search
-        // to modules that match at least one entry. Modules not matching any
-        // entry will be marked as external
-        // only: ['some_module', /^@some_scope\/.*$/], // Default: null
-      }),
-      rollup_babel({
+      rollupBabel({
         presets: [
           ["env", {modules: false}]
         ],
@@ -107,6 +91,26 @@ gulp.task("build-js", ["lint-js"], () => {
           ["transform-react-jsx", {"pragma": "minjsx"}],
           "external-helpers"
         ]
+      }),
+      rollupInject({
+        include: "**/*.js*",
+        exclude: "node_modules/**",
+        modules: {
+          minjsx: [path.resolve("src/minjsx/minjsx"), "minjsx"]
+        }
+      }),
+      rollupResolve({
+        browser: true,  // Default: false
+        extensions: [".mjs", ".js", ".jsx", ".json"],
+        preferBuiltins: false,  // Default: true
+        // modulesOnly: false, // Default: false
+        mainFields: ["module", "main"]
+      }),
+      rollupCommonJS({
+        include: "node_modules/**",
+        // exclude: [ ],
+        // ignoreGlobal: false, // if true then uses of `global` won't be dealt with by this plugin
+        // sourceMap: false // if false then skip sourceMap generation for CommonJS modules
       })
     ]
   }).then((bundler) => {
@@ -131,7 +135,7 @@ gulp.task("lint-css", () => {
 
 gulp.task("build-css", ["lint-css"], (cb) => {
   const steps = [
-    gulp.src("./src/main.css", {base: "./"}),
+    gulp.src(["./src/main.css"], {base: "./"}),
     gulp_sourcemaps.init(),
     gulp_postcss([
       postcssImport({from: "./src/main.css"}),
