@@ -6,7 +6,6 @@
   "scripts": {
     "build": "BABEL_ENV=build gulp build",
     "clean": "gulp clean",
-    "rollup": "rollup --config",
     "start": "BABEL_ENV=build gulp start",
     "test": "BABEL_ENV=test nyc mocha"
   },
@@ -21,11 +20,12 @@
   },
   "homepage": "https://github.com/kodekameleon/Worlds#readme",
   "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-transform-react-jsx": "^7.3.0",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
     "autoprefixer": "^9.6.1",
-    "babel-core": "^6.26.3",
-    "babel-plugin-external-helpers": "^6.22.0",
-    "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-spawn": "^6.0.5",
@@ -50,7 +50,7 @@
     "reload": "^2.3.0",
     "rimraf": "^2.6.2",
     "rollup": "^1.17.0",
-    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-inject": "^3.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",

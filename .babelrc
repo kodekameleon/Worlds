@@ -1,19 +1,19 @@
 {
   "env": {
     "build": {
-      "presets": [["env", {"modules": false}]],
+      "presets": [
+        ["@babel/preset-env", {"modules": false}]
+      ],
       "only": ["./src/", "./test"],
       "plugins": [
-        ["transform-react-jsx", {"pragma": "minjsx"}],
-        "external-helpers"
+        ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
       ]
     },
     "test": {
-      "presets": ["env"],
+      "presets": ["@babel/preset-env"],
       "only": ["./src/", "./test"],
       "plugins": [
-        ["transform-react-jsx",{"pragma": "minjsx"}],
-        "external-helpers"
+        ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
       ]
     }
   }

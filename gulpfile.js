@@ -85,11 +85,10 @@ gulp.task("build-js", ["lint-js"], () => {
     plugins: [
       rollupBabel({
         presets: [
-          ["env", {modules: false}]
+          ["@babel/preset-env", {modules: false}]
         ],
         plugins: [
-          ["transform-react-jsx", {"pragma": "minjsx"}],
-          "external-helpers"
+          ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
         ]
       }),
       rollupInject({
