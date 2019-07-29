@@ -11,6 +11,11 @@
     display: inline-block;
     margin-right: 2px;
     font-size: 85%;
+    color: var(--menu-subtle);
+  }
+
+  li.selected {
+    color: var(--menu-hiviz);
   }
 
   li::before {
@@ -26,6 +31,10 @@
     transition: all 0.6s;
   }
 
+  li.selected::before {
+    background: var(--menu-background-darker);
+  }
+
   li:hover::before {
     background: var(--menu-background-darker);
   }
@@ -33,7 +42,6 @@
   a {
     display: block;
     padding: 0.8em 1.8em;
-    color: var(--menu-subtle);
     cursor: pointer;
     text-decoration: none;
   }

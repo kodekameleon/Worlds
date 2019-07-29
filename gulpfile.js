@@ -13,6 +13,7 @@ const rimraf = require("rimraf");
 const rollup = require("rollup");
 const rollupBabel = require("rollup-plugin-babel");
 const rollupResolve = require("rollup-plugin-node-resolve");
+const rollupCommonJS = require("rollup-plugin-commonjs");
 const rollupInject = require("rollup-plugin-inject");
 const postcssAssets = require("postcss-assets");
 const postcssImport = require("postcss-import");
@@ -99,14 +100,17 @@ gulp.task("build-js", ["lint-js"], () => {
         }
       }),
       rollupResolve({
-        module: true, // Default: true
         browser: true,  // Default: false
         extensions: [".mjs", ".js", ".jsx", ".json"],
         preferBuiltins: false,  // Default: true
-        modulesOnly: true, // Default: false
-        customResolveOptions: {
-          moduleDirectory: "node_modules"
-        }
+        // modulesOnly: false, // Default: false
+        mainFields: ["module", "main"]
+      }),
+      rollupCommonJS({
+        include: "node_modules/**",
+        // exclude: [ ],
+        // ignoreGlobal: false, // if true then uses of `global` won't be dealt with by this plugin
+        // sourceMap: false // if false then skip sourceMap generation for CommonJS modules
       })
     ]
   }).then((bundler) => {

@@ -1,4 +1,4 @@
-// import {parse} from "qs";
+import {parse} from "querystringify";
 
 export function NavList(props, children) {
   return (<ol class="navlist">{children}</ol>);
@@ -9,8 +9,20 @@ export function NavItem(props, children) {
     throw "missing href for nav item";
   }
 
-  // console.log(`hash=${window.location.hash}`);
-  // console.log(`qs=${parse(window.location.hash)}`);
+  let classes = "";
 
-  return (<li><a href={props.href}><span>{children}</span></a></li>);
+  // Check whether the URL matches the href
+  if (props.href.length > 0 && props.href.charAt(0) === "#") {
+    const hash = window.location.hash && window.location.hash.length > 0 && parse(window.location.hash.substr(1));
+    // if (hash && hash.length > 0 && hash.charAt(0) == "#") {
+    //   hash = hash.substr(1);
+    // }
+    console.log(`parsed=${JSON.stringify(hash)} match=${hash[props.href.substring(1)]}`);
+    if (hash[props.href.substring(1)] != undefined) {
+      classes = "selected";
+    }
+  }
+
+  return (<li class={classes}><a href={props.href}><span>{children}</span></a></li>);
 }
+
