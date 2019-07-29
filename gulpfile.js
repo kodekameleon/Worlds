@@ -7,7 +7,6 @@ const gulp_postcss = require("gulp-postcss");
 const gulp_sourcemaps = require("gulp-sourcemaps");
 const gulp_eslint = require("gulp-eslint");
 const pump = require("pump");
-const sequence = require("run-sequence");
 const spawn = require("cross-spawn");
 const rimraf = require("rimraf");
 const rollup = require("rollup");
@@ -25,51 +24,46 @@ const gulpStyleLint = require("gulp-stylelint");
 
 const target = "dist";
 
-gulp.task("default", ["clean-build"]);
-gulp.task("build", ["build-html", "build-js", "build-css"]);
 
+//  ======== PUBLIC TASKS ========
 
-//  ======== CLEAN AND BUILD EVERYTHING ========
+const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS);
 
-gulp.task("clean-build", (cb) => {
-  sequence("clean", "build", cb);
-});
-
-
-//  ======== BUILD EVERYTHING AND RUN IT ========
-
-gulp.task("start", (cb) => {
-  sequence("clean", "build", "watch", cb);
-});
+/* eslint-disable no-undef */
+exports.build = build;
+exports["clean-build"] = gulp.series(clean, build);
+exports.start = gulp.series(clean, build, watch);
+exports.clean = clean;
+/* eslint-enable no-undef */
 
 
 //  ======== CLEAN ALL BUILD ARTIFACTS ========
 
-gulp.task("clean", (cb) => {
+function clean(cb) {
   rimraf(`{${target},.nyc_output,coverage}`, (err) => {
     if (err) {
       console.log(`rimraf error: ${err}`);
     }
     cb();
   });
-});
+}
 
 
 //  ======== BUILD HTML ========
 
-gulp.task("build-html", (cb) => {
+function buildHtml(cb) {
   const steps = [
     gulp.src("src/main.html"),
     gulp_rename("index.html"),
     gulp.dest(target)
   ];
   pump(steps, cb);
-});
+}
 
 
 //  ======== BUILD JS ========
 
-gulp.task("lint-js", (cb) => {
+function lintJS(cb) {
   const steps = [
     gulp.src(["src/**/*.jsx", "src/**/*.js"]),
     gulp_eslint(),
@@ -77,9 +71,9 @@ gulp.task("lint-js", (cb) => {
     gulp_eslint.failAfterError()
   ];
   pump(steps, cb);
-});
+}
 
-gulp.task("build-js", ["lint-js"], () => {
+function buildJS() {
   return rollup.rollup({
     input: "src/main.jsx",
     plugins: [
@@ -119,20 +113,21 @@ gulp.task("build-js", ["lint-js"], () => {
       sourcemap: true
     });
   });
-});
+}
 
 
 //  ======== BUILD CSS ========
 
-gulp.task("lint-css", () => {
+function lintCSS() {
   return gulp.src(["src/**/*.css"])
     .pipe(gulpStyleLint({
       failAfterError: true,
       reporters: [{formatter: styleLintFormatter, console: true}]
     }));
-});
+}
 
-gulp.task("build-css", ["lint-css"], (cb) => {
+/* eslint-disable-next-line no-unused-vars */
+function buildCSS(cb) {
   const steps = [
     gulp.src(["./src/main.css"], {base: "./"}),
     gulp_sourcemaps.init(),
@@ -150,15 +145,15 @@ gulp.task("build-css", ["lint-css"], (cb) => {
     gulp.dest(target)
   ];
   pump(steps, cb);
-});
+}
 
 
 //  ======== START WEB SERVER AND WATCH FOR CHANGES ========
 
-gulp.task("watch", () => {
+function watch() {
   spawn("reload", ["-b", "-d", "dist"]);
-  gulp.watch("src/**/*", ["build"]);
-});
+  gulp.watch("src/**/*", build);
+}
 
 
 //  ======== Helpers ========
