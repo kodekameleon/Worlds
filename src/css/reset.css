@@ -1,8 +1,9 @@
 
 html {
-  color: black;
-  font-family: Source Sans Pro, Arial Unicode MS, Arial, sans-serif;
-  font-size: 100%;
+  color: var(--main-text);
+  background: var(--main-background);
+  font-family: var(--font-default);
+  font-size: var(--font-size-default);
   text-decoration: none;
 }
 
@@ -12,7 +13,7 @@ html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border: 0 solid inherit;
+  border: 0 solid;
 }
 
 *:focus {
@@ -28,8 +29,11 @@ td {
   padding: 0;
 }
 
-ul {
+ul,
+ol {
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 /*

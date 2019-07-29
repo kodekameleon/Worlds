@@ -11,6 +11,9 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
+  "plugins": [
+    "eslint-plugin-react"
+  ],
   "rules": {
     "indent": [
       "error",
@@ -33,6 +36,7 @@
       {"allow": ["log"]}
     ],
     "no-var": 2,
-    "prefer-const": 2
+    "prefer-const": 2,
+    "react/jsx-uses-vars": 1
   }
 }

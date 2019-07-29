@@ -29,6 +29,7 @@
     "chai-as-promised": "^7.1.1",
     "cross-spawn": "^6.0.5",
     "eslint": "^5.4.0",
+    "eslint-plugin-react": "^7.14.3",
     "gulp": "^3.9.1",
     "gulp-eslint": "^5.0.0",
     "gulp-postcss": "^8.0.0",
@@ -49,6 +50,7 @@
     "rimraf": "^2.6.2",
     "rollup": "^0.65.0",
     "rollup-plugin-babel": "^3.0.5",
+    "rollup-plugin-inject": "^3.0.1",
     "rollup-plugin-node-resolve": "^3.3.0",
     "run-sequence": "^2.2.1",
     "sinon": "^7.3.2",
@@ -56,7 +58,9 @@
     "stylelint": "^10.1.0",
     "stylelint-config-standard": "^18.3.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "qs": "^6.7.0"
+  },
   "nyc": {
     "include": [
       "src"
