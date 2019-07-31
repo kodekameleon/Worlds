@@ -22,7 +22,7 @@ const autoprefixer = require("autoprefixer");
 const gulpStyleLint = require("gulp-stylelint");
 /* eslint-enable no-undef */
 
-const target = "dist";
+const TARGET = "dist";
 
 
 //  ======== PUBLIC TASKS ========
@@ -40,7 +40,7 @@ exports.clean = clean;
 //  ======== CLEAN ALL BUILD ARTIFACTS ========
 
 function clean(cb) {
-  rimraf(`{${target},.nyc_output,coverage}`, (err) => {
+  rimraf(`{${TARGET},.nyc_output,coverage}`, (err) => {
     if (err) {
       console.log(`rimraf error: ${err}`);
     }
@@ -55,7 +55,7 @@ function buildHtml(cb) {
   const steps = [
     gulp.src("src/main.html"),
     gulp_rename("index.html"),
-    gulp.dest(target)
+    gulp.dest(TARGET)
   ];
   pump(steps, cb);
 }
@@ -76,41 +76,40 @@ function lintJS(cb) {
 function buildJS() {
   return rollup.rollup({
     input: "src/main.jsx",
+    external: [ "lodash" ],
     plugins: [
+      rollupCommonJS({
+        include: "node_modules/**"
+      }),
+      rollupResolve({
+        browser: true,  // Default: false
+        extensions: [".mjs", ".js", ".jsx", ".json"],
+        preferBuiltins: false,
+        mainFields: ["module", "main"]
+      }),
       rollupBabel({
         presets: [
           ["@babel/preset-env", {modules: false}]
         ],
         plugins: [
-          ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
-        ]
+          ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
+        ],
+        exclude: ["node_modules/**"]
       }),
       rollupInject({
         include: "**/*.js*",
         exclude: "node_modules/**",
         modules: {
-          minjsx: [path.resolve("src/minjsx/minjsx"), "minjsx"]
+          createJSX: [path.resolve("src/kameleon-jsx"), "createJSX"]
         }
-      }),
-      rollupResolve({
-        browser: true,  // Default: false
-        extensions: [".mjs", ".js", ".jsx", ".json"],
-        preferBuiltins: false,  // Default: true
-        // modulesOnly: false, // Default: false
-        mainFields: ["module", "main"]
-      }),
-      rollupCommonJS({
-        include: "node_modules/**",
-        // exclude: [ ],
-        // ignoreGlobal: false, // if true then uses of `global` won't be dealt with by this plugin
-        // sourceMap: false // if false then skip sourceMap generation for CommonJS modules
       })
     ]
   }).then((bundler) => {
     return bundler.write({
-      file: "dist/main.js",
-      format: "es",
-      sourcemap: true
+      file: `${TARGET}/main.js`,
+      format: "iife",
+      sourcemap: true,
+      globals: {lodash: "_"}
     });
   });
 }
@@ -126,7 +125,6 @@ function lintCSS() {
     }));
 }
 
-/* eslint-disable-next-line no-unused-vars */
 function buildCSS(cb) {
   const steps = [
     gulp.src(["./src/main.css"], {base: "./"}),
@@ -142,7 +140,7 @@ function buildCSS(cb) {
     ]),
     gulp_rename("main.css"),
     gulp_sourcemaps.write("."),
-    gulp.dest(target)
+    gulp.dest(TARGET)
   ];
   pump(steps, cb);
 }
@@ -151,7 +149,7 @@ function buildCSS(cb) {
 //  ======== START WEB SERVER AND WATCH FOR CHANGES ========
 
 function watch() {
-  spawn("reload", ["-b", "-d", "dist"]);
+  spawn("reload", ["-b", "-d", TARGET]);
   gulp.watch("src/**/*", build);
 }
 

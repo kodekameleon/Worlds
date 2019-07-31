@@ -14,10 +14,6 @@ export function NavItem(props, children) {
   // Check whether the URL matches the href
   if (props.href.length > 0 && props.href.charAt(0) === "#") {
     const hash = window.location.hash && window.location.hash.length > 0 && parse(window.location.hash.substr(1));
-    // if (hash && hash.length > 0 && hash.charAt(0) == "#") {
-    //   hash = hash.substr(1);
-    // }
-    console.log(`parsed=${JSON.stringify(hash)} match=${hash[props.href.substring(1)]}`);
     if (hash[props.href.substring(1)] != undefined) {
       classes = "selected";
     }

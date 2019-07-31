@@ -44,6 +44,7 @@
 
   .logo-triangle {
     display: inline-block;
+    vertical-align: top;
     border-left: 220px solid var(--menu-background);
     border-top: 120px solid var(--menu-background);
     border-bottom: 0 solid transparent;

@@ -1,8 +1,8 @@
-import {minjsx} from "../../src/minjsx/minjsx";
+import {createJSX} from "../../src/kameleon-jsx/create-jsx";
 
 describe("MinJSX tests", () => {
   it("should create elements", () => {
-    const res = minjsx("div");
+    const res = createJSX("div");
     console.log(`res=${res}//${JSON.stringify(res)}`);
   });
 
