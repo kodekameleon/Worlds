@@ -12,7 +12,12 @@
     "test": {
       "presets": ["@babel/preset-env"],
       "only": ["./src/", "./test"],
+      "exclude": ["node_modules/**"],
       "plugins": [
+        ["@wordpress/babel-plugin-import-jsx-pragma", {
+          "source":  "/Users/justinjoyce/kodekameleon/Worlds/src/kameleon-jsx",
+          "scopeVariable": "createJSX"
+        }],
         ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
       ]
     }

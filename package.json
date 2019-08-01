@@ -24,7 +24,10 @@
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
+    "@istanbuljs/nyc-config-babel": "^2.1.1",
+    "@wordpress/babel-plugin-import-jsx-pragma": "^2.2.0",
     "autoprefixer": "^9.6.1",
+    "babel-plugin-istanbul": "^5.2.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-spawn": "^6.0.5",
@@ -62,12 +65,14 @@
     "querystringify": "^2.1.1"
   },
   "nyc": {
+    "register": "@babel/register",
+    "extends": "@istanbuljs/nyc-config-babel",
     "include": [
-      "src"
+      "src/**/*.js*"
     ],
     "extension": [
       ".js",
-      "*.jsx"
+      ".jsx"
     ],
     "reporter": [
       "text-summary",

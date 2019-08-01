@@ -1,7 +1,8 @@
 import {createJSX} from "./create-jsx";
-import {Fragment} from "./fragment.jsx";
-import {Router} from "./routing.jsx";
+import {Fragment} from "./fragment";
+import {Router} from "./routing";
 
+export default createJSX;
 export {
   createJSX,
   Fragment,

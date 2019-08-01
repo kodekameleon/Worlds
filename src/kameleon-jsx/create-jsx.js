@@ -4,9 +4,6 @@ export function createJSX(elemType, props, ...children) {
   let el;
   if (typeof elemType === "string") {
     el = document.createElement(elemType);
-    if (!el) {
-      throw `Error creating dom element for ${elemType}`;
-    }
 
     // Add all of the props to the element
     if (props) {
