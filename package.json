@@ -21,11 +21,13 @@
   "homepage": "https://github.com/kodekameleon/Worlds#readme",
   "devDependencies": {
     "@babel/core": "^7.5.5",
-    "@babel/plugin-external-helpers": "^7.2.0",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/register": "^7.5.5",
+    "@istanbuljs/nyc-config-babel": "^2.1.1",
+    "@wordpress/babel-plugin-import-jsx-pragma": "^2.2.0",
     "autoprefixer": "^9.6.1",
+    "babel-plugin-istanbul": "^5.2.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "cross-spawn": "^6.0.5",
@@ -54,22 +56,23 @@
     "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-inject": "^3.0.1",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "run-sequence": "^2.2.1",
     "sinon": "^7.3.2",
     "sinon-chai": "^3.3.0",
     "stylelint": "^10.1.0",
     "stylelint-config-standard": "^18.3.0"
   },
   "dependencies": {
-    "qs": "^6.7.0"
+    "querystringify": "^2.1.1"
   },
   "nyc": {
+    "register": "@babel/register",
+    "extends": "@istanbuljs/nyc-config-babel",
     "include": [
-      "src"
+      "src/**/*.js*"
     ],
     "extension": [
       ".js",
-      "*.jsx"
+      ".jsx"
     ],
     "reporter": [
       "text-summary",

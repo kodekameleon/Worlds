@@ -6,14 +6,19 @@
       ],
       "only": ["./src/", "./test"],
       "plugins": [
-        ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
+        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
       ]
     },
     "test": {
       "presets": ["@babel/preset-env"],
       "only": ["./src/", "./test"],
+      "exclude": ["node_modules/**"],
       "plugins": [
-        ["@babel/plugin-transform-react-jsx", {"pragma": "minjsx"}]
+        ["@wordpress/babel-plugin-import-jsx-pragma", {
+          "source":  "/Users/justinjoyce/kodekameleon/Worlds/src/kameleon-jsx",
+          "scopeVariable": "createJSX"
+        }],
+        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
       ]
     }
   }
