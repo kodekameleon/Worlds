@@ -1,9 +1,10 @@
 
 .navlist {
-  display: inline-block;
+  display: flex;
   vertical-align: top;
   font-family: var(--font-fancy);
   z-index: 0;
+  height: max-content;
 
   li {
     position: relative;
@@ -12,6 +13,10 @@
     margin-right: 3.5px;
     font-size: 85%;
     color: var(--menu-subtle);
+  }
+
+  li:last-child {
+    flex: 1;
   }
 
   li.selected {
@@ -28,6 +33,7 @@
     top: 0;
     left: 0;
     transform: skewX(-61.3deg);
+    transform-origin: bottom right;
     transition: all 0.6s;
   }
 
@@ -35,7 +41,7 @@
     background: var(--menu-background-darker);
   }
 
-  li:hover::before {
+  li:hover::before:not(:last-child) {
     background: var(--menu-background-darker);
   }
 
@@ -48,6 +54,7 @@
 
   span {
     position: relative;
+    left: 2.6em;
   }
 
   span::after {

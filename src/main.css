@@ -4,3 +4,11 @@
 @import "css/reset.css";
 @import "widgets/logo.css";
 @import "widgets/nav.css";
+
+.header {
+  display: flex;
+
+  .navlist {
+    flex: 1; /* TODO: REMOVE */
+  }
+}

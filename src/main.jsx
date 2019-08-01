@@ -10,26 +10,30 @@ function main() {
 
   const render = (
     <div>
-      <Logo/>
-      <Router key="navbar" hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
-        {() => (
-          <Fragment>
-            <NavList>
-              <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
-              <NavItem href="#citymaps">CITY MAPS</NavItem>
-              <NavItem href="#parties">PARTIES</NavItem>
-              <NavItem href="#encounters">ENCOUNTERS</NavItem>
-            </NavList>
-          </Fragment>
-        )}
-      </Router>
-      <Router key="worldmaps" hash={"worldmaps"}>
+      <div class="header">
+        <Logo/>
+        <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
+          {() => (
+            <Fragment>
+              <NavList>
+                <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
+                <NavItem href="#citymaps">CITY MAPS</NavItem>
+                <NavItem href="#parties">PARTIES</NavItem>
+                <NavItem href="#encounters">ENCOUNTERS</NavItem>
+
+                <li/>
+              </NavList>
+            </Fragment>
+          )}
+        </Router>
+      </div>
+      <Router hash={"worldmaps"}>
         WORLD MAPS
       </Router>
-      <Router key="citymaps" hash={"citymaps"}>
+      <Router hash={"citymaps"}>
         CITY MAPS
       </Router>
-      <Router key="home" hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
+      <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
         HOME
       </Router>
     </div>
