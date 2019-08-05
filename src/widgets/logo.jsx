@@ -2,7 +2,6 @@
 export function Logo() {
   return (
     <div class="logo">
-      <div class="logo-triangle"></div>
       <div class="logo-visuals">
         <div class="logo-image">
           <div></div>
