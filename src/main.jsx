@@ -1,6 +1,7 @@
-import {Fragment, Router} from "./kameleon-jsx";
+import {Fragment, renderApp, Router} from "./kameleon-jsx";
 import {Logo} from "./widgets/logo";
 import {NavItem, NavList} from "./widgets";
+import {WorldMapController} from "./controller/pages/worldmap-controller";
 
 
 window.addEventListener("load", main);
@@ -8,8 +9,17 @@ window.addEventListener("load", main);
 function main() {
   console.log("starting!");
 
-  const render = (
-    <div>
+  // Send pointer unlock messages back to the element that has the lock
+  let lockedElement;
+  document.addEventListener("pointerlockchange", () => {
+    if (lockedElement && !document.pointerLockElement) {
+      lockedElement.dispatchEvent(new Event("pointerlockexited"));
+    }
+    lockedElement = document.pointerLockElement;
+  });
+
+  const app = (
+    <Fragment>
       <div class="header">
         <Logo/>
         <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
@@ -28,7 +38,7 @@ function main() {
         </Router>
       </div>
       <Router hash={"worldmaps"}>
-        WORLD MAPS
+        {() => (WorldMapController)}
       </Router>
       <Router hash={"citymaps"}>
         CITY MAPS
@@ -36,11 +46,8 @@ function main() {
       <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
         HOME
       </Router>
-    </div>
+    </Fragment>
   );
 
-  const root = document.getElementById("root");
-  root.innerHTML = "";
-  root.appendChild(render);
+  renderApp(app);
 }
-

@@ -3,7 +3,10 @@
     "browser": true,
     "es6": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -12,12 +15,22 @@
     "sourceType": "module"
   },
   "plugins": [
-    "eslint-plugin-react"
+    "eslint-plugin-react",
+    "react"
   ],
+  "settings": {
+    "react": {
+      "version": "16.0"
+    }
+  },
   "rules": {
     "indent": [
       "error",
-      2
+      2,
+      {
+        "ignoredNodes": ["JSXAttribute"],
+        "SwitchCase": 1
+      }
     ],
     "linebreak-style": [
       "error",
@@ -37,7 +50,8 @@
     ],
     "no-var": 2,
     "prefer-const": 2,
-    "react/jsx-uses-vars": 1,
-    "react/jsx-no-undef": 2
+    "react/react-in-jsx-scope": 0,
+    "react/no-unknown-property": 0,
+    "react/prop-types": 0
   }
 }

@@ -4,11 +4,19 @@
 @import "css/reset.css";
 @import "widgets/logo.css";
 @import "widgets/nav.css";
+@import "controller/pages/worldmap-controller.css";
 
 .header {
   display: flex;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 101vw;
+  height: 0;
+  overflow: visible;
+  z-index: 1;
 
   .navlist {
-    flex: 1; /* TODO: REMOVE */
+    flex: 1;
   }
 }
