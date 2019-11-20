@@ -3,7 +3,20 @@
   display: inline-block;
   position: relative;
   z-index: 0;
-  margin-right: -36px;
+  width: 440px;
+  height: 120px;
+  transform: skewX(-60deg);
+  transform-origin: top left;
+  background: var(--menu-background);
+  box-shadow: 8px 4px 8px #aaa;
+
+  .logo-visuals {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: skewX(60deg);
+    transform-origin: top left;
+  }
 
   .logo-image {
     display: inline-block;
@@ -34,21 +47,5 @@
     margin-top: -16px;
     font-size: 14px;
     color: var(--menu-subtle);
-  }
-
-  .logo-visuals {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-
-  .logo-triangle {
-    display: inline-block;
-    vertical-align: top;
-    border-left: 220px solid var(--menu-background);
-    border-top: 120px solid var(--menu-background);
-    border-bottom: 0 solid transparent;
-    border-right: 220px solid transparent;
-    z-index: -1;
   }
 }

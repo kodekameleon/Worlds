@@ -1,6 +1,7 @@
-import {Fragment, Router} from "./kameleon-jsx";
+import {Fragment, renderApp, Router} from "./kameleon-jsx";
 import {Logo} from "./widgets/logo";
 import {NavItem, NavList} from "./widgets";
+import {WorldMapController} from "./controller/pages/worldmap-controller";
 
 
 window.addEventListener("load", main);
@@ -8,35 +9,45 @@ window.addEventListener("load", main);
 function main() {
   console.log("starting!");
 
-  const render = (
-    <div>
-      <Logo/>
-      <Router key="navbar" hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
-        {() => (
-          <Fragment>
-            <NavList>
-              <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
-              <NavItem href="#citymaps">CITY MAPS</NavItem>
-              <NavItem href="#parties">PARTIES</NavItem>
-              <NavItem href="#encounters">ENCOUNTERS</NavItem>
-            </NavList>
-          </Fragment>
-        )}
+  // Send pointer unlock messages back to the element that has the lock
+  let lockedElement;
+  document.addEventListener("pointerlockchange", () => {
+    if (lockedElement && !document.pointerLockElement) {
+      lockedElement.dispatchEvent(new Event("pointerlockexited"));
+    }
+    lockedElement = document.pointerLockElement;
+  });
+
+  const app = (
+    <Fragment>
+      <div class="header">
+        <Logo/>
+        <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
+          {() => (
+            <Fragment>
+              <NavList>
+                <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
+                <NavItem href="#citymaps">CITY MAPS</NavItem>
+                <NavItem href="#parties">PARTIES</NavItem>
+                <NavItem href="#encounters">ENCOUNTERS</NavItem>
+
+                <li/>
+              </NavList>
+            </Fragment>
+          )}
+        </Router>
+      </div>
+      <Router hash={"worldmaps"}>
+        {() => (WorldMapController)}
       </Router>
-      <Router key="worldmaps" hash={"worldmaps"}>
-        WORLD MAPS
-      </Router>
-      <Router key="citymaps" hash={"citymaps"}>
+      <Router hash={"citymaps"}>
         CITY MAPS
       </Router>
-      <Router key="home" hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
+      <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
         HOME
       </Router>
-    </div>
+    </Fragment>
   );
 
-  const root = document.getElementById("root");
-  root.innerHTML = "";
-  root.appendChild(render);
+  renderApp(app);
 }
-

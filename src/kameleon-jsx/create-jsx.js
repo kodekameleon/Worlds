@@ -1,28 +1,55 @@
 import * as _ from "lodash";
 
-export function createJSX(elemType, props, ...children) {
+import {getNamespaceUri} from "./namespaces";
+
+export function createJSX(tagOrFn, props, ...children) {
   let el;
-  if (typeof elemType === "string") {
-    el = document.createElement(elemType);
+  if (typeof tagOrFn === "string") {
+    const {nsUri, tag} = getNamespaceUri(tagOrFn);
+    if (nsUri) {
+      el = document.createElementNS(nsUri, tag);
+    } else {
+      el = document.createElement(tagOrFn);
+    }
 
     // Add all of the props to the element
     if (props) {
       for (const key of Object.keys(props)) {
-        if (key === "style") {
-          const styles = props[key];
-          for (const style of Object.keys(styles)) {
-            el.style[style] = styles[style];
+        switch (key) {
+          case "style": {
+            const styles = props[key];
+            if (typeof styles === "string") {
+              el.style.cssText = styles;
+            } else {
+              for (const style of Object.keys(styles)) {
+                el.style[style] = styles[style];
+              }
+            }
+            break;
           }
-        } else if (key === "className") {
-          console.log(`Replaced className with class on element ${el.tagName}`);
-          el.setAttribute("class", props[key]);
-        } else {
-          el.setAttribute(key, props[key]);
+
+          case "class":
+          case "className":
+            el.setAttribute("class", props[key]);
+            break;
+
+          case "addClass":
+          case "add-class":
+            el.classList.add(props[key]);
+            break;
+
+          case key.indexOf("on:") === 0 && key:
+            el.addEventListener(key.substr(3), props[key]);
+            break;
+
+          default:
+            el.setAttribute(key, props[key]);
+            break;
         }
       }
     }
-    appendChildren(el, children);
-  } else if (typeof elemType == "function") {
+    appendJSX(el, children);
+  } else if (typeof tagOrFn == "function") {
     // If custom elements pass the children through on a subnode they can get
     // nested inside arrays, so lets get rid of that nesting here.
     while (children.length === 1 && Array.isArray(children[0])) {
@@ -30,7 +57,7 @@ export function createJSX(elemType, props, ...children) {
     }
 
     // Call the function to create the element
-    el = elemType(props, children);
+    el = tagOrFn(props, children);
   } else {
     throw "JSX element must be a string for a standard element or a function";
   }
@@ -38,17 +65,27 @@ export function createJSX(elemType, props, ...children) {
   return el;
 }
 
-function appendChildren(el, child) {
+export function appendJSX(el, child) {
   if (Array.isArray(child)) {
     for (const descendent of child) {
-      appendChildren(el, descendent);
+      appendJSX(el, descendent);
     }
   } else if (typeof child === "function") {
-    appendChildren(el, child());
+    appendJSX(el, child());
   } else if (typeof child === "object" && child.tagName === "FRAGMENT") {
     // Strip out fragments and just add the children, reduce the childnodes into an array
-    appendChildren(el, _.reduce(child.childNodes, (l, v) => [...l, v], []));
+    appendJSX(el, _.reduce(child.childNodes, (l, v) => [...l, v], []));
   } else if (child != undefined) {
     el.append(child);
   }
+}
+
+export function renderApp(app) {
+  const root = document.getElementById("root");
+  if (!root) {
+    throw "To render the appliication there must be an element with the id #root in the document";
+  }
+
+  root.innerHTML = "";
+  appendJSX(root, app);
 }

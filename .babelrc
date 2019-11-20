@@ -1,14 +1,6 @@
 {
   "env": {
-    "build": {
-      "presets": [
-        ["@babel/preset-env", {"modules": false}]
-      ],
-      "only": ["./src/", "./test"],
-      "plugins": [
-        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
-      ]
-    },
+    "build": {},
     "test": {
       "presets": ["@babel/preset-env"],
       "only": ["./src/", "./test"],
@@ -18,7 +10,7 @@
           "source":  "/Users/justinjoyce/kodekameleon/Worlds/src/kameleon-jsx",
           "scopeVariable": "createJSX"
         }],
-        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
+        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX", "throwIfNamespace": false}]
       ]
     }
   }

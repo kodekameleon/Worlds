@@ -1,0 +1,28 @@
+
+#worldmap-controller {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  scroll-behavior: smooth;
+
+  .worldmap-layers {
+    width: 10000px;
+    height: 10000px;
+    position: relative;
+  }
+
+  #overlay-svg {
+    pointer-events: none;
+  }
+
+  svg {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+  }
+}

@@ -92,7 +92,7 @@ function buildJS() {
           ["@babel/preset-env", {modules: false}]
         ],
         plugins: [
-          ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX"}]
+          ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX", "throwIfNamespace": false}]
         ],
         exclude: ["node_modules/**"]
       }),
