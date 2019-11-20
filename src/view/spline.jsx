@@ -2,6 +2,12 @@ import {closedSpline, openSpline} from "../maths/spline";
 import {svgns} from "../kameleon-jsx";
 import {PointType} from "../maths";
 
+/**
+ * @namespace View.Spline
+ * @param props {Object} The properties for rendering the spline:
+ * @returns {Element}
+ * @constructor
+ */
 export function Spline(props) {
   // Get the points for the spline
   const {x, y, x1, y1, x2, y2} = props.closed ? closedSpline(props.points) : openSpline(props.points);
