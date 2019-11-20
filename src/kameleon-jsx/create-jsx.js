@@ -2,6 +2,14 @@ import * as _ from "lodash";
 
 import {getNamespaceUri} from "./namespaces";
 
+/**
+ * Create a thing for JSX
+ *
+ * @param tagOrFn
+ * @param props
+ * @param children
+ * @returns {HTMLElement}
+ */
 export function createJSX(tagOrFn, props, ...children) {
   let el;
   if (typeof tagOrFn === "string") {

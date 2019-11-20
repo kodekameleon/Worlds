@@ -27,20 +27,21 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS);
+const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
 exports["clean-build"] = gulp.series(clean, build);
 exports.start = gulp.series(clean, build, watch);
 exports.clean = clean;
+exports.doc = buildDoc;
 /* eslint-enable no-undef */
 
 
 //  ======== CLEAN ALL BUILD ARTIFACTS ========
 
 function clean(cb) {
-  rimraf(`{${TARGET},.nyc_output,coverage}`, (err) => {
+  rimraf(`{${TARGET},.nyc_output,coverage,doc}`, (err) => {
     if (err) {
       console.log(`rimraf error: ${err}`);
     }
@@ -154,7 +155,14 @@ function watch() {
 }
 
 
-//  ======== Helpers ========
+//  ======== BUILD DOC ========
+function buildDoc(cb) {
+  spawn.sync("jsdoc", ["-r", "-d", "./doc", "./src"]);
+  cb();
+}
+
+
+//  ======== HELPERS ========
 
 const styleLintFormatter = results =>
   _.flatMap(results, result =>
