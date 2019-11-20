@@ -8,72 +8,101 @@
  * http://www.jacos.nl/jacos_html/spline/circular/index.html
  */
 
+import {PointType} from "./point";
+console.log(PointType); // TODO: REMOVE
+
 const MIN_WEIGHT = 1; // the calculation of a curve becomes impossible if a distance is 0
 
 export function openSpline(points) {
-  /* grab (x,y) coordinates of the knots */
-  const x = [];
-  const y = [];
-  for (let i = 0; i < points.length; i++) {
-    x[i] = points[i][0];
-    y[i] = points[i][1];
-  }
+  const {x, y} = mapFromPoints(points);
 
-  // Weights equal to the distances between knots. If knots are nearer, the 3rd derivative can be higher
-  const weights = [];
-  for (let i = 0; i < points.length - 1; i++) {
-    /* Calculate Euclidean distance */
-    weights[i] = Math.sqrt(Math.pow((x[i + 1] - x[i]), 2) + Math.pow((y[i + 1] - y[i]), 2));
+  const weights = calculateWeights(x, y, true);
 
-    // If the weight is too small, the calculation becomes instable
-    if (weights[i] < MIN_WEIGHT) {
-      weights[i] = MIN_WEIGHT;
-    }
-  }
-  weights[points.length - 1] = weights[points.length - 2];
-
-  /* berekenen van de curve */
   const px = computeControlPointsBigWThomas(x, weights);
   const py = computeControlPointsBigWThomas(y, weights);
 
-  return {px, py};
+  correctCorners(points, x, y, px, py);
+
+  return {x, x1: px.p1, x2: px.p2, y, y1: py.p1, y2: py.p2};
 }
 
 
 /*computes spline control points*/
 export function closedSpline(points) {
-  /*grab (x,y) coordinates of the knots */
+  const {x, y} = mapFromPoints(points);
+
+  const weights = calculateWeights(x, y, true);
+
+  const px = computeControlPointsClosedW(x, weights);
+  const py = computeControlPointsClosedW(y, weights);
+
+  x.push(x[0]);
+  y.push(y[0]);
+  correctCorners(points, x, y, px, py);
+
+  return {x, x1: px.p1, x2: px.p2, y, y1: py.p1, y2: py.p2};
+}
+
+/*
+ * Map from points to separate x and y axis coordinates
+ */
+function mapFromPoints(points) {
+  /* grab (x,y) coordinates of the knots */
   const x = [];
   const y = [];
-  for (let i = 0; i < points.length; i++) {
-    x[i] = points[i][0];
-    y[i] = points[i][1];
-  }
+  points.forEach((point) => {
+    x.push(point.x);
+    y.push(point.y);
+  });
+  return {x, y};
+}
 
+/*
+ * Calculate the weights
+ */
+function calculateWeights(x, y, isClosed) {
   // Weights equal to the distances between knots. If knots are nearer, the 3rd derivative can be higher
   function weighting(x1, x2, y1, y2) {
     /* Calculate Euclidean distance */
     const d = Math.sqrt(Math.pow((x1 - x2), 2) + Math.pow((y1 - y2), 2));
-    // If the weight is too small, the calculation becomes instable
+    // If the weight is too small, the calculation becomes unstable
+    // return d < MIN_WEIGHT ? (d === 0 ? 0.01 : MIN_WEIGHT) : d;
     return d < MIN_WEIGHT ? MIN_WEIGHT : d;
   }
 
   const weights = [];
-  for (let i = 0; i < points.length - 1; i++) {
-    weights[i] = weighting(x[i + 1], x[i], y[i + 1], y[i]);
+  for (let i = 0; i < x.length - 1; i++) {
+    weights.push(weighting(x[i + 1], x[i], y[i + 1], y[i]));
   }
-  weights[points.length - 1] = weighting(x[0], x[points.length - 1], y[0], y[points.length - 1]);
+  if (isClosed) {
+    weights.push(weighting(x[x.length - 1], x[0], y[x.length - 1], y[0]));
+  } else {
+    weights.push(weights[weights.length - 1]);
+  }
 
-  const px = computeControlPointsCircularW(x, weights);
-  const py = computeControlPointsCircularW(y, weights);
+  return weights;
+}
 
-  return {px, py};
+/*
+ * Make sure the control points on corners are the same as the point itself.
+ */
+function correctCorners(points, x, y, px, py) {
+  for (let i = 0; i < px.p1.length; ++i) {
+    if (points[i].type == PointType.CORNER) {
+      px.p1[i] = x[i];
+      py.p1[i] = y[i];
+    }
+    if (points[i + 1 < points.length ? i + 1 : 0].type == PointType.CORNER) {
+      px.p2[i] = x[i + 1];
+      py.p2[i] = y[i + 1];
+    }
+  }
 }
 
 
 /*
  * computes control points given knots K, this is the brain of the operation
-*/
+ */
 function computeControlPointsBigWThomas(K, W) {
   const n = K.length - 1;
 
@@ -160,7 +189,7 @@ function Thomas4(r, a, b, c, d) {
 /*
  * computes control points given knots K, this is the brain of the operation
  */
-function computeControlPointsCircularW(k, w) {
+function computeControlPointsClosedW(k, w) {
   const n = k.length;
 
   /*rhs vector*/
@@ -183,19 +212,20 @@ function computeControlPointsCircularW(k, w) {
     r[i] = Math.pow(W[i - 1] + W[i], 2) * K[i] + Math.pow(W[i - 1], 2) * (1 + frac_i) * K[i + 1];
   }
 
-  const p1 = ThomasCircular(r, a, b, c);
+  const p1 = ThomasClosed(r, a, b, c);
 
-  /*we have p1, now compute p2: required: p1[n] exists*/
+  /*we have p1, now compute p2: required: p1[n] exists, so add it temporarily*/
   const p2 = [];
   p1[n] = p1[0];
   for (let i = 0; i < n; i++) {
     p2[i] = K[i + 1] * (1 + W[i] / W[i + 1]) - p1[i + 1] * (W[i] / W[i + 1]);
   }
+  p1.pop();
 
   return {p1, p2};
 }
 
-function ThomasCircular(r, a, b, c) {
+function ThomasClosed(r, a, b, c) {
   const n = r.length;
 
   const lc = [];

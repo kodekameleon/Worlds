@@ -2,16 +2,6 @@ import * as _ from "lodash";
 
 import {getNamespaceUri} from "./namespaces";
 
-const events = [
-  "onclick",
-  "onmousedown",
-  "onmousemove",
-  "onpointermove",
-  "onpointerdown",
-  "onpointerup",
-  "onkeydown"
-];
-
 export function createJSX(tagOrFn, props, ...children) {
   let el;
   if (typeof tagOrFn === "string") {
@@ -25,21 +15,36 @@ export function createJSX(tagOrFn, props, ...children) {
     // Add all of the props to the element
     if (props) {
       for (const key of Object.keys(props)) {
-        if (key === "style") {
-          const styles = props[key];
-          if (typeof styles === "string") {
-            el.style.cssText = styles;
-          } else {
-            for (const style of Object.keys(styles)) {
-              el.style[style] = styles[style];
+        switch (key) {
+          case "style": {
+            const styles = props[key];
+            if (typeof styles === "string") {
+              el.style.cssText = styles;
+            } else {
+              for (const style of Object.keys(styles)) {
+                el.style[style] = styles[style];
+              }
             }
+            break;
           }
-        } else if (key === "className") {
-          el.setAttribute("class", props[key]);
-        } else if (events.includes(key)) {
-          el[key] = props[key];
-        } else {
-          el.setAttribute(key, props[key]);
+
+          case "class":
+          case "className":
+            el.setAttribute("class", props[key]);
+            break;
+
+          case "addClass":
+          case "add-class":
+            el.classList.add(props[key]);
+            break;
+
+          case key.indexOf("on:") === 0 && key:
+            el.addEventListener(key.substr(3), props[key]);
+            break;
+
+          default:
+            el.setAttribute(key, props[key]);
+            break;
         }
       }
     }

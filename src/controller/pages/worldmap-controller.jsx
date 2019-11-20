@@ -1,14 +1,13 @@
 import {svgns} from "../../kameleon-jsx";
-import {closedSpline} from "../../maths/spline";
 import {PointsInputMethod} from "../input-methods/points-input";
 import {Grid, GridTypes} from "../../view/grid";
 
 export function WorldMapController() {
   const parentdiv = (
-    <div class="worldmap-controller">
-      <div class="worldmap-layers"
-           onpointerdown={onInputEvent} onpointerup={onInputEvent} onpointermove={onInputEvent}
-           onkeydown={onKeyDown} tabIndex="0">
+    <div id="worldmap-controller">
+      <div class="worldmap-layers" tabindex="0"
+           on:click={onInputEvent} on:pointermove={onInputEvent} on:keydown={onKeyDown}
+           on:pointerlockexited={onInputEvent}>
         <svgns:svg id="worldmap-svg" xmlns="http://www.w3.org/2000/svg">
         </svgns:svg>
         <svgns:svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg">
@@ -21,30 +20,9 @@ export function WorldMapController() {
   const maindiv = parentdiv.firstChild;
   const mainsvg = maindiv.firstChild;
 
-  maindiv.addEventListener("pointerlockexited", onInputEvent); // TODO support custom events
-  //  document.addEventListener("keydown", onKeyDown); // TODO support custom events
   maindiv.focus();
 
   const inputMethod = new PointsInputMethod(mainsvg);
-
-  // const points = [[60, 160], [220, 400], [420, 400], [700, 340], [600, 200], [540, 350], [330, 490]];
-  const points = [[60, 160], [220, 400], [389, 342], [700, 340], [600, 200], [474, 387], [330, 490]];
-  const {px, py} = closedSpline(points);
-
-  let i;
-  for (i = 0; i < points.length - 1; ++i) {
-    mainsvg.append(
-      <svgns:path d={`M ${points[i][0]} ${points[i][1]} C ${px.p1[i]} ${py.p1[i]} ${px.p2[i]} ${py.p2[i]} ${points[i+1][0]} ${points[i+1][1]}`}
-                stroke="black" fill="transparent"/>);
-  }
-  mainsvg.append(
-    <svgns:path d={`M ${points[i][0]} ${points[i][1]} C ${px.p1[i]} ${py.p1[i]} ${px.p2[i]} ${py.p2[i]} ${points[0][0]} ${points[0][1]}`}
-              stroke="black" fill="transparent"/>);
-
-  for (let i = 0; i < points.length; ++i) {
-    mainsvg.append(
-      <svgns:circle cx={points[i][0]} cy={points[i][1]} r="4" stroke="blue" fill="transparent"/>);
-  }
 
   return parentdiv;
 

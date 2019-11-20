@@ -1,5 +1,5 @@
 
-.worldmap-controller {
+#worldmap-controller {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,6 +12,10 @@
     width: 10000px;
     height: 10000px;
     position: relative;
+  }
+
+  #overlay-svg {
+    pointer-events: none;
   }
 
   svg {

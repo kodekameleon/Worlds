@@ -1,15 +1,28 @@
-import {openSpline} from "../maths/spline";
+import {closedSpline, openSpline} from "../maths/spline";
 import {svgns} from "../kameleon-jsx";
-import {Fragment} from "../kameleon-jsx";
+import {PointType} from "../maths";
 
 export function Spline(props) {
-  const {px, py} = openSpline(props.points);
+  // Get the points for the spline
+  const {x, y, x1, y1, x2, y2} = props.closed ? closedSpline(props.points) : openSpline(props.points);
+
+  // Create svg containing a path with the spline, and circles or diamonds for the points
   return (
-    <Fragment>
-      {props.points.length > 0 && props.points.map((v, i, a) => i < a.length - 1
-        ? <svgns:path stroke="black" fill="transparent"
-                      d={`M ${v[0]} ${v[1]} C ${px.p1[i]} ${py.p1[i]} ${px.p2[i]} ${py.p2[i]} ${a[i + 1][0]} ${a[i + 1][1]}`}/>
-        : undefined)}
-    </Fragment>
+    <svgns:svg class="spline" addClass={props.editing && "editing"}>
+      <svgns:path class="shape"
+                  d={`M ${x[0]} ${y[0]}` + x2.reduce(
+                    (p, v, i) => p +
+                      ` C ${x1[i].toFixed(3)} ${y1[i].toFixed(3)} ${x2[i].toFixed(3)} ${y2[i].toFixed(3)} ${x[i + 1]} ${y[i + 1]}`,
+                    "")}
+      />
+      {
+        props.points.map((pt) => (
+          pt.type === PointType.CURVED
+            ? <svgns:circle class="handle" cx={pt.x} cy={pt.y} r="2"/>
+            : <svgns:polygon class="handle"
+                             points={`${pt.x},${pt.y - 3} ${pt.x - 3},${pt.y} ${pt.x},${pt.y + 3} ${pt.x + 3},${pt.y}`}/>
+        ))
+      }
+    </svgns:svg>
   );
 }
