@@ -34,16 +34,17 @@
 
   a {
     display: block;
-    padding: 0.8em 1.8em;
+    padding: 0.8em 2.2em;
     cursor: pointer;
     text-decoration: none;
-    transform: skewX(60deg);
-    transform-origin: top left;
   }
 
   span {
+    display: block;
+    transform: skewX(60deg);
+    transform-origin: top left;
     position: relative;
-    left: -2.6em;
+    left: -1.35em;
   }
 
   span::after {

@@ -91,7 +91,7 @@ export function appendJSX(el, child) {
 export function renderApp(app) {
   const root = document.getElementById("root");
   if (!root) {
-    throw "To render the appliication there must be an element with the id #root in the document";
+    throw "To render the application there must be an element with the id #root in the document";
   }
 
   root.innerHTML = "";

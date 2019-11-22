@@ -34,7 +34,7 @@ exports.build = build;
 exports["clean-build"] = gulp.series(clean, build);
 exports.start = gulp.series(clean, build, watch);
 exports.clean = clean;
-exports.buildDoc = buildDoc;
+exports.makedoc = buildDoc;
 /* eslint-enable no-undef */
 
 
@@ -157,7 +157,7 @@ function watch() {
 
 //  ======== BUILD DOC ========
 function buildDoc(cb) {
-  spawn.sync("jsdoc", ["-r", "-d", "./docs", "./src"]);
+  spawn.sync("jsdoc", ["-r", "-c", "./.jsdoc.json", "-d", "./docs", "./src"]);
   cb();
 }
 

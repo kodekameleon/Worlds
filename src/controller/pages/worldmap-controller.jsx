@@ -13,6 +13,8 @@ export function WorldMapController() {
         <svgns:svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg">
           <Grid mode={GridTypes.HEX}/>
         </svgns:svg>
+        <div id="worldmap-widgets">
+        </div>
       </div>
     </div>
   );

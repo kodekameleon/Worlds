@@ -10,16 +10,32 @@ export function NavItem(props, children) {
     throw "Missing href for nav item";
   }
 
-  let classes = "";
+  // Add a listener so that we can update the navitem classes when the page changes
+  window.addEventListener("hashchange", onHashChange);
 
-  // Check whether the URL matches the href
-  if (props.href.length > 0 && props.href.charAt(0) === "#") {
-    const hash = (window.location.hash && window.location.hash.length > 0 && parse(window.location.hash.substr(1))) || {};
-    if (hash[props.href.substring(1)] != undefined || (_.isEmpty(hash) && props.href === "#")) {
-      classes = "selected";
+  const element = (<li class={getCssClass()}><a href={props.href}><span>{children}</span></a></li>);
+  return element;
+
+  function getCssClass() {
+    let cssClass = "";
+
+    // Check whether the URL matches the href
+    if (props.href.length > 0 && props.href.charAt(0) === "#") {
+      const hash = (window.location.hash && window.location.hash.length > 0 && parse(window.location.hash.substr(1))) || {};
+      if (hash[props.href.substring(1)] != undefined || (_.isEmpty(hash) && props.href === "#")) {
+        cssClass = "selected";
+      }
     }
+    return cssClass;
   }
 
-  return (<li class={classes}><a href={props.href}><span>{children}</span></a></li>);
+  function onHashChange() {
+    if (!element || !element.isConnected) {
+      window.removeEventListener("hashchange", onHashChange);
+      return;
+    }
+
+    element.className = getCssClass();
+  }
 }
 

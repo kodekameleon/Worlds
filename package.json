@@ -8,7 +8,7 @@
     "clean": "gulp clean",
     "start": "BABEL_ENV=build gulp start",
     "test": "BABEL_ENV=test nyc mocha",
-    "buildDoc": "BABEL_ENV=build gulp buildDoc"
+    "makedoc": "BABEL_ENV=build gulp makedoc"
   },
   "repository": {
     "type": "git",

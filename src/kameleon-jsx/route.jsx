@@ -9,9 +9,9 @@ import * as _ from "lodash";
  * @returns {*}
  * @constructor
  */
-export function Router(props, children) {
+export function Route(props, children) {
   if (!props || !props["hash"]) {
-    throw "Router element requires a hash attribute";
+    throw "Route element requires a hash attribute";
   }
 
   // Build a list of hash properties to check
@@ -26,9 +26,9 @@ export function Router(props, children) {
 
   const fragment = (
     <Fragment>
-      <div class="router" style={{display: "none"}}/>
+      <div class="route" style={{display: "none"}}/>
       {isMatch() ? children : undefined}
-      <div class="router-end" style={{display: "none"}}/>
+      <div class="route-end" style={{display: "none"}}/>
     </Fragment>
   );
 
@@ -38,7 +38,7 @@ export function Router(props, children) {
   return fragment;
 
   function onHashChange() {
-    // If the router is no longer in the DOM it has been removed by some higher level router going
+    // If the route is no longer in the DOM it has been removed by some higher level route going
     // out of scope, so remove the change handler.
     if (!firstEl || !firstEl.isConnected) {
       window.removeEventListener("hashchange", onHashChange);
@@ -52,7 +52,7 @@ export function Router(props, children) {
     }
     locationHash = newLocationHash;
 
-    // Remove all of the elements inside the router. Skip over the router place holders.
+    // Remove all of the elements inside the route. Skip over the route place holders.
     let el = firstEl.nextSibling;
     while (el && el !== lastEl) {
       const removeEl = el;
@@ -60,7 +60,7 @@ export function Router(props, children) {
       removeEl.remove();
     }
 
-    // If the router does not match there is nothing to render, so just exit.
+    // If the route does not match there is nothing to render, so just exit.
     if (!isMatch()) {
       return;
     }
