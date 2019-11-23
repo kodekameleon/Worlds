@@ -1,0 +1,32 @@
+.compass {
+  position: fixed;
+  top: 20vh;
+  height: 80vh;
+  left: 10vw;
+  width: 90vw;
+  fill: #6c6060;
+
+  .ring {
+    stroke-width: 4;
+    stroke-dasharray: 2 0.7;
+    stroke: var(--menu-subtle-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+  }
+
+  .arrow {
+    stroke-width: 2.5;
+    stroke: var(--menu-subtle-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+  }
+
+  text {
+    font-family: var(--font-fancy);
+    fill: var(--menu-subtle-darker);
+    font-size: 87.5%;
+    font-weight: bolder;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+}

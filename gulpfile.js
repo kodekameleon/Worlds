@@ -27,7 +27,7 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS, buildDoc);
+const build = gulp.series(buildHtml, buildJS, lintCSS, buildCSS, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
@@ -64,6 +64,7 @@ function buildHtml(cb) {
 
 //  ======== BUILD JS ========
 
+// eslint-disable-next-line no-unused-vars
 function lintJS(cb) {
   const steps = [
     gulp.src(["src/**/*.jsx", "src/**/*.js"]),

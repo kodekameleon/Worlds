@@ -3,7 +3,7 @@ html {
   color: var(--main-text);
   background: var(--main-background);
   font-family: var(--font-default);
-  font-size: var(--font-size-default);
+  font-size: 16px;
   text-decoration: none;
 }
 

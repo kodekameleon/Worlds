@@ -4,6 +4,7 @@
 @import "css/reset.css";
 @import "widgets/logo.css";
 @import "widgets/nav.css";
+@import "widgets/compass.css";
 @import "controller/pages/worldmap-controller.css";
 @import "view/view.css";
 
