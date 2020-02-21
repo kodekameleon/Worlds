@@ -1,7 +1,7 @@
 
 html {
-  color: var(--main-text);
-  background: var(--main-background);
+  color: var(--text-color);
+  background: var(--color-background);
   font-family: var(--font-default);
   font-size: 16px;
   text-decoration: none;

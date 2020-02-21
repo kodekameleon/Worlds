@@ -1,7 +1,7 @@
-.compass {
+.zoom {
   position: fixed;
   bottom: 125px;
-  right: 75px;
+  right: 200px;
   height: 1px;
   width: 1px;
   background: transparent;
@@ -10,9 +10,9 @@
     overflow: visible;
   }
 
-  .rotator {
-    transform: rotate(720deg);
-    transition: all 5s ease-in-out;
+  circle, path {
+    stroke-width: 4;
+    stroke: var(--menu-text-darker);
   }
 
   .ring {
@@ -44,13 +44,5 @@
     text-anchor: middle;
     dominant-baseline: central;
     pointer-events: none;
-  }
-
-  .shadow {
-    fill: transparent;
-
-    .ring {
-      stroke-dasharray: 1 0;
-    }
   }
 }

@@ -92,6 +92,12 @@ export function createJSX(tagOrFn, props, ...children) {
       children = children[0];
     }
 
+    // If the props contain class or className make sure it contains both.
+    if (props &amp;&amp; (props.className || props.class)) {
+      props.className = props.className || props.class;
+      props.class = props.className || props.class;
+    }
+
     // Call the function to create the element
     el = tagOrFn(props, children);
   } else {

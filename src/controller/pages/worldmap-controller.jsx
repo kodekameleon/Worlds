@@ -1,7 +1,7 @@
 import {svgns} from "../../kameleon-jsx";
 import {PointsInputMethod} from "../input-methods/points-input";
 import {Grid, GridTypes} from "../../view/grid";
-import {Compass} from "../../widgets/compass";
+import {ScrollPad, Compass, Zoom} from "../../widgets";
 
 export function WorldMapController() {
   const parentdiv = (
@@ -16,6 +16,8 @@ export function WorldMapController() {
         </svgns:svg>
         <div id="worldmap-widgets">
           <Compass/>
+          <ScrollPad/>
+          <Zoom/>
         </div>
       </div>
     </div>
