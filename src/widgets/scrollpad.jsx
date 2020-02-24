@@ -15,12 +15,12 @@ export function ScrollPad() {
         </svgns:defs>
 
         <svgns:g  style={"filter:url(#arrowpad-shadow)"}>
-          <svgns:path className="arrow" d={"M -32 0 L -12 -10 L -12 10 Z"}/>
-          <svgns:path className="arrow" d={"M 32 0 L 12 -10 L 12 10 Z"}/>
-          <svgns:path className="arrow" d={"M 0 -32 L -10 -12 L 10 -12 Z"}/>
-          <svgns:path className="arrow" d={"M 0 32 L -10 12 L 10 12 Z"}/>
+          <svgns:path class="arrow" d={"M -32 0 L -12 -10 L -12 10 Z"}/>
+          <svgns:path class="arrow" d={"M 32 0 L 12 -10 L 12 10 Z"}/>
+          <svgns:path class="arrow" d={"M 0 -32 L -10 -12 L 10 -12 Z"}/>
+          <svgns:path class="arrow" d={"M 0 32 L -10 12 L 10 12 Z"}/>
 
-          <svgns:path className="center" d={
+          <svgns:path class="center" d={
             "M -8 -1 L -1 -1 L -1 -8" +
             "M 8 -1 L 1 -1 L 1 -8" +
             "M -8 1 L -1 1 L -1 8" +

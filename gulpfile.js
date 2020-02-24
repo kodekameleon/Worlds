@@ -94,7 +94,11 @@ function buildJS() {
           ["@babel/preset-env", {modules: false}]
         ],
         plugins: [
-          ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX", "throwIfNamespace": false}]
+          ["@babel/plugin-transform-react-jsx", {
+            "pragma": "createJSX",
+            "pragmaFrag": "Fragment",
+            "throwIfNamespace": false,
+          }]
         ],
         exclude: ["node_modules/**"]
       }),
@@ -102,7 +106,8 @@ function buildJS() {
         include: "**/*.js*",
         exclude: "node_modules/**",
         modules: {
-          createJSX: [path.resolve("src/kameleon-jsx"), "createJSX"]
+          createJSX: [path.resolve("src/kameleon-jsx"), "createJSX"],
+          Fragment: [path.resolve("src/kameleon-jsx"), "Fragment"]
         }
       })
     ]

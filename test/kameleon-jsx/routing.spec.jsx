@@ -2,6 +2,10 @@ import {expect} from "chai";
 
 import {Route} from "../../src/kameleon-jsx/route";
 
+function TestComponent() {
+  return (<span>Test Component</span>);
+}
+
 describe("Route component:", () => {
   let oldAddListener, oldRemoveListener;
   let listeners = [];
@@ -83,6 +87,19 @@ describe("Route component:", () => {
       "<div>" +
       "<div class=\"route\" style=\"display: none;\"></div>" +
       "<div>Hello World!</div>" +
+      "<div class=\"route-end\" style=\"display: none;\"></div>" +
+      "</div>");
+  });
+
+  it("should render a component from the props", () => {
+    const el = (
+      <div>
+        <Route hash={"hash"} always component={TestComponent}/>
+      </div>);
+    expect(el.outerHTML).to.equal(
+      "<div>" +
+      "<div class=\"route\" style=\"display: none;\"></div>" +
+      "<span>Test Component</span>" +
       "<div class=\"route-end\" style=\"display: none;\"></div>" +
       "</div>");
   });

@@ -13,7 +13,8 @@ html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  border: 0 solid;
+  border-width: 0;
+  border-style: solid;
 }
 
 *:focus {
@@ -49,8 +50,7 @@ textarea::-moz-focus-inner {
 
 input[type='button']:not(:disabled),
 input[type='image']:not(:disabled),
-button:not(:disabled),
-label:not(:disabled) {
+button:not(:disabled) {
   cursor: pointer;
 }
 

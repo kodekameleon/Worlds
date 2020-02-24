@@ -10,7 +10,11 @@
           "source":  "../../src/kameleon-jsx",
           "scopeVariable": "createJSX"
         }],
-        ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX", "throwIfNamespace": false}]
+        ["@babel/plugin-transform-react-jsx", {
+          "pragma": "createJSX",
+          "pragmaFrag": "Fragment",
+          "throwIfNamespace": false,
+        }]
       ]
     }
   }

@@ -1,0 +1,23 @@
+
+.row {
+  display: flex;
+  flex-direction: row;
+
+  &.center {
+    align-items: center;
+  }
+
+  .even > * {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+
+  &.center {
+    align-items: center;
+  }
+}

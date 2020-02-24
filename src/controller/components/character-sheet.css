@@ -1,0 +1,122 @@
+
+.character-sheet {
+  display: flex;
+  flex-direction: column;
+  border-color: var(--border-color);
+  font-size: 1rem;
+
+  .hiviz {
+    font-size: 2em;
+  }
+
+  .loviz {
+    font-size: 0.6em;
+  }
+
+  .row1, .row2 {
+    display: flex;
+  }
+
+  label {
+    display: inline-block;
+    width: 100%;
+    font-size: 0.6em;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border-color-light);
+
+    &.center {
+      text-align: center;
+    }
+  }
+
+  .character-info-block {
+    flex-grow: 1;
+
+    .details {
+      flex-grow: 1;
+      padding: 0.5em 0.5em 0.5em 2em;
+
+      .col {
+        padding: 0.2em 0.2em;
+      }
+    }
+  }
+
+  .character-stat-block {
+    text-align: center;
+
+    .character-stat {
+      border: 1px solid;
+      border-radius: var(--border-radius);
+      margin: 0.5em 0;
+      padding: 0 0.2em 0 0.2em;
+
+      .value {
+        font-size: 0.8em;
+        border: 1px solid;
+        border-radius: 2em;
+        display: inline-block;
+        padding: 0.4em;
+        width: 2.4em;
+        height: 2.4em;
+        max-height: 2.4em;
+        margin-top: -1px;
+        line-height: 1.5;
+      }
+
+      label {
+        width: 100%;
+      }
+    }
+  }
+
+  .saving-throw-block {
+    margin-bottom: 1em;
+    border: 1px solid;
+    border-radius: var(--border-radius);
+    padding: 0.4em 0.4em 0 0.4em;
+
+    .value {
+      padding: 0 0.4em 0 0;
+      display: inline-block;
+      width: 2.2em;
+      text-align: right;
+
+      &.proficient::before {
+        display: inline-block;
+        position: relative;
+        left: -1em;
+        max-width: 0;
+        content: "\2713";
+        font-size: 0.8em;
+      }
+    }
+
+    .name {
+      display: inline-block;
+      font-size: 0.8em;
+    }
+
+    .attr {
+      display: inline-block;
+      font-size: 0.6em;
+      padding-left: 0.4em;
+    }
+  }
+
+  .combat-block {
+    .death-saves {
+      text-align: right;
+      white-space: nowrap;
+
+      .label {
+        font-size: 0.8em;
+      }
+
+      .boxes {
+        font-size: 1.2em;
+      }
+    }
+  }
+}

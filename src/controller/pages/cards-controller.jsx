@@ -5,15 +5,15 @@ export function CardsController() {
     <div id="cards-controller">
       <RoughPaper class="window-backgound"/>
 
-      <div className="card">
-        <div className="card-title">Arcane Lock</div>
-        <div className="card-subtitle">2nd-level abjuration</div>
-        <div className="card-field"><label>Casting time</label>1 action</div>
-        <div className="card-field"><label>Range</label>Self</div>
-        <div className="card-field"><label>Components</label>V, S</div>
-        <div className="card-field"><label>Duration</label>Until dispelled</div>
-        <div className="card-field"><label>Classes</label>Wizard</div>
-        <div className="text">
+      <div class="card">
+        <div class="card-title">Arcane Lock</div>
+        <div class="card-subtitle">2nd-level abjuration</div>
+        <div class="card-field"><label>Casting time</label>1 action</div>
+        <div class="card-field"><label>Range</label>Self</div>
+        <div class="card-field"><label>Components</label>V, S</div>
+        <div class="card-field"><label>Duration</label>Until dispelled</div>
+        <div class="card-field"><label>Classes</label>Wizard</div>
+        <div class="text">
           <p>You touch a closed door, window, gate, chest, or other
             entryway, and it becomes locked for the duration. You
             and the creatures you designate when you cast this

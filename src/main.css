@@ -7,7 +7,9 @@
 @import "controller/pages/worldmap-controller.css";
 @import "controller/pages/encounters-controller.css";
 @import "controller/pages/cards-controller.css";
-@import "view/view.css";
+@import "controller/pages/parties-controller.css";
+@import "view/index.css";
+@import "controller/components/components.css";
 
 .header {
   display: flex;

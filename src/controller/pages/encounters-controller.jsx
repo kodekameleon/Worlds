@@ -35,67 +35,67 @@ const MONSTER_DESCRIPTIONS=[
 
 export function EncountersController() {
   return (
-    <div className="encounters-controller">
-      <div className="mon-stat-block">
-        <div className="mon-stat-block__header">
-          <div className="mon-stat-block__name">
+    <div class="encounters-controller">
+      <div class="mon-stat-block">
+        <div class="mon-stat-block__header">
+          <div class="mon-stat-block__name">
             {MONSTER_NAME}
           </div>
-          <div className="mon-stat-block__meta">{MONSTER_TYPE}</div>
+          <div class="mon-stat-block__meta">{MONSTER_TYPE}</div>
         </div>
-        <div className="mon-stat-block__separator">
-          <img className="mon-stat-block__separator-img" alt=""
+        <div class="mon-stat-block__separator">
+          <img class="mon-stat-block__separator-img" alt=""
                src="https://media-waterdeep.cursecdn.com/file-attachments/0/579/stat-block-header-bar.svg"/>
         </div>
-        <div className="mon-stat-block__attributes">
-          <div className="mon-stat-block__attribute">
-            <span className="mon-stat-block__attribute-label">Armor Class</span>
-            <span className="mon-stat-block__attribute-value">
-              <span className="mon-stat-block__attribute-data-value">{MONSTER_AC}</span>
+        <div class="mon-stat-block__attributes">
+          <div class="mon-stat-block__attribute">
+            <span class="mon-stat-block__attribute-label">Armor Class</span>
+            <span class="mon-stat-block__attribute-value">
+              <span class="mon-stat-block__attribute-data-value">{MONSTER_AC}</span>
             </span>
           </div>
-          <div className="mon-stat-block__attribute">
-            <span className="mon-stat-block__attribute-label">Hit Points</span>
-            <span className="mon-stat-block__attribute-data">
-              <span className="mon-stat-block__attribute-data-value">{MONSTER_HP[0]}</span>&nbsp;
-              <span className="mon-stat-block__attribute-data-extra">{MONSTER_HP[1]}</span>
+          <div class="mon-stat-block__attribute">
+            <span class="mon-stat-block__attribute-label">Hit Points</span>
+            <span class="mon-stat-block__attribute-data">
+              <span class="mon-stat-block__attribute-data-value">{MONSTER_HP[0]}</span>&nbsp;
+              <span class="mon-stat-block__attribute-data-extra">{MONSTER_HP[1]}</span>
             </span>
           </div>
-          <div className="mon-stat-block__attribute">
-            <span className="mon-stat-block__attribute-label">Speed</span>
-            <span className="mon-stat-block__attribute-data">
-              <span className="mon-stat-block__attribute-data-value">{MONSTER_SPEED}</span>
+          <div class="mon-stat-block__attribute">
+            <span class="mon-stat-block__attribute-label">Speed</span>
+            <span class="mon-stat-block__attribute-data">
+              <span class="mon-stat-block__attribute-data-value">{MONSTER_SPEED}</span>
             </span>
           </div>
         </div>
-        <div className="mon-stat-block__stat-block">
-          <div className="mon-stat-block__separator">
-            <img className="mon-stat-block__separator-img" alt=""
+        <div class="mon-stat-block__stat-block">
+          <div class="mon-stat-block__separator">
+            <img class="mon-stat-block__separator-img" alt=""
                  src="https://media-waterdeep.cursecdn.com/file-attachments/0/579/stat-block-header-bar.svg"/>
           </div>
-          <div className="ability-block">
+          <div class="ability-block">
             {MONSTER_STATS.map((stat) =>
-              <div className="ability-block__stat">
-                <div className="ability-block__heading">{stat[0]}</div>
-                <div className="ability-block__data">
-                  <span className="ability-block__score">{stat[1]}</span>&nbsp;
-                  <span className="ability-block__modifier">{stat[2]}</span>
+              <div class="ability-block__stat">
+                <div class="ability-block__heading">{stat[0]}</div>
+                <div class="ability-block__data">
+                  <span class="ability-block__score">{stat[1]}</span>&nbsp;
+                  <span class="ability-block__modifier">{stat[2]}</span>
                 </div>
               </div>
             )}
           </div>
-          <div className="mon-stat-block__separator">
-            <img className="mon-stat-block__separator-img" alt=""
+          <div class="mon-stat-block__separator">
+            <img class="mon-stat-block__separator-img" alt=""
                  src="https://media-waterdeep.cursecdn.com/file-attachments/0/579/stat-block-header-bar.svg"/>
           </div>
         </div>
-        <div className="mon-stat-block__tidbits">
+        <div class="mon-stat-block__tidbits">
           {MONSTER_TIDBITS.map((tidbit) =>
-            <div className="mon-stat-block__tidbit">
-              <span className="mon-stat-block__tidbit-label">{tidbit[0]}</span>
-              <span className="mon-stat-block__tidbit-data">
+            <div class="mon-stat-block__tidbit">
+              <span class="mon-stat-block__tidbit-label">{tidbit[0]}</span>
+              <span class="mon-stat-block__tidbit-data">
                 {tidbit[1].map((tidbitItem, index, arr) =>
-                  <span className="mon-stat-block__tidbit-data">
+                  <span class="mon-stat-block__tidbit-data">
                     {`${tidbitItem}${index + 1 < arr.length ? ", " : ""}`}
                   </span>
                 )}
@@ -103,15 +103,15 @@ export function EncountersController() {
             </div>
           )}
         </div>
-        <div className="mon-stat-block__separator">
-          <img className="mon-stat-block__separator-img" alt=""
+        <div class="mon-stat-block__separator">
+          <img class="mon-stat-block__separator-img" alt=""
                src="https://media-waterdeep.cursecdn.com/file-attachments/0/579/stat-block-header-bar.svg"/>
         </div>
-        <div className="mon-stat-block__description-blocks">
+        <div class="mon-stat-block__description-blocks">
           {MONSTER_DESCRIPTIONS.map((descr) =>
-            <div className="mon-stat-block__description-block">
-              {descr.heading && <div className="mon-stat-block__description-block-heading">{descr.heading}</div>}
-              <div className="mon-stat-block__description-block-content">
+            <div class="mon-stat-block__description-block">
+              {descr.heading && <div class="mon-stat-block__description-block-heading">{descr.heading}</div>}
+              <div class="mon-stat-block__description-block-content">
                 {descr.text}
               </div>
             </div>

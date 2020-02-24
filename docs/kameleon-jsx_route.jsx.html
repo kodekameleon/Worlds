@@ -42,6 +42,11 @@ export function Route(props, children) {
     throw "Route element requires a hash attribute";
   }
 
+  // If a child component is given use it for the children
+  if (props.component) {
+    children = props.component;
+  }
+
   // Build a list of hash properties to check
   const routeHash = typeof props.hash === "string" ? [props.hash] : props.hash;
 
@@ -53,11 +58,11 @@ export function Route(props, children) {
   window.addEventListener("hashchange", onHashChange);
 
   const fragment = (
-    &lt;Fragment>
+    &lt;>
       &lt;div class="route" style={{display: "none"}}/>
       {isMatch() ? children : undefined}
       &lt;div class="route-end" style={{display: "none"}}/>
-    &lt;/Fragment>
+    &lt;/>
   );
 
   const firstEl = fragment.firstChild;

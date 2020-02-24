@@ -12,10 +12,10 @@ export function Compass() {
           </svgns:filter>
         </svgns:defs>
 
-        <svgns:g className="shadow" style="transform:translate(2px,2px)">
-          <svgns:g className="rotator" style={"filter:url(#compass-shadow)"}>
-            <svgns:circle className="ring" cx={"0"} cy={"0"} r={"24"}/>
-            <svgns:path className="arrow" d={
+        <svgns:g class="shadow" style="transform:translate(2px,2px)">
+          <svgns:g class="rotator" style={"filter:url(#compass-shadow)"}>
+            <svgns:circle class="ring" cx={"0"} cy={"0"} r={"24"}/>
+            <svgns:path class="arrow" d={
               "M -8 -24 L 0 -38 L 8 -24 L 0 0 Z" +
               "M 0 12 L 8 24 L 0 36 L -8 24 Z" +
               "M 12 0 L 24 8 L 36 0 L 24 -8 Z" +
@@ -23,9 +23,9 @@ export function Compass() {
           </svgns:g>
         </svgns:g>
 
-        <svgns:g className="rotator">
-          <svgns:circle className="ring grabbable" cx={"0"} cy={"0"} r={"24"}/>
-          <svgns:path className="arrow grabbable" d={
+        <svgns:g class="rotator">
+          <svgns:circle class="ring grabbable" cx={"0"} cy={"0"} r={"24"}/>
+          <svgns:path class="arrow grabbable" d={
             "M -8 -24 L 0 -38 L 8 -24 L 0 0 Z" +
             "M 0 12 L 8 24 L 0 36 L -8 24 Z" +
             "M 12 0 L 24 8 L 36 0 L 24 -8 Z" +
