@@ -1,0 +1,181 @@
+
+.character-sheet {
+  display: flex;
+  flex-direction: column;
+  border-color: var(--border-color);
+  font-size: 1rem;
+
+  .hiviz {
+    font-size: 2em;
+  }
+
+  .loviz {
+    font-size: 0.6em;
+  }
+
+  .row1, .row2 {
+    display: flex;
+  }
+
+  .spaced {
+    margin: 0.4em;
+  }
+
+  .boxed {
+    border: 1px solid;
+    border-radius: var(--border-radius);
+    padding: 0 0.2em 0 0.2em;
+
+    & > :not(label) {
+      flex-grow: 1;
+    }
+  }
+
+  .col > .boxed {
+    margin-bottom: 0.5em;
+  }
+
+  label {
+    display: inline-block;
+    width: 100%;
+    font-size: 0.6em;
+    text-transform: uppercase;
+    border-top: 1px solid var(--border-color-light);
+    line-height: 1.1;
+    padding: 0.2em 0;
+    text-align: center;
+  }
+
+  .character-info-block {
+    flex-grow: 1;
+
+    .details {
+      flex-grow: 1;
+      padding-left: 2em;
+    }
+
+    .character-detail {
+      padding: 0.2em;
+    }
+
+    label {
+      text-align: left;
+    }
+  }
+
+  .character-stat-block {
+    .character-stat {
+      .value {
+        font-size: 0.8em;
+        border: 1px solid;
+        border-radius: 2.4em / 1.6em;
+        display: inline-block;
+        width: 2.4em;
+        height: 1.6em;
+        max-height: 2.4em;
+        margin-top: -1px;
+      }
+
+      label {
+        width: 100%;
+      }
+    }
+  }
+
+  .saving-throw-block {
+    margin-bottom: 1em;
+
+    .check {
+      display: inline-block;
+
+      &::before {
+        display: inline-block;
+        content: "\2713";
+        font-size: 0.8em;
+        visibility: hidden;
+      }
+
+      &.checked::before {
+        visibility: visible;
+      }
+    }
+
+    .value {
+      display: inline-block;
+      text-align: right;
+      width: 1.5em;
+    }
+
+    .name {
+      display: inline-block;
+      font-size: 0.8em;
+      padding-left: 0.4em;
+    }
+
+    .attr {
+      display: inline-block;
+      font-size: 0.6em;
+      padding-left: 0.4em;
+    }
+  }
+
+  .combat-block {
+    .value {
+      position: relative;
+      width: 100%;
+    }
+
+    .max-value {
+      position: absolute;
+      left: 0;
+      top: 1px;
+      line-height: 1;
+
+      div {
+        padding-right: 0.2em;
+      }
+    }
+
+    .current-hit-points {
+      min-height: 4em;
+    }
+
+    .temporary-hit-points {
+      min-height: 4em;
+    }
+
+    .current-hit-dice {
+      /* */
+    }
+
+    .death-saves {
+      white-space: nowrap;
+
+      .label {
+        font-size: 0.6em;
+      }
+
+      .boxes {
+        font-size: 1.2em;
+      }
+
+      div {
+        line-height: 1;
+      }
+    }
+  }
+
+  .attacks-block {
+    .table {
+      /* */
+    }
+
+    .name {
+      font-size: 0.8em;
+    }
+
+    .damage-type {
+      font-size: 0.8em;
+    }
+  }
+}

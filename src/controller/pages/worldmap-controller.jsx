@@ -1,6 +1,7 @@
 import {svgns} from "../../kameleon-jsx";
 import {PointsInputMethod} from "../input-methods/points-input";
 import {Grid, GridTypes} from "../../view/grid";
+import {ScrollPad, Compass, Zoom} from "../../widgets";
 
 export function WorldMapController() {
   const parentdiv = (
@@ -13,6 +14,11 @@ export function WorldMapController() {
         <svgns:svg id="overlay-svg" xmlns="http://www.w3.org/2000/svg">
           <Grid mode={GridTypes.HEX}/>
         </svgns:svg>
+        <div id="worldmap-widgets">
+          <Compass/>
+          <ScrollPad/>
+          <Zoom/>
+        </div>
       </div>
     </div>
   );

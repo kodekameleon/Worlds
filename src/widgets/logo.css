@@ -40,12 +40,12 @@
   .logo-text > div:first-child {
     margin-left: -12px;
     font-size: 48px;
-    color: var(--menu-hiviz);
+    color: var(--menu-text-active);
   }
 
   .logo-text > div:last-child {
     margin-top: -16px;
     font-size: 14px;
-    color: var(--menu-subtle);
+    color: var(--menu-text-subtle);
   }
 }

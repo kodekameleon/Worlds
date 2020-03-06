@@ -1,0 +1,16 @@
+
+#parties-controller {
+  padding: 24px;
+
+  .character-sheet {
+    .row1 {
+      padding: 64px 0 0 320px;
+    }
+  }
+
+  /* TODO: temp commented out
+  .character-stat-block {
+    margin-top: -60px;
+  }
+  */
+}

@@ -7,7 +7,7 @@ const namespaceUris = {
 export function getNamespaceUri(tag) {
   const colon = tag.indexOf(":");
   if (colon < 0) {
-    return {undefined};
+    return {};
   }
   const tagpart = tag.substr(colon + 1);
   const namespace = tag.substr(0, colon);

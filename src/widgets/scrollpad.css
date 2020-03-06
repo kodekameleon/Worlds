@@ -1,0 +1,37 @@
+.arrowpad {
+  position: fixed;
+  bottom: 75px;
+  right: 130px;
+  height: 1px;
+  width: 1px;
+  background: transparent;
+
+  > svg {
+    overflow: visible;
+  }
+
+  .arrow {
+    stroke-width: 0.75;
+    fill: var(--menu-background);
+    stroke: var(--menu-outline-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+  }
+
+  .center {
+    stroke-width: 1.5;
+    fill: none;
+    stroke: var(--menu-outline-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+  }
+
+  text {
+    font-family: var(--font-fancy);
+    fill: var(--menu-outline-darker);
+    font-size: 70%;
+    font-weight: bolder;
+    text-anchor: middle;
+    dominant-baseline: central;
+  }
+}

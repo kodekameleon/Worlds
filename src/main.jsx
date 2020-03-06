@@ -1,8 +1,10 @@
-import {Fragment, renderApp, Router} from "./kameleon-jsx";
+import {renderApp, Route} from "./kameleon-jsx";
 import {Logo} from "./widgets/logo";
 import {NavItem, NavList} from "./widgets";
 import {WorldMapController} from "./controller/pages/worldmap-controller";
-
+import {EncountersController} from "./controller/pages/encounters-controller";
+import {CardsController} from "./controller/pages/cards-controller";
+import {PartiesController} from "./controller/pages/parties-controller";
 
 window.addEventListener("load", main);
 
@@ -19,34 +21,28 @@ function main() {
   });
 
   const app = (
-    <Fragment>
+    <>
       <div class="header">
         <Logo/>
-        <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} always>
-          {() => (
-            <Fragment>
-              <NavList>
-                <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
-                <NavItem href="#citymaps">CITY MAPS</NavItem>
-                <NavItem href="#parties">PARTIES</NavItem>
-                <NavItem href="#encounters">ENCOUNTERS</NavItem>
+        <NavList>
+          <NavItem href="#worldmaps">WORLĐ MAPS</NavItem>
+          <NavItem href="#citymaps">CITY MAPS</NavItem>
+          <NavItem href="#parties">PARTIES</NavItem>
+          <NavItem href="#encounters">ENCOUNTERS</NavItem>
+          <NavItem href="#cards">CARĐS</NavItem>
 
-                <li/>
-              </NavList>
-            </Fragment>
-          )}
-        </Router>
+          <li/>
+        </NavList>
       </div>
-      <Router hash={"worldmaps"}>
-        {() => (WorldMapController)}
-      </Router>
-      <Router hash={"citymaps"}>
-        CITY MAPS
-      </Router>
-      <Router hash={["worldmaps", "citymaps", "parties", "encounters"]} none>
+      <Route hash={"worldmaps"} component={WorldMapController}/>
+      <Route hash={"citymaps"}>CITY MAPS</Route>
+      <Route hash={"parties"} component={PartiesController}/>
+      <Route hash={"encounters"} component={EncountersController}/>
+      <Route hash={"cards"} component={CardsController}/>
+      <Route hash={["worldmaps", "citymaps", "parties", "encounters", "cards"]} none>
         HOME
-      </Router>
-    </Fragment>
+      </Route>
+    </>
   );
 
   renderApp(app);

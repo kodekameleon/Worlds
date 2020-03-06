@@ -27,14 +27,14 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS, buildDoc);
+const build = gulp.series(buildHtml, buildJS, lintCSS, buildCSS, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
 exports["clean-build"] = gulp.series(clean, build);
 exports.start = gulp.series(clean, build, watch);
 exports.clean = clean;
-exports.buildDoc = buildDoc;
+exports.makedoc = buildDoc;
 /* eslint-enable no-undef */
 
 
@@ -64,6 +64,7 @@ function buildHtml(cb) {
 
 //  ======== BUILD JS ========
 
+// eslint-disable-next-line no-unused-vars
 function lintJS(cb) {
   const steps = [
     gulp.src(["src/**/*.jsx", "src/**/*.js"]),
@@ -93,7 +94,11 @@ function buildJS() {
           ["@babel/preset-env", {modules: false}]
         ],
         plugins: [
-          ["@babel/plugin-transform-react-jsx", {"pragma": "createJSX", "throwIfNamespace": false}]
+          ["@babel/plugin-transform-react-jsx", {
+            "pragma": "createJSX",
+            "pragmaFrag": "Fragment",
+            "throwIfNamespace": false,
+          }]
         ],
         exclude: ["node_modules/**"]
       }),
@@ -101,7 +106,8 @@ function buildJS() {
         include: "**/*.js*",
         exclude: "node_modules/**",
         modules: {
-          createJSX: [path.resolve("src/kameleon-jsx"), "createJSX"]
+          createJSX: [path.resolve("src/kameleon-jsx"), "createJSX"],
+          Fragment: [path.resolve("src/kameleon-jsx"), "Fragment"]
         }
       })
     ]
@@ -157,7 +163,7 @@ function watch() {
 
 //  ======== BUILD DOC ========
 function buildDoc(cb) {
-  spawn.sync("jsdoc", ["-r", "-d", "./docs", "./src"]);
+  spawn.sync("jsdoc", ["-r", "-c", "./.jsdoc.json", "-d", "./docs", "./src"]);
   cb();
 }
 

@@ -9,7 +9,6 @@
  */
 
 import {PointType} from "./point";
-console.log(PointType); // TODO: REMOVE
 
 const MIN_WEIGHT = 1; // the calculation of a curve becomes impossible if a distance is 0
 

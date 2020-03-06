@@ -9,6 +9,9 @@ Full documentation at https://kodekameleon.github.io/Worlds/
 
 ## Todo
 
+* favicon
+* compass, zoom, scroll
+
 * Crosshairs and coordinate display
 * Input method
   * Delete last point entered

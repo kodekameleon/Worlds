@@ -1,5 +1,10 @@
 {
   "extends": "stylelint-config-standard",
   "rules": {
+    "at-rule-empty-line-before": false,
+    "selector-list-comma-newline-after": false,
+    "custom-property-empty-line-before": false,
+    "no-descending-specificity": false,
+    "comment-no-empty": false
   }
 }

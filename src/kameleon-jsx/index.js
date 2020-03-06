@@ -1,6 +1,6 @@
 import {appendJSX, createJSX, renderApp} from "./create-jsx";
 import {Fragment} from "./fragment";
-import {Router} from "./routing";
+import {Route} from "./route";
 
 export default createJSX;
 export {
@@ -8,7 +8,7 @@ export {
   createJSX,
   Fragment,
   renderApp,
-  Router
+  Route
 };
 
 // Some html namespaces
