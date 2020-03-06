@@ -37,3 +37,19 @@ export const SkillName = {
   STEALTH: "Stealth",
   SURVIVAL: "Survival"
 };
+
+export const DamageType = {
+  ACID: "Acid",
+  BLUDGEONING: "Bludgeoning",
+  COLD: "Cold",
+  FIRE: "Fire",
+  FORCE: "Force",
+  LIGHTNING: "Lightning",
+  NECROTIC: "Necrotic",
+  PIERCING: "Piercing",
+  POISON: "Poison",
+  PSYCHIC: "Pshychic",
+  RADIANT: "Radiant",
+  SLASHING: "Slashing",
+  THUNDER: "Thunder"
+}

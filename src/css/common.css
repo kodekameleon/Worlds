@@ -10,6 +10,7 @@
   width: 100%;
   height: 100%;
   z-index: -1;
+  pointer-events: none;
 }
 
 .full-page {
@@ -21,4 +22,6 @@
   z-index: 0;
   font-family: var(--font-fancy);
   color: var(--text-color);
+  overflow-x: hidden;
+  overflow-y: auto;
 }

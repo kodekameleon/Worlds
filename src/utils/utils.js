@@ -1,7 +1,7 @@
 
 export const Utils = {
-  prefixSign: (n) => {
-    return n > 0 ? `+${n}` : n;
+  signed: (n) => {
+    return n > 0 ? `+${n}` : `${n}`;
   },
 
   calcStatBonus: (n) => {

@@ -15,6 +15,11 @@ function TestNestedCustom(props, children) {
   return (<div><TestElement>{children}</TestElement></div>);
 }
 
+function TestElementNoProps(props, children) {
+  expect(props).to.deep.equal({});
+  return (<span class={props.class}>{children}</span>);
+}
+
 describe("CreateJSX:", () => {
   it("should create a simple div element", () => {
     const el = (<div/>);
@@ -98,8 +103,15 @@ describe("CreateJSX:", () => {
   });
 
   it("should create a custom element ensuring props is defined", () => {
-    const el = (<TestElement>Hello World!</TestElement>);
+    const el = (<TestElementNoProps>Hello World!</TestElementNoProps>);
     expect(el.outerHTML).to.equal("<span>Hello World!</span>");
+  });
+
+  it("should fail when creating a custom element with addClass", () => {
+    expect(() => (<TestElement addClass={"abc"}>Hello World!</TestElement>))
+      .to.throw("May not specify addClass or add-class when creating a custom element");
+    expect(() => (<TestElement add-class={"abc"}>Hello World!</TestElement>))
+      .to.throw("May not specify addClass or add-class when creating a custom element");
   });
 
   it("should create a custom element containing a fragment", () => {

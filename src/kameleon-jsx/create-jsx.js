@@ -68,6 +68,10 @@ export function createJSX(tagOrFn, props, ...children) {
   } else if (typeof tagOrFn == "function") {
     props = props || {};
 
+    if (props.addClass || props["add-class"]) {
+      throw "May not specify addClass or add-class when creating a custom element";
+    }
+
     // If custom elements pass the children through on a subnode they can get
     // nested inside arrays, so lets get rid of that nesting here.
     while (children.length === 1 && Array.isArray(children[0])) {
@@ -112,7 +116,6 @@ export function renderApp(app) {
   root.innerHTML = "";
   appendJSX(root, app);
 }
-
 
 function processClassName(props) {
   const classes = props.class || props.className;

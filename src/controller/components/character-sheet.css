@@ -17,17 +17,33 @@
     display: flex;
   }
 
+  .spaced {
+    margin: 0.4em;
+  }
+
+  .boxed {
+    border: 1px solid;
+    border-radius: var(--border-radius);
+    padding: 0 0.2em 0 0.2em;
+
+    & > :not(label) {
+      flex-grow: 1;
+    }
+  }
+
+  .col > .boxed {
+    margin-bottom: 0.5em;
+  }
+
   label {
     display: inline-block;
     width: 100%;
     font-size: 0.6em;
-    font-weight: bold;
     text-transform: uppercase;
     border-top: 1px solid var(--border-color-light);
-
-    &.center {
-      text-align: center;
-    }
+    line-height: 1.1;
+    padding: 0.2em 0;
+    text-align: center;
   }
 
   .character-info-block {
@@ -35,34 +51,29 @@
 
     .details {
       flex-grow: 1;
-      padding: 0.5em 0.5em 0.5em 2em;
+      padding-left: 2em;
+    }
 
-      .col {
-        padding: 0.2em 0.2em;
-      }
+    .character-detail {
+      padding: 0.2em;
+    }
+
+    label {
+      text-align: left;
     }
   }
 
   .character-stat-block {
-    text-align: center;
-
     .character-stat {
-      border: 1px solid;
-      border-radius: var(--border-radius);
-      margin: 0.5em 0;
-      padding: 0 0.2em 0 0.2em;
-
       .value {
         font-size: 0.8em;
         border: 1px solid;
-        border-radius: 2em;
+        border-radius: 2.4em / 1.6em;
         display: inline-block;
-        padding: 0.4em;
         width: 2.4em;
-        height: 2.4em;
+        height: 1.6em;
         max-height: 2.4em;
         margin-top: -1px;
-        line-height: 1.5;
       }
 
       label {
@@ -73,29 +84,32 @@
 
   .saving-throw-block {
     margin-bottom: 1em;
-    border: 1px solid;
-    border-radius: var(--border-radius);
-    padding: 0.4em 0.4em 0 0.4em;
 
-    .value {
-      padding: 0 0.4em 0 0;
+    .check {
       display: inline-block;
-      width: 2.2em;
-      text-align: right;
 
-      &.proficient::before {
+      &::before {
         display: inline-block;
-        position: relative;
-        left: -1em;
-        max-width: 0;
         content: "\2713";
         font-size: 0.8em;
+        visibility: hidden;
       }
+
+      &.checked::before {
+        visibility: visible;
+      }
+    }
+
+    .value {
+      display: inline-block;
+      text-align: right;
+      width: 1.5em;
     }
 
     .name {
       display: inline-block;
       font-size: 0.8em;
+      padding-left: 0.4em;
     }
 
     .attr {
@@ -106,17 +120,62 @@
   }
 
   .combat-block {
+    .value {
+      position: relative;
+      width: 100%;
+    }
+
+    .max-value {
+      position: absolute;
+      left: 0;
+      top: 1px;
+      line-height: 1;
+
+      div {
+        padding-right: 0.2em;
+      }
+    }
+
+    .current-hit-points {
+      min-height: 4em;
+    }
+
+    .temporary-hit-points {
+      min-height: 4em;
+    }
+
+    .current-hit-dice {
+      /* */
+    }
+
     .death-saves {
-      text-align: right;
       white-space: nowrap;
 
       .label {
-        font-size: 0.8em;
+        font-size: 0.6em;
       }
 
       .boxes {
         font-size: 1.2em;
       }
+
+      div {
+        line-height: 1;
+      }
+    }
+  }
+
+  .attacks-block {
+    .table {
+      /* */
+    }
+
+    .name {
+      font-size: 0.8em;
+    }
+
+    .damage-type {
+      font-size: 0.8em;
     }
   }
 }

@@ -9,7 +9,7 @@
 @import "controller/pages/cards-controller.css";
 @import "controller/pages/parties-controller.css";
 @import "view/index.css";
-@import "controller/components/components.css";
+@import "controller/components/index.css";
 
 .header {
   display: flex;
