@@ -78,12 +78,12 @@ function CharacterStatBlock(props) {
 
   return (
     <Col className="character-stat-block">
-      <CharacterStat name={AttributeName.STRENGTH} value={char.strength}/>
-      <CharacterStat name={AttributeName.DEXTERITY} value={char.dexterity}/>
-      <CharacterStat name={AttributeName.CONSTITUTION} value={char.constitution}/>
-      <CharacterStat name={AttributeName.INTELLIGENCE} value={char.intelligence}/>
-      <CharacterStat name={AttributeName.WISDOM} value={char.wisdom}/>
-      <CharacterStat name={AttributeName.CHARISMA} value={char.charisma}/>
+      <CharacterStat name={AttributeName.STRENGTH} value={char.strength} bonus={char.bonus.strength}/>
+      <CharacterStat name={AttributeName.DEXTERITY} value={char.dexterity} bonus={char.bonus.dexterity}/>
+      <CharacterStat name={AttributeName.CONSTITUTION} value={char.constitution} bonus={char.bonus.constitution}/>
+      <CharacterStat name={AttributeName.INTELLIGENCE} value={char.intelligence} bonus={char.bonus.intelligence}/>
+      <CharacterStat name={AttributeName.WISDOM} value={char.wisdom} bonus={char.bonus.wisdom}/>
+      <CharacterStat name={AttributeName.CHARISMA} value={char.charisma} bonus={char.bonus.charisma}/>
     </Col>
   );
 }
@@ -92,7 +92,7 @@ function CharacterStat(props) {
   return (
     <Col class="character-stat boxed padded spaced" center>
       <div class="value">{props.value}</div>
-      <div class="hiviz">{Utils.signed(Utils.calcStatBonus(props.value))}</div>
+      <div class="hiviz">{Utils.signed(props.bonus)}</div>
       <label>{props.name}</label>
     </Col>
   );

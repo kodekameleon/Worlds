@@ -1,3 +1,4 @@
+// istanbul ignore file
 /*
  * Derived from work by Lubos Brieda and Jaco Stuifbergen
  *
