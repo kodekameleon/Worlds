@@ -1,5 +1,5 @@
 
-export const AttributeName = {
+export const CharacterStatName = {
   STRENGTH: "Strength",
   DEXTERITY: "Dexterity",
   CONSTITUTION: "Constitution",
@@ -8,7 +8,7 @@ export const AttributeName = {
   CHARISMA: "Charisma"
 };
 
-export const AttributeShort = {
+export const CharacterStatShort = {
   STRENGTH: "STR",
   DEXTERITY: "DEX",
   CONSTITUTION: "CON",
@@ -52,4 +52,4 @@ export const DamageType = {
   RADIANT: "Radiant",
   SLASHING: "Slashing",
   THUNDER: "Thunder"
-}
+};

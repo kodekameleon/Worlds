@@ -8,12 +8,13 @@
       "plugins": [
         ["@wordpress/babel-plugin-import-jsx-pragma", {
           "source":  "../../src/kameleon-jsx",
-          "scopeVariable": "createJSX"
+          "scopeVariable": "createJSX",
+          "scopeVariableFrag": "Fragment"
         }],
         ["@babel/plugin-transform-react-jsx", {
           "pragma": "createJSX",
           "pragmaFrag": "Fragment",
-          "throwIfNamespace": false,
+          "throwIfNamespace": false
         }]
       ]
     }

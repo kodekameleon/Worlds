@@ -42,7 +42,7 @@ export function Spline(props) {
 
   // Create svg containing a path with the spline, and circles or diamonds for the points
   return (
-    &lt;svgns:svg class="spline" addClass={props.editing &amp;&amp; "editing"}>
+    &lt;svgns:svg class={["spline", props.editing &amp;&amp; "editing"]}>
       &lt;svgns:path class="shape"
                   d={`M ${x[0]} ${y[0]}` + x2.reduce(
                     (p, v, i) => p +

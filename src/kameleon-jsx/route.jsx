@@ -1,5 +1,4 @@
 import {parse} from "querystringify";
-import {Fragment} from "./fragment";
 import * as _ from "lodash";
 
 /**

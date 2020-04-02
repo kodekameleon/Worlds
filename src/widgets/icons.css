@@ -1,0 +1,72 @@
+
+@font-face {
+  font-family: "worlds-icons";
+  /* noinspection CssInvalidFunction */
+  src: resolve("worlds-icons.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.icon {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+  color: var(--text-color);
+
+  &:hover {
+    z-index: 1;
+    color: var(--text-color-dark);
+  }
+
+  &::before {
+    font-family: "worlds-icons"; /* stylelint-disable-line */
+    font-weight: bold;
+    transition: transform var(--transition-fast);
+  }
+
+  &:hover::before {
+    transform: scale(1.1);
+  }
+
+  &.crescent-moon::after {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    content: '';
+    top: 0;
+    left: 0;
+    opacity: 0;
+    box-shadow: 2px 2px 4px var(--border-color-dark);
+    transform: rotate(-90deg);
+    transition: opacity var(--transition-fast), transform var(--transition-normal);
+  }
+
+  &.crescent-moon:hover::after {
+    opacity: 1;
+    transform: rotate(0deg);
+    z-index: 2;
+  }
+}
+
+.grab-handle {
+  position: relative;
+  height: 0.8em;
+
+  &::before {
+    font-family: "worlds-icons"; /* stylelint-disable-line */
+    position: absolute;
+    content: "\e002";
+    top: 0;
+    right: 0;
+    font-size: 0.8em;
+    line-height: 1;
+    opacity: 0.6;
+  }
+}

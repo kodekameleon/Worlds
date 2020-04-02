@@ -16,6 +16,11 @@
     left: 0;
     transform: skewX(60deg);
     transform-origin: top left;
+    pointer-events: none;
+
+    * {
+      pointer-events: none;
+    }
   }
 
   .logo-image {
@@ -35,6 +40,7 @@
     font-family: var(--font-fancy);
     display: inline-block;
     vertical-align: top;
+    user-select: none;
   }
 
   .logo-text > div:first-child {

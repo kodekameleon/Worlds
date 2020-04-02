@@ -1,7 +1,7 @@
 
 export function Table(props, children) {
   return (
-    <div class={"table"}>
+    <div class={"table"} props={props}>
       {children}
     </div>
   );
@@ -20,6 +20,7 @@ export function Row(props, children) {
         props.padded && "padded",
         props.table && "table",
         props.class]}
+      props={props}
     >
       {children}
     </div>
@@ -36,6 +37,7 @@ export function Col(props, children) {
         props.right && "right",
         props.padded && "padded",
         props.class]}
+      props={props}
     >
       {children}
     </div>

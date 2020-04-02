@@ -13,7 +13,7 @@ export function NavItem(props, children) {
   // Add a listener so that we can update the navitem classes when the page changes
   window.addEventListener("hashchange", onHashChange);
 
-  const element = (<li class={getCssClass()}><a href={props.href}><span>{children}</span></a></li>);
+  const element = (<li class={getCssClass()}><a href={props.href} draggable={false}><span>{children}</span></a></li>);
   return element;
 
   function getCssClass() {

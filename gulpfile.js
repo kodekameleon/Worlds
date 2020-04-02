@@ -27,7 +27,7 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, buildJS, lintCSS, buildCSS, buildDoc);
+const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS, buildMedia, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
@@ -64,15 +64,22 @@ function buildHtml(cb) {
 
 //  ======== BUILD JS ========
 
-// eslint-disable-next-line no-unused-vars
-function lintJS(cb) {
+function lintJS() {
+/*
   const steps = [
-    gulp.src(["src/**/*.jsx", "src/**/*.js"]),
+    gulp.src(["src/ ** / * .jsx", "src/ * * / *.js"]),
     gulp_eslint(),
     gulp_eslint.formatEach("visualstudio"),
     gulp_eslint.failAfterError()
   ];
-  pump(steps, cb);
+  pump(steps, () => {console.log("done"); cb(); });
+*/
+
+
+  return gulp.src(["src/**/*.jsx", "src/**/*.js"])
+    .pipe(gulp_eslint())
+    .pipe(gulp_eslint.formatEach("visualstudio"))
+    .pipe(gulp_eslint.failAfterError());
 }
 
 function buildJS() {
@@ -141,12 +148,24 @@ function buildCSS(cb) {
       postcssPrecss(),
       autoprefixer(),
       postcssAssets({
-        loadPaths: ["media", "."]
+        loadPaths: ["media/dist", "media/inline", "."],
+        relative: "media/dist"
       }),
       postcssReporter({clearReportedMessages: true})
     ]),
     gulp_rename("main.css"),
     gulp_sourcemaps.write("."),
+    gulp.dest(TARGET)
+  ];
+  pump(steps, cb);
+}
+
+
+//  ======== BUILD / COPY MEDIA ========
+
+function buildMedia(cb) {
+  const steps = [
+    gulp.src(["./media/dist/**/*"]),
     gulp.dest(TARGET)
   ];
   pump(steps, cb);

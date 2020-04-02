@@ -2,7 +2,7 @@ import {RoughPaper} from "../../view/rough-paper";
 import {CharacterSheet} from "../components/character-sheet";
 import {Character} from "../../model";
 
-const character = Character();
+const character = new Character();
 character.name = "Grimthorpe Firefingers";
 character.class = "Wizard";
 character.level = 3;
@@ -17,7 +17,6 @@ character.constitution = 13;
 character.intelligence = 12;
 character.wisdom = 10;
 character.charisma = 8;
-
 
 export function PartiesController() {
   return (

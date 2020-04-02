@@ -20,6 +20,22 @@ function TestElementNoProps(props, children) {
   return (<span class={props.class}>{children}</span>);
 }
 
+function TestElementFuncClass() {
+  // eslint-disable-next-line react/display-name
+  TestElementFuncClass.prototype.render = (props) => {
+    return <div props={props}/>;
+  };
+}
+
+class TestElementClass {
+  constructor() {
+  }
+
+  render(props) {
+    return <div props={props}/>;
+  }
+}
+
 describe("CreateJSX:", () => {
   it("should create a simple div element", () => {
     const el = (<div/>);
@@ -42,6 +58,31 @@ describe("CreateJSX:", () => {
     expect(el.className).to.equal("a-class-name");
   });
 
+  it("should create an element with a custom property", () => {
+    const el = (<div custom-prop="a-custom-prop"/>);
+    expect(el.outerHTML).to.equal("<div custom-prop=\"a-custom-prop\"></div>");
+  });
+
+  it("should create an element with delegated props using class", () => {
+    const el = (<div props={{class: "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div class=\"abc\">Hello World!</div>");
+  });
+
+  it("should create an element with delegated props using className", () => {
+    const el = (<div props={{className: "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div class=\"abc\">Hello World!</div>");
+  });
+
+  it("should create an element with class delegated props overridden by parameterized props", () => {
+    const el = (<div className="def" props={{class: "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div class=\"def\">Hello World!</div>");
+  });
+
+  it("should create an element with custom delegated props overridden by parameterized props", () => {
+    const el = (<div custom-prop="def" props={{"custom-prop": "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div custom-prop=\"def\">Hello World!</div>");
+  });
+
   it("should create an element with classes that are a string", () => {
     const el = (<div className={"a b c"}/>);
     expect(el.outerHTML).to.equal("<div class=\"a b c\"></div>");
@@ -55,16 +96,6 @@ describe("CreateJSX:", () => {
   it("should create an element with classes in an array", () => {
     const el = (<div className={["a", "", undefined, null, "b", "c"]}/>);
     expect(el.outerHTML).to.equal("<div class=\"a b c\"></div>");
-  });
-
-  it("should create an element with an 'addClass' string", () => {
-    const el = (<div addClass="a-class-name"/>);
-    expect(el.className).to.equal("a-class-name");
-  });
-
-  it("should create an element with an 'addClass' array", () => {
-    const el = (<div addClass={["a", "", undefined, null, "b", "c"]}/>);
-    expect(el.className).to.equal("a b c");
   });
 
   it("should fail to create an element with an invalid tag", () => {
@@ -107,13 +138,6 @@ describe("CreateJSX:", () => {
     expect(el.outerHTML).to.equal("<span>Hello World!</span>");
   });
 
-  it("should fail when creating a custom element with addClass", () => {
-    expect(() => (<TestElement addClass={"abc"}>Hello World!</TestElement>))
-      .to.throw("May not specify addClass or add-class when creating a custom element");
-    expect(() => (<TestElement add-class={"abc"}>Hello World!</TestElement>))
-      .to.throw("May not specify addClass or add-class when creating a custom element");
-  });
-
   it("should create a custom element containing a fragment", () => {
     const el = (<div><TestFragment>Hello World!</TestFragment></div>);
     expect(el.outerHTML).to.equal("<div><span>Hello World!</span><span>Part 2</span></div>");
@@ -122,6 +146,41 @@ describe("CreateJSX:", () => {
   it("should create a custom element with nested children", () => {
     const el = (<TestNestedCustom>Hello World!</TestNestedCustom>);
     expect(el.outerHTML).to.equal("<div><span>Hello World!</span></div>");
+  });
+
+  it("should create a reference to an element with a ref", () => {
+    const ref = {};
+    const el = (<div ref={ref}/>);
+    expect(el).to.equal(ref?.element);
+    expect(el.outerHTML).to.equal(<div/>.outerHTML);
+  });
+
+  it("should fail when creating an element with an undefined reference", () => {
+    let ref;
+    expect(() => (<div ref={ref}/>)).throw("References must be initialized when creating elements with a reference");
+  });
+
+  it("should create a custom element from a functional class", () => {
+    const el = (<TestElementFuncClass class={"blah"}/>);
+    expect(el.outerHTML).to.equal("<div class=\"blah\"></div>");
+  });
+
+  it("should create a custom element from a functional class with a ref", () => {
+    const ref = {};
+    const el = (<TestElementFuncClass class={"blah"} ref={ref}/>);
+    expect(el.outerHTML).to.equal("<div class=\"blah\"></div>");
+    expect(ref.element).to.equal(el);
+    expect(ref.object).to.not.be.null;
+    expect(ref.object.constructor.name).to.equal("TestElementFuncClass");
+  });
+
+  it("should create a custom element from a class", () => {
+    const ref = {};
+    const el = (<TestElementClass class={"blah"} ref={ref}/>);
+    expect(el.outerHTML).to.equal("<div class=\"blah\"></div>");
+    expect(ref.element).to.equal(el);
+    expect(ref.object).to.not.be.null;
+    expect(ref.object.constructor.name).to.equal("TestElementClass");
   });
 
   it("should fail with an invalid element type", () => {
