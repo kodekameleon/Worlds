@@ -148,8 +148,8 @@ function buildCSS(cb) {
       postcssPrecss(),
       autoprefixer(),
       postcssAssets({
-        loadPaths: ["media/dist", "media/inline", "."],
-        relative: "media/dist"
+        loadPaths: ["media/publish", "media/inline", "."],
+        relative: "media/publish"
       }),
       postcssReporter({clearReportedMessages: true})
     ]),
@@ -165,7 +165,7 @@ function buildCSS(cb) {
 
 function buildMedia(cb) {
   const steps = [
-    gulp.src(["./media/dist/**/*"]),
+    gulp.src(["./media/publish/**/*"]),
     gulp.dest(TARGET)
   ];
   pump(steps, cb);
