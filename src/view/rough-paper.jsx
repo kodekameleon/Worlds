@@ -2,7 +2,7 @@ import {svgns} from "../kameleon-jsx";
 
 export function RoughPaper(props) {
   return (
-    <svgns:svg className={props.class} addClass="rough-paper">
+    <svgns:svg class={["rough-paper", props.class]}>
       <svgns:filter id='roughpaper' x='0%' y='0%' width='100%' height="100%">
         <svgns:feTurbulence type="fractalNoise" baseFrequency='0.04' result='noise' numOctaves="5"/>
         <svgns:feDiffuseLighting class="color" in='noise' surfaceScale='2'>

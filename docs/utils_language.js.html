@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: kameleon-jsx/fragment.jsx</title>
+    <title>JSDoc: Source: utils/language.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: kameleon-jsx/fragment.jsx</h1>
+    <h1 class="page-title">Source: utils/language.js</h1>
 
     
 
@@ -27,16 +27,30 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
+ * @namespace Language
  *
- * @param props
- * @param children
- * @returns {*}
- * @constructor
+ * Helpers that deal with various aspects of the language
  */
-export function Fragment(props, children) {
-  // Use lower case fragment here so that JSX does not invoke Fragment to do the creation.
-  return (&lt;fragment class="fragment">{children}&lt;/fragment>);
-}
+export const Language = {
+
+  /**
+   * Compose the properties of a set of objects into a target object. This will not
+   * resolve getters/setters, but instead copy them. Apart from that, this function
+   * is equivalent to Object.assign().
+   *
+   * @param target      The target object to compose the other objects into
+   * @param ...sources  The source object(s) to compose into the target object
+   * @returns {*}       The composed object, this is simply the target
+   */
+  compose(target, ...sources) {
+    for (const source of sources) {
+      for (const prop in source) {
+        Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop));
+      }
+    }
+    return target;
+  }
+};
 </code></pre>
         </article>
     </section>

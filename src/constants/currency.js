@@ -5,4 +5,4 @@ export const CurrencyUnit = {
   SP: "sp",
   CP: "cp",
   EP: "ep"
-}
+};

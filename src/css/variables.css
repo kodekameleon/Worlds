@@ -5,7 +5,8 @@
   --font-size-default: 100%;
 
   --color-background: #fff;
-  --text-color: #666;
+  --text-color: #6c6060;
+  --text-color-dark: #484040;
   --text-heading-color: #822000;
 
   --border-color-dark: #6c6060;
@@ -21,5 +22,6 @@
   --menu-outline-subtle: #908282;
   --menu-outline-darker: #6c6060;
 
-  --transition-speed: 0.6s;
+  --transition-fast: 0.2s;
+  --transition-normal: 0.6s;
 }

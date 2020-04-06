@@ -5,6 +5,28 @@
   border-color: var(--border-color);
   font-size: 1rem;
 
+  .edit-button {
+    width: 2em;
+    height: 2em;
+    margin-right: 1em;
+  }
+
+  .edit-button::before {
+    content: "\e000";
+  }
+
+  &.editmode {
+    .edit-button::before {
+      content: "\e001";
+    }
+  }
+
+  &.viewmode {
+    .grab-handle {
+      display: none;
+    }
+  }
+
   .hiviz {
     font-size: 2em;
   }
@@ -65,20 +87,80 @@
 
   .character-stat-block {
     .character-stat {
+      position: relative;
+
+      .value-container {
+        width: 100%;
+        justify-content: center;
+      }
+
       .value {
         font-size: 0.8em;
         border: 1px solid;
-        border-radius: 2.4em / 1.6em;
+        border-radius: 50%;
         display: inline-block;
         width: 2.4em;
         height: 1.6em;
         max-height: 2.4em;
         margin-top: -1px;
+        cursor: default;
+      }
+
+      .drag-drop-container {
+        position: fixed;
+        left: -600px;
+        top: 600px;
+        padding: 0;
+        background-color: transparent;
+
+        .value-container {
+          color: var(--text-color-dark);
+          background: transparent;
+          font-size: 2em;
+          text-shadow: 0 0 9px #444;
+        }
+
+        .value {
+          margin-top: 0;
+        }
       }
 
       label {
         width: 100%;
       }
+
+      .grab-handle::before {
+        top: 1px;
+        right: 4px;
+      }
+
+      &::after {
+        position: absolute;
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        left: -3px;
+        top: -3px;
+        border: 1px solid black;
+        border-radius: 6px;
+        content: '';
+        z-index: -1;
+        background-color: rgba(133, 167, 10, 0.2);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--transition-normal), background-color var(--transition-normal);
+      }
+    }
+
+    &.dragging > .character-stat:not(.drag-source) * {
+      pointer-events: none;
+    }
+
+    &.dragging > .character-stat:not(.drag-source)::after {
+      opacity: 1;
+    }
+
+    &.dragging > .character-stat.drag-hover:not(.drag-source)::after {
+      background-color: rgba(133, 167, 10, 0.4);
     }
   }
 

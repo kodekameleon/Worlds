@@ -29,7 +29,7 @@
     stroke: var(--menu-outline-darker);
     stroke-linejoin: miter;
     stroke-miterlimit: 8;
-    transition: all var(--transition-speed);
+    transition: all var(--transition-normal);
 
     &:hover {
       fill: var(--menu-background-active);

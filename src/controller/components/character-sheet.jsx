@@ -1,34 +1,57 @@
 import {Col, Row, Table} from "../../widgets/layout";
-import {AttributeName, AttributeShort, CurrencyUnit, DamageType, SkillName} from "../../constants";
+import {CharacterStatName, CharacterStatShort, CurrencyUnit, DamageType, SkillName} from "../../constants";
 import {Utils} from "../../utils";
+
+function doChangeStats(character, stats) {
+  console.log(stats);
+  for (const stat in stats) {
+    console.log(stat);
+  }
+}
 
 export function CharacterSheet(props) {
   const char = props.character;
+  const viewState = {
+    editing: false
+  };
+  const rootElement = {};
 
   return (
-    <div class="character-sheet">
-      <div class="row1">
-        <CharacterInfoBlock character={char}/>
-      </div>
+    <div ref={rootElement} class="character-sheet viewmode">
+      <Row class="row1" center>
+        <div class="icon crescent-moon edit-button" on:click={onLockClick}/>
+        <CharacterInfoBlock character={char} viewState={viewState}/>
+      </Row>
       <div class="row2">
         <Col>
-          <CharacterStatBlock character={char}/>
+          <CharacterStatBlock character={char} viewState={viewState} onChangeStats={doChangeStats}/>
         </Col>
         <Col>
-          <SavingThrowBlock character={char}/>
-          <SkillBlock character={char}/>
+          <SavingThrowBlock character={char} viewState={viewState}/>
+          <SkillBlock character={char} viewState={viewState}/>
         </Col>
         <Col>
           <Row>
-            <CombatBlock character={char}/>
-            <MeleeBlock character={char}/>
-            <ProficiencyBlock character={char}/>
-            <PossessionsBlock character={char}/>
+            <CombatBlock character={char} viewState={viewState}/>
+            <MeleeBlock character={char} viewState={viewState}/>
+            <ProficiencyBlock character={char} viewState={viewState}/>
+            <PossessionsBlock character={char} viewState={viewState}/>
           </Row>
         </Col>
       </div>
     </div>
   );
+
+  function onLockClick() {
+    viewState.editing = !viewState.editing;
+    if (viewState.editing) {
+      rootElement.element.classList.add("editmode");
+      rootElement.element.classList.remove("viewmode");
+    } else {
+      rootElement.element.classList.add("viewmode");
+      rootElement.element.classList.remove("editmode");
+    }
+  }
 }
 
 function CharacterInfoBlock(props) {
@@ -73,40 +96,118 @@ function CharacterInfoBlock(props) {
   );
 }
 
-function CharacterStatBlock(props) {
-  const char = props.character;
+function CharacterStatBlock(baseProps) {
+  const char = baseProps.character;
+  const statBlockElement = {};
+  let dragOriginElement;
 
   return (
-    <Col className="character-stat-block">
-      <CharacterStat name={AttributeName.STRENGTH} value={char.strength}/>
-      <CharacterStat name={AttributeName.DEXTERITY} value={char.dexterity}/>
-      <CharacterStat name={AttributeName.CONSTITUTION} value={char.constitution}/>
-      <CharacterStat name={AttributeName.INTELLIGENCE} value={char.intelligence}/>
-      <CharacterStat name={AttributeName.WISDOM} value={char.wisdom}/>
-      <CharacterStat name={AttributeName.CHARISMA} value={char.charisma}/>
+    <Col className="character-stat-block" ref={statBlockElement}>
+      <CharacterStat name={CharacterStatName.STRENGTH} value={char.strength} bonus={char.bonus.strength}/>
+      <CharacterStat name={CharacterStatName.DEXTERITY} value={char.dexterity} bonus={char.bonus.dexterity}/>
+      <CharacterStat name={CharacterStatName.CONSTITUTION} value={char.constitution} bonus={char.bonus.constitution}/>
+      <CharacterStat name={CharacterStatName.INTELLIGENCE} value={char.intelligence} bonus={char.bonus.intelligence}/>
+      <CharacterStat name={CharacterStatName.WISDOM} value={char.wisdom} bonus={char.bonus.wisdom}/>
+      <CharacterStat name={CharacterStatName.CHARISMA} value={char.charisma} bonus={char.bonus.charisma}/>
     </Col>
   );
-}
 
-function CharacterStat(props) {
-  return (
-    <Col class="character-stat boxed padded spaced" center>
-      <div class="value">{props.value}</div>
-      <div class="hiviz">{Utils.signed(Utils.calcStatBonus(props.value))}</div>
-      <label>{props.name}</label>
-    </Col>
-  );
+  function CharacterStat(props) {
+    const statElement = {};
+
+    return (
+      <Col class="character-stat boxed padded spaced" center ref={statElement}
+           on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
+        <Row class="value-container" center draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+          <div class="grab-handle"/>
+          <div class="value">{props.value}</div>
+        </Row>
+        <div class="hiviz">{Utils.signed(props.bonus)}</div>
+        <label>{props.name}</label>
+      </Col>
+    );
+
+    function onDragStart(ev) {
+      // Cancel the drag if we are not in editing mode.
+      if (!baseProps.viewState.editing) {
+        ev.preventDefault();
+        return false;
+      }
+
+      // Set what is being dragged
+      ev.dataTransfer.setData("drag/CharacterStat", props.name);
+
+      // Create an image to drag
+      const valueElement = statElement.element.querySelector(".value-container");
+      const vebr = valueElement.getBoundingClientRect();
+      const img = (
+        <div class="drag-drop-container" style={`width: ${vebr.width}px`}>
+          <div class="value-container">{props.value}</div>
+        </div>
+      );
+      valueElement.parentElement.insertBefore(img, valueElement.nextSibling);
+      const iebr = img.getBoundingClientRect();
+      console.log(iebr);
+      console.log((vebr.width - iebr.width) / 2);
+      console.log((vebr.height - iebr.height) / 2);
+      ev.dataTransfer.setDragImage(img,
+        ev.clientX - valueElement.getBoundingClientRect().left + (iebr.width - vebr.width) / 2,
+        ev.clientY - valueElement.getBoundingClientRect().top + (iebr.height - vebr.height) / 2);
+      setTimeout(() => img.remove());
+
+      // Update styles to indicate a drag is in progress, and which is the source
+      statBlockElement.element.classList.add("dragging");
+      statElement.element.classList.add("drag-source");
+
+      // Remember the element that is the origin
+      dragOriginElement = statElement;
+    }
+
+    function onDragEnd() {
+      statBlockElement.element.classList.remove("dragging");
+      statElement.element.classList.remove("drag-source");
+      dragOriginElement = undefined;
+    }
+
+    function onDragOver(ev) {
+      if (dragOriginElement !== statElement) {
+        ev.preventDefault();
+      }
+    }
+
+    function onDrop(ev) {
+      statElement.element.classList.remove("drag-hover");
+      if (dragOriginElement !== statElement) {
+        ev.preventDefault();
+        const origin = ev.dataTransfer.getData("drag/CharacterStat");
+        console.log(`Set stats: target: ${props.name} ${props.value}`);
+        console.log(`Set stats: origin: ${origin}`);
+        baseProps.onChangeStats(char, {
+          [props.name.toLowerCase()]: char[origin.toLowerCase()],
+          [origin.toLowerCase()]: props.value
+        });
+      }
+    }
+
+    function onDragEnter() {
+      statElement.element.classList.add("drag-hover");
+    }
+
+    function onDragLeave() {
+      statElement.element.classList.remove("drag-hover");
+    }
+  }
 }
 
 function SavingThrowBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
-      <SavingThrowStat name={AttributeName.STRENGTH} value={2} proficient={false}/>
-      <SavingThrowStat name={AttributeName.DEXTERITY} value={2} proficient={false}/>
-      <SavingThrowStat name={AttributeName.CONSTITUTION} value={1} proficient={false}/>
-      <SavingThrowStat name={AttributeName.INTELLIGENCE} value={2} proficient/>
-      <SavingThrowStat name={AttributeName.WISDOM} value={2} proficient/>
-      <SavingThrowStat name={AttributeName.CHARISMA} value={-1} proficient={false}/>
+      <SavingThrowStat name={CharacterStatName.STRENGTH} value={2} proficient={false}/>
+      <SavingThrowStat name={CharacterStatName.DEXTERITY} value={2} proficient={false}/>
+      <SavingThrowStat name={CharacterStatName.CONSTITUTION} value={1} proficient={false}/>
+      <SavingThrowStat name={CharacterStatName.INTELLIGENCE} value={2} proficient/>
+      <SavingThrowStat name={CharacterStatName.WISDOM} value={2} proficient/>
+      <SavingThrowStat name={CharacterStatName.CHARISMA} value={-1} proficient={false}/>
       <label>Saving Throws</label>
     </Col>
   );
@@ -115,26 +216,26 @@ function SavingThrowBlock() {
 function SkillBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
-      <SavingThrowStat name={SkillName.ACROBATICS} value={2} proficient={false} attribute={AttributeShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.ANIMAL_HANDLING} value={0} proficient={false} attribute={AttributeShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.ARCANA} value={3} proficient={false} attribute={AttributeShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.ATHLETICS} value={2} proficient={false} attribute={AttributeShort.STRENGTH}/>
-      <SavingThrowStat name={SkillName.DECEPTION} value={-1} proficient={false} attribute={AttributeShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.HISTORY} value={3} proficient={false} attribute={AttributeShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.INSIGHT} value={0} proficient={false} attribute={AttributeShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.INTIMIDATION} value={1} proficient={false} attribute={AttributeShort.CHARISMA}/>
+      <SavingThrowStat name={SkillName.ACROBATICS} value={2} proficient={false} attribute={CharacterStatShort.DEXTERITY}/>
+      <SavingThrowStat name={SkillName.ANIMAL_HANDLING} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
+      <SavingThrowStat name={SkillName.ARCANA} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
+      <SavingThrowStat name={SkillName.ATHLETICS} value={2} proficient={false} attribute={CharacterStatShort.STRENGTH}/>
+      <SavingThrowStat name={SkillName.DECEPTION} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
+      <SavingThrowStat name={SkillName.HISTORY} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
+      <SavingThrowStat name={SkillName.INSIGHT} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
+      <SavingThrowStat name={SkillName.INTIMIDATION} value={1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
       <SavingThrowStat name={SkillName.INVESTIGATION} value={3} proficient={false}
-                       attribute={AttributeShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.MEDICINE} value={0} proficient={false} attribute={AttributeShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.NATURE} value={3} proficient={false} attribute={AttributeShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.PERCEPTION} value={0} proficient={false} attribute={AttributeShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.PERFORMANCE} value={-1} proficient={false} attribute={AttributeShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.PERSUASION} value={-1} proficient={false} attribute={AttributeShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.RELIGION} value={18} proficient={false} attribute={AttributeShort.INTELLIGENCE}/>
+                       attribute={CharacterStatShort.INTELLIGENCE}/>
+      <SavingThrowStat name={SkillName.MEDICINE} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
+      <SavingThrowStat name={SkillName.NATURE} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
+      <SavingThrowStat name={SkillName.PERCEPTION} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
+      <SavingThrowStat name={SkillName.PERFORMANCE} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
+      <SavingThrowStat name={SkillName.PERSUASION} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
+      <SavingThrowStat name={SkillName.RELIGION} value={18} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
       <SavingThrowStat name={SkillName.SLEIGHT_OF_HAND} value={2} proficient={false}
-                       attribute={AttributeShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.STEALTH} value={2} proficient={false} attribute={AttributeShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.SURVIVAL} value={0} proficient={false} attribute={AttributeShort.WISDOM}/>
+                       attribute={CharacterStatShort.DEXTERITY}/>
+      <SavingThrowStat name={SkillName.STEALTH} value={2} proficient={false} attribute={CharacterStatShort.DEXTERITY}/>
+      <SavingThrowStat name={SkillName.SURVIVAL} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
       <label>Skill</label>
     </Col>
   );
