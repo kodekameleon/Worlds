@@ -1,6 +1,7 @@
 import {Col, Row, Table} from "../../widgets/layout";
 import {CharacterStatName, CharacterStatShort, CurrencyUnit, DamageType, SkillName} from "../../constants";
 import {Utils} from "../../utils";
+import {CharacterStatsView} from "../../view/character-sheet";
 
 function doChangeStats(character, stats) {
   console.log(stats);
@@ -24,7 +25,7 @@ export function CharacterSheet(props) {
       </Row>
       <div class="row2">
         <Col>
-          <CharacterStatBlock character={char} viewState={viewState} onChangeStats={doChangeStats}/>
+          <CharacterStatsView character={char} viewState={viewState} onChangeStats={doChangeStats}/>
         </Col>
         <Col>
           <SavingThrowBlock character={char} viewState={viewState}/>
@@ -94,109 +95,6 @@ function CharacterInfoBlock(props) {
       </div>
     </Row>
   );
-}
-
-function CharacterStatBlock(baseProps) {
-  const char = baseProps.character;
-  const statBlockElement = {};
-  let dragOriginElement;
-
-  return (
-    <Col className="character-stat-block" ref={statBlockElement}>
-      <CharacterStat name={CharacterStatName.STRENGTH} value={char.strength} bonus={char.bonus.strength}/>
-      <CharacterStat name={CharacterStatName.DEXTERITY} value={char.dexterity} bonus={char.bonus.dexterity}/>
-      <CharacterStat name={CharacterStatName.CONSTITUTION} value={char.constitution} bonus={char.bonus.constitution}/>
-      <CharacterStat name={CharacterStatName.INTELLIGENCE} value={char.intelligence} bonus={char.bonus.intelligence}/>
-      <CharacterStat name={CharacterStatName.WISDOM} value={char.wisdom} bonus={char.bonus.wisdom}/>
-      <CharacterStat name={CharacterStatName.CHARISMA} value={char.charisma} bonus={char.bonus.charisma}/>
-    </Col>
-  );
-
-  function CharacterStat(props) {
-    const statElement = {};
-
-    return (
-      <Col class="character-stat boxed padded spaced" center ref={statElement}
-           on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
-        <Row class="value-container" center draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
-          <div class="grab-handle"/>
-          <div class="value">{props.value}</div>
-        </Row>
-        <div class="hiviz">{Utils.signed(props.bonus)}</div>
-        <label>{props.name}</label>
-      </Col>
-    );
-
-    function onDragStart(ev) {
-      // Cancel the drag if we are not in editing mode.
-      if (!baseProps.viewState.editing) {
-        ev.preventDefault();
-        return false;
-      }
-
-      // Set what is being dragged
-      ev.dataTransfer.setData("drag/CharacterStat", props.name);
-
-      // Create an image to drag
-      const valueElement = statElement.element.querySelector(".value-container");
-      const vebr = valueElement.getBoundingClientRect();
-      const img = (
-        <div class="drag-drop-container" style={`width: ${vebr.width}px`}>
-          <div class="value-container">{props.value}</div>
-        </div>
-      );
-      valueElement.parentElement.insertBefore(img, valueElement.nextSibling);
-      const iebr = img.getBoundingClientRect();
-      console.log(iebr);
-      console.log((vebr.width - iebr.width) / 2);
-      console.log((vebr.height - iebr.height) / 2);
-      ev.dataTransfer.setDragImage(img,
-        ev.clientX - valueElement.getBoundingClientRect().left + (iebr.width - vebr.width) / 2,
-        ev.clientY - valueElement.getBoundingClientRect().top + (iebr.height - vebr.height) / 2);
-      setTimeout(() => img.remove());
-
-      // Update styles to indicate a drag is in progress, and which is the source
-      statBlockElement.element.classList.add("dragging");
-      statElement.element.classList.add("drag-source");
-
-      // Remember the element that is the origin
-      dragOriginElement = statElement;
-    }
-
-    function onDragEnd() {
-      statBlockElement.element.classList.remove("dragging");
-      statElement.element.classList.remove("drag-source");
-      dragOriginElement = undefined;
-    }
-
-    function onDragOver(ev) {
-      if (dragOriginElement !== statElement) {
-        ev.preventDefault();
-      }
-    }
-
-    function onDrop(ev) {
-      statElement.element.classList.remove("drag-hover");
-      if (dragOriginElement !== statElement) {
-        ev.preventDefault();
-        const origin = ev.dataTransfer.getData("drag/CharacterStat");
-        console.log(`Set stats: target: ${props.name} ${props.value}`);
-        console.log(`Set stats: origin: ${origin}`);
-        baseProps.onChangeStats(char, {
-          [props.name.toLowerCase()]: char[origin.toLowerCase()],
-          [origin.toLowerCase()]: props.value
-        });
-      }
-    }
-
-    function onDragEnter() {
-      statElement.element.classList.add("drag-hover");
-    }
-
-    function onDragLeave() {
-      statElement.element.classList.remove("drag-hover");
-    }
-  }
 }
 
 function SavingThrowBlock() {
