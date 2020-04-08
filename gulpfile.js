@@ -2,9 +2,7 @@
 const _ = require("lodash");
 const path = require("path");
 const gulp = require("gulp");
-const gulp_rename = require("gulp-rename");
 const gulp_eslint = require("gulp-eslint");
-const pump = require("pump");
 const spawn = require("cross-spawn");
 const rimraf = require("rimraf");
 const rollup = require("rollup");
@@ -13,6 +11,7 @@ const rollupResolve = require("@rollup/plugin-node-resolve");
 const rollupCommonJS = require("@rollup/plugin-commonjs");
 const rollupInject = require("@rollup/plugin-inject");
 const rollupPostCSS = require("rollup-plugin-postcss");
+const rollupCopy = require("rollup-plugin-copy");
 const postcssAssets = require("postcss-assets");
 const postcssPrecss = require("precss");
 const postcssReporter = require("postcss-reporter");
@@ -25,7 +24,7 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildMedia, buildDoc);
+const build = gulp.series(lintJS, lintCSS, buildJS, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
@@ -48,18 +47,6 @@ function clean(cb) {
 }
 
 
-//  ======== BUILD HTML ========
-
-function buildHtml(cb) {
-  const steps = [
-    gulp.src("src/main.html"),
-    gulp_rename("index.html"),
-    gulp.dest(TARGET)
-  ];
-  pump(steps, cb);
-}
-
-
 //  ======== BUILD JS ========
 
 function lintJS() {
@@ -74,6 +61,12 @@ function buildJS() {
     input: "src/main.jsx",
     external: [ "lodash" ],
     plugins: [
+      rollupCopy({
+        targets: [
+          {src: "media/publish/**/*", dest: "dist"},
+          {src: "src/main.html", dest: "dist", rename: "index.html"}
+        ]
+      }),
       rollupCommonJS({
         include: "node_modules/**"
       }),
@@ -138,17 +131,6 @@ function lintCSS() {
       reporters: [{formatter: styleLintFormatter, console: true}]
     }));
 }
-
-//  ======== BUILD / COPY MEDIA ========
-
-function buildMedia(cb) {
-  const steps = [
-    gulp.src(["./media/publish/**/*"]),
-    gulp.dest(TARGET)
-  ];
-  pump(steps, cb);
-}
-
 
 //  ======== START WEB SERVER AND WATCH FOR CHANGES ========
 
