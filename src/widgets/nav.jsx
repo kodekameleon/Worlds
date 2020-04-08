@@ -1,5 +1,6 @@
 import {parse} from "querystringify";
 import * as _ from "lodash";
+import "./nav.css";
 
 export function NavList(props, children) {
   return (<ol class="navlist">{children}</ol>);

@@ -1,4 +1,5 @@
 import {svgns} from "../kameleon-jsx";
+import "./rough-paper.css";
 
 export function RoughPaper(props) {
   return (

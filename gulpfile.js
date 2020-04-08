@@ -3,8 +3,6 @@ const _ = require("lodash");
 const path = require("path");
 const gulp = require("gulp");
 const gulp_rename = require("gulp-rename");
-const gulp_postcss = require("gulp-postcss");
-const gulp_sourcemaps = require("gulp-sourcemaps");
 const gulp_eslint = require("gulp-eslint");
 const pump = require("pump");
 const spawn = require("cross-spawn");
@@ -14,8 +12,8 @@ const rollupBabel = require("rollup-plugin-babel");
 const rollupResolve = require("@rollup/plugin-node-resolve");
 const rollupCommonJS = require("@rollup/plugin-commonjs");
 const rollupInject = require("@rollup/plugin-inject");
+const rollupPostCSS = require("rollup-plugin-postcss");
 const postcssAssets = require("postcss-assets");
-const postcssImport = require("postcss-import");
 const postcssPrecss = require("precss");
 const postcssReporter = require("postcss-reporter");
 const autoprefixer = require("autoprefixer");
@@ -27,7 +25,7 @@ const TARGET = "dist";
 
 //  ======== PUBLIC TASKS ========
 
-const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildCSS, buildMedia, buildDoc);
+const build = gulp.series(buildHtml, lintJS, buildJS, lintCSS, buildMedia, buildDoc);
 
 /* eslint-disable no-undef */
 exports.build = build;
@@ -65,17 +63,6 @@ function buildHtml(cb) {
 //  ======== BUILD JS ========
 
 function lintJS() {
-/*
-  const steps = [
-    gulp.src(["src/ ** / * .jsx", "src/ * * / *.js"]),
-    gulp_eslint(),
-    gulp_eslint.formatEach("visualstudio"),
-    gulp_eslint.failAfterError()
-  ];
-  pump(steps, () => {console.log("done"); cb(); });
-*/
-
-
   return gulp.src(["src/**/*.jsx", "src/**/*.js"])
     .pipe(gulp_eslint())
     .pipe(gulp_eslint.formatEach("visualstudio"))
@@ -109,6 +96,19 @@ function buildJS() {
         ],
         exclude: ["node_modules/**"]
       }),
+      rollupPostCSS({
+        extract: true,
+        sourceMap: true,
+        plugins: [
+          postcssPrecss(),
+          autoprefixer(),
+          postcssAssets({
+            loadPaths: ["media/publish", "media/inline", "."],
+            relative: "media/publish"
+          }),
+          postcssReporter({clearReportedMessages: true})
+        ]
+      }),
       rollupInject({
         include: "**/*.js*",
         exclude: "node_modules/**",
@@ -138,28 +138,6 @@ function lintCSS() {
       reporters: [{formatter: styleLintFormatter, console: true}]
     }));
 }
-
-function buildCSS(cb) {
-  const steps = [
-    gulp.src(["./src/main.css"], {base: "./"}),
-    gulp_sourcemaps.init(),
-    gulp_postcss([
-      postcssImport({from: "./src/main.css"}),
-      postcssPrecss(),
-      autoprefixer(),
-      postcssAssets({
-        loadPaths: ["media/publish", "media/inline", "."],
-        relative: "media/publish"
-      }),
-      postcssReporter({clearReportedMessages: true})
-    ]),
-    gulp_rename("main.css"),
-    gulp_sourcemaps.write("."),
-    gulp.dest(TARGET)
-  ];
-  pump(steps, cb);
-}
-
 
 //  ======== BUILD / COPY MEDIA ========
 

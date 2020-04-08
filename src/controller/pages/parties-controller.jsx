@@ -2,6 +2,8 @@ import {RoughPaper} from "../../view/rough-paper";
 import {CharacterSheet} from "../components/character-sheet";
 import {Character} from "../../model";
 
+import "./parties-controller.css";
+
 const character = new Character();
 character.name = "Grimthorpe Firefingers";
 character.class = "Wizard";

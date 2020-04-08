@@ -1,5 +1,7 @@
 import {RoughPaper} from "../../view/rough-paper";
 
+import "./cards-controller.css";
+
 export function CardsController() {
   return (
     <div id="cards-controller">
