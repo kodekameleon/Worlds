@@ -3,13 +3,6 @@
 @import "css/variables.css";
 @import "css/reset.css";
 @import "css/common.css";
-@import "widgets/index.css";
-@import "controller/pages/worldmap-controller.css";
-@import "controller/pages/encounters-controller.css";
-@import "controller/pages/cards-controller.css";
-@import "controller/pages/parties-controller.css";
-@import "view/index.css";
-@import "controller/components/index.css";
 
 .header {
   display: flex;

@@ -5,6 +5,7 @@ import {WorldMapController} from "./controller/pages/worldmap-controller";
 import {EncountersController} from "./controller/pages/encounters-controller";
 import {CardsController} from "./controller/pages/cards-controller";
 import {PartiesController} from "./controller/pages/parties-controller";
+import "./main.css";
 
 window.addEventListener("load", main);
 

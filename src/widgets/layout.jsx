@@ -1,3 +1,4 @@
+import "./layout.css";
 
 export function Table(props, children) {
   return (

@@ -1,4 +1,5 @@
 import {svgns} from "../kameleon-jsx";
+import "./scrollpad.css";
 
 export function ScrollPad() {
   return (
