@@ -54,19 +54,3 @@
     z-index: 2;
   }
 }
-
-.grab-handle {
-  position: relative;
-  height: 0.8em;
-
-  &::before {
-    font-family: "worlds-icons"; /* stylelint-disable-line */
-    position: absolute;
-    content: "\e002";
-    top: 0;
-    right: 0;
-    font-size: 0.8em;
-    line-height: 1;
-    opacity: 0.6;
-  }
-}

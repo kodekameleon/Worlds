@@ -22,7 +22,7 @@
   }
 
   &.viewmode {
-    .grab-handle {
+    .drag-handle {
       display: none;
     }
   }

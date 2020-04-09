@@ -1,63 +1,11 @@
 import {Col, Row, Table} from "../../widgets/layout";
 import {CharacterStatName, CharacterStatShort, CurrencyUnit, DamageType, SkillName} from "../../constants";
 import {Utils} from "../../utils";
-import {CharacterStatsView} from "../../view/character-sheet";
-import {Icon} from "../../widgets";
-import "./character-sheet.css";
+import "./character-sheet-view.css";
 
-function doChangeStats(character, stats) {
-  console.log(stats);
-  for (const stat in stats) {
-    console.log(stat);
-  }
-}
+//TODO: BREAK THIS DOWN INTO MANAGEABLE CHUNKS
 
-export function CharacterSheet(props) {
-  const char = props.character;
-  const viewState = {
-    editing: false
-  };
-  const rootElement = {};
-
-  return (
-    <div ref={rootElement} class="character-sheet viewmode">
-      <Row class="row1" center>
-        <Icon class="edit-button" hoverEffect={"crescent-moon"} on:click={onLockClick}/>
-        <CharacterInfoBlock character={char} viewState={viewState}/>
-      </Row>
-      <div class="row2">
-        <Col>
-          <CharacterStatsView character={char} viewState={viewState} onChangeStats={doChangeStats}/>
-        </Col>
-        <Col>
-          <SavingThrowBlock character={char} viewState={viewState}/>
-          <SkillBlock character={char} viewState={viewState}/>
-        </Col>
-        <Col>
-          <Row>
-            <CombatBlock character={char} viewState={viewState}/>
-            <MeleeBlock character={char} viewState={viewState}/>
-            <ProficiencyBlock character={char} viewState={viewState}/>
-            <PossessionsBlock character={char} viewState={viewState}/>
-          </Row>
-        </Col>
-      </div>
-    </div>
-  );
-
-  function onLockClick() {
-    viewState.editing = !viewState.editing;
-    if (viewState.editing) {
-      rootElement.element.classList.add("editmode");
-      rootElement.element.classList.remove("viewmode");
-    } else {
-      rootElement.element.classList.add("viewmode");
-      rootElement.element.classList.remove("editmode");
-    }
-  }
-}
-
-function CharacterInfoBlock(props) {
+export function CharacterInfoBlock(props) {
   const char = props.character;
 
   return (
@@ -99,7 +47,7 @@ function CharacterInfoBlock(props) {
   );
 }
 
-function SavingThrowBlock() {
+export function SavingThrowBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
       <SavingThrowStat name={CharacterStatName.STRENGTH} value={2} proficient={false}/>
@@ -113,7 +61,7 @@ function SavingThrowBlock() {
   );
 }
 
-function SkillBlock() {
+export function SkillBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
       <SavingThrowStat name={SkillName.ACROBATICS} value={2} proficient={false} attribute={CharacterStatShort.DEXTERITY}/>
@@ -141,7 +89,7 @@ function SkillBlock() {
   );
 }
 
-function SavingThrowStat(props) {
+export function SavingThrowStat(props) {
   return (
     <Row class="saving-throw-stat" baseline>
       <div class={["check", props.proficient && "checked"]}/>
@@ -152,7 +100,7 @@ function SavingThrowStat(props) {
   );
 }
 
-function CombatBlock() {
+export function CombatBlock() {
   return (
     <Col class="combat-block">
       <Row even>
@@ -198,7 +146,7 @@ function CombatBlock() {
   );
 }
 
-function MeleeBlock() {
+export function MeleeBlock() {
   return (
     <Col class="attacks-block boxed spaced">
       <Table>
@@ -211,7 +159,7 @@ function MeleeBlock() {
   );
 }
 
-function MeleeAttack(props) {
+export function MeleeAttack(props) {
   return (
     <Row>
       <div class="name">{props.name}</div>
@@ -222,7 +170,7 @@ function MeleeAttack(props) {
   );
 }
 
-function ProficiencyBlock() {
+export function ProficiencyBlock() {
   return (
     <Col class="attacks-block boxed spaced">
       <div/>
@@ -231,7 +179,7 @@ function ProficiencyBlock() {
   );
 }
 
-function PossessionsBlock() {
+export function PossessionsBlock() {
   return (
     <Col class="attacks-block boxed spaced">
       <div>
@@ -247,7 +195,7 @@ function PossessionsBlock() {
   );
 }
 
-function MoneyBlock(props) {
+export function MoneyBlock(props) {
   return (
     <Col class="money-block boxed spaced">
       <div className="value">{props.amount}</div>

@@ -1,8 +1,7 @@
 import {Col, Row} from "../../widgets/layout";
 import {CharacterStatName} from "../../constants";
 import {Utils} from "../../utils";
-
-import "./character-sheet.css";
+import {DragHandle} from "../../widgets";
 
 export function CharacterStatsView(baseProps) {
   const char = baseProps.character;
@@ -27,7 +26,7 @@ export function CharacterStatsView(baseProps) {
       <Col class="character-stat boxed padded spaced" center
            on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
         <Row class="value-container" center draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
-          <div class="grab-handle"/>
+          <DragHandle/>
           <div class="value">
             <div class="value-in-motion">
               {props.value}
@@ -60,9 +59,6 @@ export function CharacterStatsView(baseProps) {
       );
       valueElement.parentElement.insertBefore(img, valueElement.nextSibling);
       const iebr = img.getBoundingClientRect();
-      console.log(iebr);
-      console.log((vebr.width - iebr.width) / 2);
-      console.log((vebr.height - iebr.height) / 2);
       ev.dataTransfer.setDragImage(img,
         ev.clientX - valueElement.getBoundingClientRect().left + (iebr.width - vebr.width) / 2,
         ev.clientY - valueElement.getBoundingClientRect().top + (iebr.height - vebr.height) / 2);
