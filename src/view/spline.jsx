@@ -1,6 +1,7 @@
 import {closedSpline, openSpline} from "../maths/spline";
 import {svgns} from "../kameleon-jsx";
 import {PointType} from "../maths";
+import "./spline.css";
 
 /**
  * @namespace View.Spline

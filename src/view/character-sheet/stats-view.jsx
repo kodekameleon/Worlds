@@ -2,6 +2,8 @@ import {Col, Row} from "../../widgets/layout";
 import {CharacterStatName} from "../../constants";
 import {Utils} from "../../utils";
 
+import "./character-sheet.css";
+
 export function CharacterStatsView(baseProps) {
   const char = baseProps.character;
   let dragOriginEl;

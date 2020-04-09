@@ -3,6 +3,8 @@ import {PointsInputMethod} from "../input-methods/points-input";
 import {Grid, GridTypes} from "../../view/grid";
 import {ScrollPad, Compass, Zoom} from "../../widgets";
 
+import "./worldmap-controller.css";
+
 export function WorldMapController() {
   const parentdiv = (
     <div id="worldmap-controller">

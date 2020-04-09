@@ -3,6 +3,8 @@ import {CharacterStatName, CharacterStatShort, CurrencyUnit, DamageType, SkillNa
 import {Utils} from "../../utils";
 import {CharacterStatsView} from "../../view/character-sheet";
 
+import "./character-sheet.css";
+
 function doChangeStats(character, stats) {
   console.log(stats);
   for (const stat in stats) {

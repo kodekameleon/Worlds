@@ -1,4 +1,5 @@
 import {svgns} from "../kameleon-jsx";
+import "./zoom.css";
 
 export function Zoom() {
   const [a, b] = ["a", "b"];

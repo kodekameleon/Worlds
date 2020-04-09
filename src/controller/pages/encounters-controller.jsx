@@ -1,4 +1,6 @@
 
+import "./encounters-controller.css";
+
 const MONSTER_NAME="Apprentice Wizard";
 const MONSTER_TYPE="Medium humanoid (any race), any alignment";
 const MONSTER_AC="10";

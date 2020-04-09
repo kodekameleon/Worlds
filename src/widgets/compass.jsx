@@ -1,4 +1,5 @@
 import {svgns} from "../kameleon-jsx";
+import "./compass.css";
 
 export function Compass() {
   return (
