@@ -1,6 +1,9 @@
 import {ActionHandler} from "../../src/actions/action-handler";
-import {expect} from "chai";
+import spies from "chai-spies";
 import {UndoStack} from "../../src/actions/undo-stack";
+import chai, {expect} from "chai";
+
+chai.use(spies);
 
 describe("ActionHandler", () => {
   let undoStack;
@@ -28,14 +31,6 @@ describe("ActionHandler", () => {
     const handler = actionHandler.do((...args) => { params = args; });
     handler("event1", "event2");
     expect(params).to.deep.equal([{}, "event1", "event2"]);
-  });
-
-  it("should pass do and event parameters to the action", () => {
-    let params;
-    const actionHandler = new ActionHandler({}, undoStack);
-    const handler = actionHandler.do((...args) => { params = args; }, "do1", "do2");
-    handler("event1", "event2");
-    expect(params).to.deep.equal([{}, "do1", "do2", "event1", "event2"]);
   });
 
   it("should pass do and event parameters to the action", () => {
@@ -87,5 +82,61 @@ describe("ActionHandler", () => {
     const handler = actionHandler.do(() => { return {a: true}; });
     handler();
     expect(undoStack.undoLength).to.equal(1);
+  });
+
+  it("should create an undo function that calls UndoStack.undo", () => {
+    const actionHandler = new ActionHandler({}, undoStack);
+    const undo = actionHandler.undo();
+
+    expect(typeof undo).to.equal("function");
+
+    const spy = chai.spy.on(undoStack, "undo");
+
+    undo();
+
+    expect(spy).to.have.been.called.once;
+  });
+
+  it("should create an undo function that calls UndoStack.undo, and renders", () => {
+    let rendered;
+    const actionHandler = new ActionHandler({}, undoStack, () => { rendered = true; });
+    const undo = actionHandler.undo();
+
+    expect(typeof undo).to.equal("function");
+
+    const spy = chai.spy.on(undoStack, "undo", () => true);
+
+    undo();
+
+    expect(spy).to.have.been.called.once;
+    expect(rendered).to.equal(true);
+  });
+
+  it("should create a redo function that calls UndoStack.redo", () => {
+    const actionHandler = new ActionHandler({}, undoStack);
+    const redo = actionHandler.redo();
+
+    expect(typeof redo).to.equal("function");
+
+    const spy = chai.spy.on(undoStack, "redo");
+
+    redo();
+
+    expect(spy).to.have.been.called.once;
+  });
+
+  it("should create a redo function that calls UndoStack.redo, and renders", () => {
+    let rendered;
+    const actionHandler = new ActionHandler({}, undoStack, () => { rendered = true; });
+    const redo = actionHandler.redo();
+
+    expect(typeof redo).to.equal("function");
+
+    const spy = chai.spy.on(undoStack, "redo", () => true);
+
+    redo();
+
+    expect(spy).to.have.been.called.once;
+    expect(rendered).to.equal(true);
   });
 });

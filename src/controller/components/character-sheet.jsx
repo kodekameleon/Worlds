@@ -30,7 +30,11 @@ export function CharacterSheet(props) {
     const el = (
       <div class={["character-sheet", viewState.editing ? "editmode" : "viewmode"]}>
         <Row class="row1" center>
-          <Icon class="edit-button" hoverEffect={"crescent-moon"} on:click={onLockClick}/>
+          <Row class="tools">
+            <Icon glyph="&#xe003;" hoverEffect="crescent-moon" on:click={actionHandler.undo()} enabled={undoStack.canUndo}/>
+            <Icon glyph="&#xe004;" hoverEffect="crescent-moon" on:click={actionHandler.redo()} enabled={undoStack.canRedo}/>
+            <Icon class="edit-button" hoverEffect="crescent-moon" on:click={onLockClick}/>
+          </Row>
           <CharacterInfoBlock character={character} viewState={viewState}/>
         </Row>
         <div class="row2">
