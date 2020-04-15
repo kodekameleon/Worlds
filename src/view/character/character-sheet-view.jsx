@@ -1,6 +1,7 @@
-import {Col, Row, Table} from "../../widgets/layout";
-import {CharacterStatName, CharacterStatShort, CurrencyUnit, DamageType, SkillName} from "../../constants";
+import {messages} from "./messages";
 import {Utils} from "../../utils";
+import {CharacterStatProp, CurrencyUnit, DamageProp, SkillProp} from "../../constants";
+import {Col, Row, Table} from "../../widgets/layout";
 import "./character-sheet-view.css";
 
 //TODO: BREAK THIS DOWN INTO MANAGEABLE CHUNKS
@@ -50,12 +51,12 @@ export function CharacterInfoBlock(props) {
 export function SavingThrowBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
-      <SavingThrowStat name={CharacterStatName.STRENGTH} value={2} proficient={false}/>
-      <SavingThrowStat name={CharacterStatName.DEXTERITY} value={2} proficient={false}/>
-      <SavingThrowStat name={CharacterStatName.CONSTITUTION} value={1} proficient={false}/>
-      <SavingThrowStat name={CharacterStatName.INTELLIGENCE} value={2} proficient/>
-      <SavingThrowStat name={CharacterStatName.WISDOM} value={2} proficient/>
-      <SavingThrowStat name={CharacterStatName.CHARISMA} value={-1} proficient={false}/>
+      <SavingThrowStat stat={CharacterStatProp.STRENGTH} value={2} proficient={false}/>
+      <SavingThrowStat stat={CharacterStatProp.DEXTERITY} value={2} proficient={false}/>
+      <SavingThrowStat stat={CharacterStatProp.CONSTITUTION} value={1} proficient={false}/>
+      <SavingThrowStat stat={CharacterStatProp.INTELLIGENCE} value={2} proficient/>
+      <SavingThrowStat stat={CharacterStatProp.WISDOM} value={2} proficient/>
+      <SavingThrowStat stat={CharacterStatProp.CHARISMA} value={-1} proficient={false}/>
       <label>Saving Throws</label>
     </Col>
   );
@@ -64,26 +65,26 @@ export function SavingThrowBlock() {
 export function SkillBlock() {
   return (
     <Col className={"saving-throw-block boxed padded spaced"}>
-      <SavingThrowStat name={SkillName.ACROBATICS} value={2} proficient={false} attribute={CharacterStatShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.ANIMAL_HANDLING} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.ARCANA} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.ATHLETICS} value={2} proficient={false} attribute={CharacterStatShort.STRENGTH}/>
-      <SavingThrowStat name={SkillName.DECEPTION} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.HISTORY} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.INSIGHT} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.INTIMIDATION} value={1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.INVESTIGATION} value={3} proficient={false}
-                       attribute={CharacterStatShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.MEDICINE} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.NATURE} value={3} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.PERCEPTION} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
-      <SavingThrowStat name={SkillName.PERFORMANCE} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.PERSUASION} value={-1} proficient={false} attribute={CharacterStatShort.CHARISMA}/>
-      <SavingThrowStat name={SkillName.RELIGION} value={18} proficient={false} attribute={CharacterStatShort.INTELLIGENCE}/>
-      <SavingThrowStat name={SkillName.SLEIGHT_OF_HAND} value={2} proficient={false}
-                       attribute={CharacterStatShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.STEALTH} value={2} proficient={false} attribute={CharacterStatShort.DEXTERITY}/>
-      <SavingThrowStat name={SkillName.SURVIVAL} value={0} proficient={false} attribute={CharacterStatShort.WISDOM}/>
+      <SavingThrowStat save={SkillProp.ACROBATICS} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
+      <SavingThrowStat save={SkillProp.ANIMAL_HANDLING} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
+      <SavingThrowStat save={SkillProp.ARCANA} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
+      <SavingThrowStat save={SkillProp.ATHLETICS} value={2} proficient={false} stat={CharacterStatProp.STRENGTH}/>
+      <SavingThrowStat save={SkillProp.DECEPTION} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
+      <SavingThrowStat save={SkillProp.HISTORY} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
+      <SavingThrowStat save={SkillProp.INSIGHT} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
+      <SavingThrowStat save={SkillProp.INTIMIDATION} value={1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
+      <SavingThrowStat save={SkillProp.INVESTIGATION} value={3} proficient={true}
+                       stat={CharacterStatProp.INTELLIGENCE}/>
+      <SavingThrowStat save={SkillProp.MEDICINE} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
+      <SavingThrowStat save={SkillProp.NATURE} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
+      <SavingThrowStat save={SkillProp.PERCEPTION} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
+      <SavingThrowStat save={SkillProp.PERFORMANCE} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
+      <SavingThrowStat save={SkillProp.PERSUASION} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
+      <SavingThrowStat save={SkillProp.RELIGION} value={18} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
+      <SavingThrowStat save={SkillProp.SLEIGHT_OF_HAND} value={2} proficient={false}
+                       stat={CharacterStatProp.DEXTERITY}/>
+      <SavingThrowStat save={SkillProp.STEALTH} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
+      <SavingThrowStat save={SkillProp.SURVIVAL} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
       <label>Skill</label>
     </Col>
   );
@@ -94,8 +95,8 @@ export function SavingThrowStat(props) {
     <Row class="saving-throw-stat" baseline>
       <div class={["check", props.proficient && "checked"]}/>
       <div class="value">{Utils.signed(props.value)}</div>
-      <div class="name">{props.name}</div>
-      {props.attribute && <div class="attr">{`(${props.attribute})`}</div>}
+      <div class="name">{messages[props.save || props.stat]}</div>
+      {props.save && <div class="attr">{`(${messages.short[props.stat]})`}</div>}
     </Row>
   );
 }
@@ -150,9 +151,9 @@ export function MeleeBlock() {
   return (
     <Col class="attacks-block boxed spaced">
       <Table>
-        <MeleeAttack name={"Shortsword"} attackBonus={5} damage={"1d6+2"} damageType={DamageType.PIERCING}/>
-        <MeleeAttack name={"Shortsword (offhand)"} attackBonus={5} damage={"1d6"} damageType={DamageType.PIERCING}/>
-        <MeleeAttack name={"Firebolt"} attackBonus={5} damage={"1d10"} damageType={DamageType.FIRE}/>
+        <MeleeAttack name={"Shortsword"} attackBonus={5} damage={"1d6+2"} damageType={DamageProp.PIERCING}/>
+        <MeleeAttack name={"Shortsword (offhand)"} attackBonus={5} damage={"1d6"} damageType={DamageProp.PIERCING}/>
+        <MeleeAttack name={"Firebolt"} attackBonus={5} damage={"1d10"} damageType={DamageProp.FIRE}/>
       </Table>
       <label>Attacks & Spellcasting</label>
     </Col>

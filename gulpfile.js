@@ -52,7 +52,7 @@ function clean(cb) {
 function lintJS() {
   return gulp.src(["src/**/*.jsx", "src/**/*.js"])
     .pipe(gulp_eslint())
-    .pipe(gulp_eslint.formatEach("visualstudio"))
+    .pipe(gulp_eslint.format(eslintFormatter))
     .pipe(gulp_eslint.failAfterError());
 }
 
@@ -148,12 +148,21 @@ function buildDoc(cb) {
 
 
 //  ======== HELPERS ========
+const sev = ["info", "warning", "error"];
+const eslintFormatter = (results) => {
+  const msgs = results.reduce((arr, v) => v.messages.length
+    ? v.messages.reduce((a, m) => [...a, `${v.filePath}(${m.line}, ${m.column}): ${sev[m.severity]}: ${m.message}`], arr)
+    : arr, []);
+  return msgs.length === 0 ? undefined : "\n" + msgs.join("\n");
+};
 
-const styleLintFormatter = results =>
-  _.flatMap(results, result =>
+const styleLintFormatter = results => {
+  const msgs = _.flatMap(results, result =>
     _.map(
       result.warnings,
       warning =>
         `${result.source}(${warning.line},${warning.column}): ${warning.severity}: ${warning.text}`
     )
-  ).join("\n");
+  );
+  return msgs.length === 0 ? "" : "\n" + msgs.joing("\n");
+}

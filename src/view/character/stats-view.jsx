@@ -1,18 +1,19 @@
-import {Col, Row} from "../../widgets/layout";
-import {CharacterStatName} from "../../constants";
-import {Utils} from "../../utils";
+import {CharacterStatProp} from "../../constants";
 import {DragHandle} from "../../widgets";
+import {messages} from "./messages";
+import {Utils} from "../../utils";
+import {Col, Row} from "../../widgets/layout";
 
 export function CharacterStatsView(baseProps) {
   const char = baseProps.character;
-  let dragOriginEl;
+  let dragOriginEl, dragOriginStat;
 
-  const strEl = <CharacterStat name={CharacterStatName.STRENGTH} value={char.strength} bonus={char.bonus.strength}/>;
-  const dexEl = <CharacterStat name={CharacterStatName.DEXTERITY} value={char.dexterity} bonus={char.bonus.dexterity}/>;
-  const conEl = <CharacterStat name={CharacterStatName.CONSTITUTION} value={char.constitution} bonus={char.bonus.constitution}/>;
-  const intEl = <CharacterStat name={CharacterStatName.INTELLIGENCE} value={char.intelligence} bonus={char.bonus.intelligence}/>;
-  const wisEl = <CharacterStat name={CharacterStatName.WISDOM} value={char.wisdom} bonus={char.bonus.wisdom}/>;
-  const chaEl = <CharacterStat name={CharacterStatName.CHARISMA} value={char.charisma} bonus={char.bonus.charisma}/>;
+  const strEl = <CharacterStat stat={CharacterStatProp.STRENGTH}/>;
+  const dexEl = <CharacterStat stat={CharacterStatProp.DEXTERITY}/>;
+  const conEl = <CharacterStat stat={CharacterStatProp.CONSTITUTION}/>;
+  const intEl = <CharacterStat stat={CharacterStatProp.INTELLIGENCE}/>;
+  const wisEl = <CharacterStat stat={CharacterStatProp.WISDOM}/>;
+  const chaEl = <CharacterStat stat={CharacterStatProp.CHARISMA}/>;
 
   const statsEl = (
     <Col className="character-stat-block">
@@ -29,12 +30,12 @@ export function CharacterStatsView(baseProps) {
           <DragHandle/>
           <div class="value">
             <div class="value-in-motion">
-              {props.value}
+              {char[props.stat]}
             </div>
           </div>
         </Row>
-        <div class="hiviz">{Utils.signed(props.bonus)}</div>
-        <label>{props.name}</label>
+        <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
+        <label>{messages[props.stat]}</label>
       </Col>
     );
     return statEl;
@@ -47,14 +48,14 @@ export function CharacterStatsView(baseProps) {
       }
 
       // Set what is being dragged
-      ev.dataTransfer.setData("drag/CharacterStat", props.name);
+      ev.dataTransfer.setData("drag/CharacterStat", props.stat);
 
       // Create an image to drag
       const valueElement = statEl.querySelector(".value-container");
       const vebr = valueElement.getBoundingClientRect();
       const img = (
         <div class="drag-drop-container" style={`width: ${vebr.width}px`}>
-          <div class="value-container">{props.value}</div>
+          <div class="value-container">{char[props.stat]}</div>
         </div>
       );
       valueElement.parentElement.insertBefore(img, valueElement.nextSibling);
@@ -70,6 +71,7 @@ export function CharacterStatsView(baseProps) {
 
       // Remember the element that is the origin
       dragOriginEl = statEl;
+      dragOriginStat = props.stat;
     }
 
     function onDragEnd() {
@@ -88,12 +90,9 @@ export function CharacterStatsView(baseProps) {
       statEl.classList.remove("drag-hover");
       if (dragOriginEl !== statEl) {
         ev.preventDefault();
-        const origin = ev.dataTransfer.getData("drag/CharacterStat");
-        console.log(`Set stats: target: ${props.name} ${props.value}`);
-        console.log(`Set stats: origin: ${origin}`);
-        baseProps.onChangeStats(char, {
-          [props.name.toLowerCase()]: char[origin.toLowerCase()],
-          [origin.toLowerCase()]: props.value
+        baseProps.onChangeStats({
+          [props.stat]: char[dragOriginStat],
+          [dragOriginStat]: char[props.stat]
         });
       }
     }

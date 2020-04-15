@@ -49,12 +49,16 @@
       "error",
       {"allow": ["log"]}
     ],
-    "no-var": 2,
-    "prefer-const": 2,
+    "no-var": "error",
+    "prefer-const": "error",
+    "no-prototype-builtins": 0,
+    "sort-imports": ["error", {
+      "ignoreCase": true,
+      "memberSyntaxSortOrder": ["single", "multiple", "all", "none"]
+    }],
     "react/react-in-jsx-scope": 0,
     "react/no-unknown-property": 0,
     "react/prop-types": 0,
-    "react/jsx-key": 0,
-    "no-prototype-builtins": 0
+    "react/jsx-key": 0
   }
 }
