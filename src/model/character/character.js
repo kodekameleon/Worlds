@@ -1,6 +1,5 @@
-
-import {Language} from "../../utils";
 import {CharacterStats} from "./character-stats";
+import {Language} from "../../utils";
 
 export function Character() {
   const state = {};

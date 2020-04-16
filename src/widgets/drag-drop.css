@@ -1,0 +1,15 @@
+.drag-handle {
+  position: relative;
+  font-size: 0.8em;
+  height: 1em;
+
+  &::before {
+    font-family: "worlds-icons"; /* stylelint-disable-line */
+    position: absolute;
+    content: "\e002";
+    top: 0;
+    right: 0;
+    line-height: 1;
+    opacity: 0.6;
+  }
+}

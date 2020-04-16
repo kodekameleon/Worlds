@@ -18,6 +18,11 @@
   transition: background-color var(--transition-fast), color var(--transition-fast);
   color: var(--text-color);
 
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
   &:hover {
     z-index: 1;
     color: var(--text-color-dark);
@@ -31,6 +36,10 @@
 
   &:hover::before {
     transform: scale(1.1);
+  }
+
+  &[glyph]::before {
+    content: attr(glyph);
   }
 
   &.crescent-moon::after {
@@ -52,21 +61,5 @@
     opacity: 1;
     transform: rotate(0deg);
     z-index: 2;
-  }
-}
-
-.grab-handle {
-  position: relative;
-  height: 0.8em;
-
-  &::before {
-    font-family: "worlds-icons"; /* stylelint-disable-line */
-    position: absolute;
-    content: "\e002";
-    top: 0;
-    right: 0;
-    font-size: 0.8em;
-    line-height: 1;
-    opacity: 0.6;
   }
 }

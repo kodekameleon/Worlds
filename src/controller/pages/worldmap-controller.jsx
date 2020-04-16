@@ -1,7 +1,7 @@
-import {svgns} from "../../kameleon-jsx";
 import {PointsInputMethod} from "../input-methods/points-input";
+import {svgns} from "../../kameleon-jsx";
+import {Compass, ScrollPad, Zoom} from "../../widgets";
 import {Grid, GridTypes} from "../../view/grid";
-import {ScrollPad, Compass, Zoom} from "../../widgets";
 
 import "./worldmap-controller.css";
 

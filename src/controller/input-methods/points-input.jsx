@@ -1,5 +1,5 @@
-import {Spline} from "../../view/spline";
 import {appendJSX} from "../../kameleon-jsx";
+import {Spline} from "../../view/spline";
 import {Point, PointType} from "../../maths";
 
 export class PointsInputMethod {

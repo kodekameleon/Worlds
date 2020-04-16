@@ -1,6 +1,6 @@
-import {RoughPaper} from "../../view/rough-paper";
-import {CharacterSheet} from "../components/character-sheet";
 import {Character} from "../../model";
+import {CharacterSheet} from "../components/character-sheet";
+import {RoughPaper} from "../../view/rough-paper";
 
 import "./parties-controller.css";
 

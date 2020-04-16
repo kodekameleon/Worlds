@@ -1,17 +1,15 @@
-import {renderApp, Route} from "./kameleon-jsx";
-import {Logo} from "./widgets/logo";
-import {NavItem, NavList} from "./widgets";
-import {WorldMapController} from "./controller/pages/worldmap-controller";
-import {EncountersController} from "./controller/pages/encounters-controller";
 import {CardsController} from "./controller/pages/cards-controller";
+import {EncountersController} from "./controller/pages/encounters-controller";
+import {Logo} from "./widgets/logo";
 import {PartiesController} from "./controller/pages/parties-controller";
+import {WorldMapController} from "./controller/pages/worldmap-controller";
+import {NavItem, NavList} from "./widgets";
+import {renderApp, Route} from "./kameleon-jsx";
 import "./main.css";
 
 window.addEventListener("load", main);
 
 function main() {
-  console.log("starting!");
-
   // Send pointer unlock messages back to the element that has the lock
   let lockedElement;
   document.addEventListener("pointerlockchange", () => {

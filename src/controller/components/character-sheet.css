@@ -5,10 +5,13 @@
   border-color: var(--border-color);
   font-size: 1rem;
 
-  .edit-button {
+  .tools {
+    margin-right: 1em;
+  }
+
+  .icon {
     width: 2em;
     height: 2em;
-    margin-right: 1em;
   }
 
   .edit-button::before {
@@ -22,7 +25,7 @@
   }
 
   &.viewmode {
-    .grab-handle {
+    .drag-handle {
       display: none;
     }
   }

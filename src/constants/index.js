@@ -1,3 +1,3 @@
 
-export * from "./character.js";
+export * from "./character-consts.js";
 export * from "./currency.js";
