@@ -1,12 +1,4 @@
 
-export const CharacterStatProp = {
-  STRENGTH: "strength",
-  DEXTERITY: "dexterity",
-  CONSTITUTION: "constitution",
-  INTELLIGENCE: "intelligence",
-  WISDOM: "wisdom",
-  CHARISMA: "charisma"
-};
 
 export const SkillProp = {
   ACROBATICS: "acrobatics",

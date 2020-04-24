@@ -1,8 +1,9 @@
-import {CharacterStatProp} from "../../constants";
+import {CharacterStatProp} from "../../model/character/stats";
 import {DragHandle} from "../../widgets";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
-import {Col, Row} from "../../widgets/layout";
+import {Col, PopupTip, Row} from "../../widgets";
+import "./stats-view.css";
 
 export function CharacterStatsView(baseProps) {
   const char = baseProps.character;
@@ -36,6 +37,8 @@ export function CharacterStatsView(baseProps) {
         </Row>
         <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
         <label>{messages[props.stat]}</label>
+
+        <StatInfo stat={props.stat}/>
       </Col>
     );
     return statEl;
@@ -116,6 +119,14 @@ export function CharacterStatsView(baseProps) {
       statEl.querySelector(".value-in-motion").style.top = null;
       dragOriginEl.querySelector(".value-in-motion").style.top = null;
     }
+  }
+
+  function StatInfo(props) {
+    return (
+      <PopupTip class="stat-info" right>
+        {char.features[props.stat].sources.map((s) => <div>{`${s.source.name}: ${s.value}`}</div>)}
+      </PopupTip>
+    );
   }
 }
 

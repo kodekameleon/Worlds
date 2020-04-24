@@ -1,6 +1,7 @@
 import {ActionHandler} from "../../actions/action-handler";
 import {doChangeStats} from "../../actions/character-actions";
 import {Icon} from "../../widgets";
+import {messages} from "../messages";
 import {UndoStack} from "../../actions/undo-stack";
 import {
   CharacterInfoBlock,
@@ -31,9 +32,9 @@ export function CharacterSheet(props) {
       <div class={["character-sheet", viewState.editing ? "editmode" : "viewmode"]}>
         <Row class="row1" center>
           <Row class="tools">
-            <Icon glyph="&#xe003;" hoverEffect="crescent-moon" on:click={actionHandler.undo()} enabled={undoStack.canUndo}/>
-            <Icon glyph="&#xe004;" hoverEffect="crescent-moon" on:click={actionHandler.redo()} enabled={undoStack.canRedo}/>
-            <Icon class="edit-button" hoverEffect="crescent-moon" on:click={onLockClick}/>
+            <Icon glyph="&#xe003;" hoverEffect="crescent-moon" on:click={actionHandler.undo()} enabled={undoStack.canUndo} tip={messages.tips.undo}/>
+            <Icon glyph="&#xe004;" hoverEffect="crescent-moon" on:click={actionHandler.redo()} enabled={undoStack.canRedo} tip={messages.tips.redo}/>
+            <Icon class="edit-button" hoverEffect="crescent-moon" on:click={onLockClick} tip={messages.tips.lockCharacter}/>
           </Row>
           <CharacterInfoBlock character={character} viewState={viewState}/>
         </Row>

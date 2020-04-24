@@ -2,12 +2,11 @@
 
 /* eslint-disable no-undef */
 require("mocha");
-//require("dotenv/config");
 
 // Set up chai extensions
 const chai = require("chai");
 chai.config.includeStack = true;
 
-chai.use(require("sinon-chai"));
 chai.use(require("chai-as-promised"));
+chai.use(require("deep-equal-in-any-order"));
 /* eslint-enable no-undef */

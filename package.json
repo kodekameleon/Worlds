@@ -38,6 +38,7 @@
     "chai-as-promised": "^7.1.1",
     "chai-spies": "^1.0.0",
     "cross-spawn": "^6.0.5",
+    "deep-equal-in-any-order": "^1.0.27",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
     "gulp": "^4.0.2",
@@ -59,7 +60,6 @@
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-postcss": "^2.5.0",
     "sinon": "^7.5.0",
-    "sinon-chai": "^3.5.0",
     "stylelint": "^10.1.0",
     "stylelint-config-standard": "^18.3.0"
   },

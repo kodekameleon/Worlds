@@ -84,7 +84,7 @@ export function createJSX(tagOrFn, props, ...children) {
   } else if (typeof tagOrFn === "function") {
     // If custom elements pass the children through on a subnode they can get
     // nested inside arrays, so lets get rid of that nesting here.
-    // TODO: WOULD flat() would here ?
+    // TODO: WOULD flat() work here ?
     while (children.length === 1 && Array.isArray(children[0])) {
       children = children[0];
     }

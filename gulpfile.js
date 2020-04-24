@@ -164,5 +164,5 @@ const styleLintFormatter = results => {
         `${result.source}(${warning.line},${warning.column}): ${warning.severity}: ${warning.text}`
     )
   );
-  return msgs.length === 0 ? "" : "\n" + msgs.joing("\n");
+  return msgs.length === 0 ? "" : "\n" + msgs.join("\n");
 }

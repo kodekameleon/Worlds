@@ -18,11 +18,6 @@
   transition: background-color var(--transition-fast), color var(--transition-fast);
   color: var(--text-color);
 
-  &.disabled {
-    pointer-events: none;
-    opacity: 0.6;
-  }
-
   &:hover {
     z-index: 1;
     color: var(--text-color-dark);
@@ -34,7 +29,12 @@
     transition: transform var(--transition-fast);
   }
 
-  &:hover::before {
+  &.disabled::before {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  &:not(.disabled):hover::before {
     transform: scale(1.1);
   }
 
@@ -42,7 +42,7 @@
     content: attr(glyph);
   }
 
-  &.crescent-moon::after {
+  &.crescent-moon:not(.disabled)::after {
     pointer-events: none;
     position: absolute;
     width: 100%;

@@ -1,5 +1,6 @@
 
-import {CharacterStatProp, DamageProp, SkillProp} from "../../constants";
+import {CharacterStatProp} from "../../model/character/stats";
+import {DamageProp, SkillProp} from "../../constants";
 
 export const messages = {
   [CharacterStatProp.STRENGTH]: "Strength",

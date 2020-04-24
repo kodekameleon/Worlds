@@ -1,3 +1,3 @@
 
-export {Character, CharacterStats} from "./character";
+export {Character} from "./character";
 

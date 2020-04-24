@@ -1,7 +1,8 @@
+import {CharacterStatProp} from "../../model/character/stats";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
-import {CharacterStatProp, CurrencyUnit, DamageProp, SkillProp} from "../../constants";
 import {Col, Row, Table} from "../../widgets/layout";
+import {CurrencyUnit, DamageProp, SkillProp} from "../../constants";
 import "./character-sheet-view.css";
 
 //TODO: BREAK THIS DOWN INTO MANAGEABLE CHUNKS
