@@ -1,5 +1,4 @@
 import {getNamespaceUri} from "./namespaces";
-import * as _ from "lodash";
 
 /**
  * Create a thing for JSX
@@ -78,9 +77,9 @@ export function createJSX(tagOrFn, srcProps, ...children) {
           break;
 
         default:
-          // A custom atribute, custom attributes are only applied when they are provided in the
+          // A custom attribute, custom attributes are only applied when they are provided in the
           // source props, not when they are provided in the delegated props.
-          if (srcProps.hasOwnProperty(key)) {
+          if (srcProps.hasOwnProperty(key) && srcProps[key] !== undefined) {
             el.setAttribute(key, props[key]);
           }
           break;
@@ -127,7 +126,7 @@ export function appendJSX(el, child) {
     appendJSX(el, child());
   } else if (typeof child === "object" && child?.tagName === "FRAGMENT") {
     // Strip out fragments and just add the children, reduce the childnodes into an array
-    appendJSX(el, _.reduce(child.childNodes, (l, v) => [...l, v], []));
+    appendJSX(el, [...child.childNodes].reduce((l, v) => [...l, v], []));
   } else if (child !== undefined && child !== null && child !== false) {
     el.append(child);
   }

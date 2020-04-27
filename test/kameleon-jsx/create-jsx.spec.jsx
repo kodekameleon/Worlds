@@ -56,6 +56,11 @@ describe("CreateJSX:", () => {
     expect(el.outerHTML).to.equal("<div custom-prop=\"a-custom-prop\"></div>");
   });
 
+  it("should create an element ignoring undefined custom properties", () => {
+    const el = (<div custom-prop={undefined}/>);
+    expect(el.outerHTML).to.equal("<div></div>");
+  });
+
   it("should create an element with delegated props using class", () => {
     const el = (<div props={{class: "abc"}}>Hello World!</div>);
     expect(el.outerHTML).to.equal("<div class=\"abc\">Hello World!</div>");
