@@ -1,8 +1,8 @@
 import {CharacterStatProp} from "../../model/character/stats";
-import {DragHandle} from "../../widgets";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
 import {Col, PopupTip, Row} from "../../widgets";
+import {DragHandle, DropTarget} from "../../widgets";
 import "./stats-view.css";
 
 export function CharacterStatsView(baseProps) {
@@ -26,25 +26,31 @@ export function CharacterStatsView(baseProps) {
   function CharacterStat(props) {
     const statInfo = char.features[props.stat];
     const statEl = (
-      <Col class={["character-stat boxed padded spaced", statInfo.available && "attention"]} center
-           on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
-        <Row class="value-container" center draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
-          <DragHandle/>
-          <div class="value">
-            <div class="value-in-motion">
-              {char[props.stat]}
-            </div>
+      <DropTarget class="spaced"
+        canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
+        <Col class={["character-stat boxed padded", statInfo.available && "attention"]} center>
+          <div class="draggable" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+            <Row class="value-container" center>
+              <DragHandle/>
+              <div class="value">
+                <div class="value-in-motion">
+                  {char[props.stat]}
+                </div>
+              </div>
+            </Row>
           </div>
-        </Row>
-        <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
-        <label>{messages[props.stat]}</label>
+          <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
+          <label>{messages[props.stat]}</label>
 
-        <StatInfo stat={props.stat}/>
-      </Col>
+          <StatInfo stat={props.stat}/>
+        </Col>
+      </DropTarget>
     );
     return statEl;
 
     function onDragStart(ev) {
+      console.log("onDragStart");
+
       // Cancel the drag if we are not in editing mode.
       if (!baseProps.viewState.editing) {
         ev.preventDefault();
@@ -84,38 +90,26 @@ export function CharacterStatsView(baseProps) {
       dragOriginEl = undefined;
     }
 
-    function onDragOver(ev) {
-      if (dragOriginEl !== statEl) {
-        ev.preventDefault();
-      }
+    function canDrop() {
+      return dragOriginEl !== statEl;
     }
 
-    function onDrop(ev) {
-      statEl.classList.remove("drag-hover");
-      if (dragOriginEl !== statEl) {
-        ev.preventDefault();
-        baseProps.onChangeStats({
-          [props.stat]: char[dragOriginStat],
-          [dragOriginStat]: char[props.stat]
-        });
-      }
+    function onDrop() {
+      baseProps.onChangeStats({
+        [props.stat]: char[dragOriginStat],
+        [dragOriginStat]: char[props.stat]
+      });
     }
 
     function onDragEnter() {
-      if (dragOriginEl !== statEl) {
-        statEl.classList.add("drag-hover");
-
-        // Get the positions of the two stats being swapped, and then swap them
-        const valElTop = statEl.getBoundingClientRect().top;
-        const origElTop = dragOriginEl.getBoundingClientRect().top;
-        statEl.querySelector(".value-in-motion").style.top = `${origElTop - valElTop}px`;
-        dragOriginEl.querySelector(".value-in-motion").style.top = `${valElTop - origElTop}px`;
-      }
+      // Get the positions of the two stats being swapped, and then swap them
+      const valElTop = statEl.getBoundingClientRect().top;
+      const origElTop = dragOriginEl.getBoundingClientRect().top;
+      statEl.querySelector(".value-in-motion").style.top = `${origElTop - valElTop}px`;
+      dragOriginEl.querySelector(".value-in-motion").style.top = `${valElTop - origElTop}px`;
     }
 
     function onDragLeave() {
-      statEl.classList.remove("drag-hover");
-
       // Reset the positions of the values
       statEl.querySelector(".value-in-motion").style.top = null;
       dragOriginEl.querySelector(".value-in-motion").style.top = null;
@@ -124,7 +118,7 @@ export function CharacterStatsView(baseProps) {
 
   function StatInfo(props) {
     const rows = char.features[props.stat].modifiers.reduce((res, modifier) => {
-      if (modifier.min != modifier.max) {
+      if (modifier.min !== modifier.max) {
         res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);
       } else if (modifier.value !== 0) {
         res.push(<div>{`${modifier.source.name}: ${modifier.value}`}</div>);

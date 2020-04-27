@@ -4,9 +4,11 @@
   --font-default: "Roboto", arial, sans-serif;
   --font-size-default: 100%;
 
+  --color-attention: #b00;
+  --color-drop-target: #85a70a;
+
   --color-background: #fff;
   --color-background-dark: #6c6060;
-  --color-attention: #b00;
   --text-color: #6c6060;
   --text-color-dark: #484040;
   --text-color-light-on-dark: #ffefd5;

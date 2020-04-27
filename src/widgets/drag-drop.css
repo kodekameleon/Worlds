@@ -1,3 +1,73 @@
+
+.dragging {
+  .drop-target:not(.drag-source) * {
+    pointer-events: none;
+  }
+
+  .drop-target.drag-source .draggable * {
+    pointer-events: none;
+  }
+
+  .drop-target {
+    position: relative;
+    border-radius: 7px;
+
+    &:not(.drag-source)::before,
+    &:not(.drag-source)::after {
+      content: "";
+      position: absolute;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      top: -3px;
+      left: -3px;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    &:not(.drag-source)::before {
+      background-color: var(--color-drop-target);
+      border: 1px solid transparent;
+      opacity: 0.2;
+    }
+
+    &.drag-hover:not(.drag-source)::before {
+      opacity: 0.4;
+    }
+
+    &:not(.drag-source)::after {
+      border: 1px solid;
+    }
+  }
+}
+
+/*
+&.dragging > .character-stat:not(.drag-source)::after {
+  opacity: 1;
+}
+
+&.dragging > .character-stat.drag-hover:not(.drag-source)::after {
+  background-color: rgba(133, 167, 10, 0.4);
+}
+
+      &::after {
+        position: absolute;
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        left: -3px;
+        top: -3px;
+        border: 1px solid black;
+        border-radius: 6px;
+        content: '';
+        z-index: -1;
+        background-color: rgba(133, 167, 10, 0.2);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity var(--transition-normal), background-color var(--transition-normal);
+      }
+
+*/
+
 .drag-handle {
   position: relative;
   font-size: 0.8em;

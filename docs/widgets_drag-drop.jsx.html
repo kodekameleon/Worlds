@@ -49,7 +49,7 @@
  */
 export function DropTarget(props, children) {
   const el = (
-    &lt;div class="drop-target" on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
+    &lt;div class={["drop-target", props.class]} on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
       {children}
     &lt;/div>
   );
@@ -62,7 +62,6 @@ export function DropTarget(props, children) {
   }
 
   function onDrop(ev) {
-    console.log("onDrop");
     el.classList.remove("drag-hover");
     if (props.canDrop(ev)) {
       ev.preventDefault();
@@ -71,7 +70,6 @@ export function DropTarget(props, children) {
   }
 
   function onDragEnter(ev) {
-    console.log("onDragEnter");
     if (props.canDrop(ev)) {
       el.classList.add("drag-hover");
 
@@ -82,7 +80,6 @@ export function DropTarget(props, children) {
   }
 
   function onDragLeave(ev) {
-    console.log("onDragLeave");
     el.classList.remove("drag-hover");
 
     if(props.onDragLeave) {
