@@ -24,8 +24,11 @@ export function CharacterStatsView(baseProps) {
   return statsEl;
 
   function CharacterStat(props) {
+    const statInfo = char.features[props.stat];
+    console.log(props.stat);
+    console.log(statInfo);
     const statEl = (
-      <Col class="character-stat boxed padded spaced" center
+      <Col class={["character-stat boxed padded spaced", statInfo.available && "attention"]} center
            on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
         <Row class="value-container" center draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
           <DragHandle/>
@@ -122,9 +125,18 @@ export function CharacterStatsView(baseProps) {
   }
 
   function StatInfo(props) {
+    const rows = char.features[props.stat].modifiers.reduce((res, modifier) => {
+      if (modifier.min != modifier.max) {
+        res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);
+      } else if (modifier.value !== 0) {
+        res.push(<div>{`${modifier.source.name}: ${modifier.value}`}</div>);
+      }
+      return res;
+    }, []);
+
     return (
       <PopupTip class="stat-info" right>
-        {char.features[props.stat].sources.map((s) => <div>{`${s.source.name}: ${s.value}`}</div>)}
+        {rows}
       </PopupTip>
     );
   }

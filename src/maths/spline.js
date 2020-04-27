@@ -88,11 +88,11 @@ function calculateWeights(x, y, isClosed) {
  */
 function correctCorners(points, x, y, px, py) {
   for (let i = 0; i < px.p1.length; ++i) {
-    if (points[i].type == PointType.CORNER) {
+    if (points[i].type === PointType.CORNER) {
       px.p1[i] = x[i];
       py.p1[i] = y[i];
     }
-    if (points[i + 1 < points.length ? i + 1 : 0].type == PointType.CORNER) {
+    if (points[i + 1 < points.length ? i + 1 : 0].type === PointType.CORNER) {
       px.p2[i] = x[i + 1];
       py.p2[i] = y[i + 1];
     }

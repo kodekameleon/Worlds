@@ -30,6 +30,10 @@
     margin-bottom: 0.5em;
   }
 
+  .attention {
+    box-shadow: 0 0 0 2px var(--color-attention);
+  }
+
   label {
     display: inline-block;
     width: 100%;

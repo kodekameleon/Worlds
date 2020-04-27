@@ -23,7 +23,7 @@ export function NavItem(props, children) {
     // Check whether the URL matches the href
     if (props.href.length > 0 && props.href.charAt(0) === "#") {
       const hash = (window.location.hash && window.location.hash.length > 0 && parse(window.location.hash.substr(1))) || {};
-      if (hash[props.href.substring(1)] != undefined || (_.isEmpty(hash) && props.href === "#")) {
+      if (hash[props.href.substring(1)] !== undefined || (_.isEmpty(hash) && props.href === "#")) {
         cssClass = "selected";
       }
     }

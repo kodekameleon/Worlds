@@ -89,5 +89,9 @@
   .stat-info {
     text-align: left;
     white-space: nowrap;
+
+    &.popup-tip {
+      font-size: 0.8em;
+    }
   }
 }

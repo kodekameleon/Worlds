@@ -7,7 +7,7 @@ import "./parties-controller.css";
 const character = Character();
 character.name = "Grimthorpe Firefingers";
 character.class = "Wizard";
-character.level = 3;
+character.level = 5;
 character.background = "Sage";
 character.player = "Justin";
 character.race = "Rock Gnome";
@@ -20,7 +20,7 @@ character.intelligence = 12;
 character.wisdom = 10;
 character.charisma = 8;
 
-// Create base stats and Half Elf features
+// Create base stats, Half Elf, Level 4 stat upgrade features
 const standardArrayFeature = Feature({}, {
   uniqueId: "base-stats:standard-array",
   name: "Standard Array",
@@ -37,15 +37,23 @@ const halfElfFeature = Feature({}, {
   name: "Half Elf",
   charisma: 2,
   chooseUpTo: 2,
+  choicesMade: 2,
   maxPerStat: 1,
-  chooseFrom: ["strength", "dexterity", "intelligence", "wisdom"],
+  chooseFrom: ["strength", "dexterity", "constitution", "intelligence", "wisdom"],
   chosen: {
     constitution: 1,
     intelligence: 1
   }
 });
+const level4Feature = Feature({}, {
+  uniqueId: "class:wizard-level-4",
+  name: "Wizard Level 4",
+  chooseUpTo: 2,
+  maxPerStat: 1,
+  chooseFrom: ["strength", "dexterity", "intelligence", "wisdom", "charisma"]
+});
 
-character.features.featureList.push(standardArrayFeature, halfElfFeature);
+character.features.featureList.push(standardArrayFeature, halfElfFeature, level4Feature);
 
 
 console.log(character);

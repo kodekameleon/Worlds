@@ -122,10 +122,10 @@ export function appendJSX(el, child) {
     }
   } else if (typeof child === "function") {
     appendJSX(el, child());
-  } else if (typeof child === "object" && child.tagName === "FRAGMENT") {
+  } else if (typeof child === "object" && child?.tagName === "FRAGMENT") {
     // Strip out fragments and just add the children, reduce the childnodes into an array
     appendJSX(el, _.reduce(child.childNodes, (l, v) => [...l, v], []));
-  } else if (child != undefined) {
+  } else if (child !== undefined && child !== null && child !== false) {
     el.append(child);
   }
 }

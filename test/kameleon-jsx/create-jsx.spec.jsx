@@ -94,7 +94,7 @@ describe("CreateJSX:", () => {
   });
 
   it("should create an element with classes in an array", () => {
-    const el = (<div className={["a", "", undefined, null, "b", "c"]}/>);
+    const el = (<div className={["a", "", undefined, null, false, "b", "c"]}/>);
     expect(el.outerHTML).to.equal("<div class=\"a b c\"></div>");
   });
 
@@ -187,8 +187,8 @@ describe("CreateJSX:", () => {
     expect(() => createJSX(27)).to.throw("JSX element must be a string for a standard element or a function");
   });
 
-  it("should ignore undefined elements", () => {
-    const el = (<div>{undefined}</div>);
+  it("should ignore undefined, null, false elements", () => {
+    const el = (<div>{[undefined, null, false]}</div>);
     expect(el.outerHTML).to.equal("<div></div>");
   });
 

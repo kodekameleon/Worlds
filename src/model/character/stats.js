@@ -75,57 +75,65 @@ export function StatsFeature(state, copyFrom) {
   Language.assignOverwrite(self, copyFrom);
 
   return {
-    get strength() { return getChange(CharacterStatProp.STRENGTH); },
-    get dexterity() { return getChange(CharacterStatProp.DEXTERITY); },
-    get constitution() { return getChange(CharacterStatProp.CONSTITUTION); },
-    get intelligence() { return getChange(CharacterStatProp.INTELLIGENCE); },
-    get wisdom() { return getChange(CharacterStatProp.WISDOM); },
-    get charisma() { return getChange(CharacterStatProp.CHARISMA); },
+    get strength() { return getModifier(CharacterStatProp.STRENGTH); },
+    get dexterity() { return getModifier(CharacterStatProp.DEXTERITY); },
+    get constitution() { return getModifier(CharacterStatProp.CONSTITUTION); },
+    get intelligence() { return getModifier(CharacterStatProp.INTELLIGENCE); },
+    get wisdom() { return getModifier(CharacterStatProp.WISDOM); },
+    get charisma() { return getModifier(CharacterStatProp.CHARISMA); },
 
-    getChange: (prop) => getChange(prop),
-    hasChange: (prop) => self[prop] || self.chooseFrom.includes(prop) ? true : false,
+    getModifier: (prop) => getModifier(prop),
+    hasModifier: (prop) => self[prop] || self.chooseFrom.includes(prop) ? true : false,
 
     serialize: () => Language.deflate(self)
   };
 
-  function getChange(prop) {
+  function getModifier(prop) {
+    const available = (self.chooseFrom.includes(ANY) || self.chooseFrom.includes(prop))
+      && self.chooseUpTo > self.choicesMade
+      && self.maxPerStat > self.chosen[prop]
+      ? Math.min(self.chooseUpTo - self.choicesMade, self.maxPerStat - Math.max(self.chosen[prop], 0))
+      : 0;
     return {
       source: UniqueObject(undefined, state),
       value: self[prop] + self.chosen[prop],
       min: +self[prop],
-      max: (self.chooseFrom.includes(ANY) || self.chooseFrom.includes(prop)) ? self[prop] + self.maxPerStat : +self[prop]
+      max: +self[prop] + ((self.chooseFrom.includes(ANY) || self.chooseFrom.includes(prop)) && self.maxPerStat),
+      available
     };
   }
 }
 
 export function StatsFeatureSet(state) {
   return {
-    get strength() { return getStatSources(CharacterStatProp.STRENGTH); },
-    get dexterity() { return getStatSources(CharacterStatProp.DEXTERITY); },
-    get constitution() { return getStatSources(CharacterStatProp.CONSTITUTION); },
-    get intelligence() { return getStatSources(CharacterStatProp.INTELLIGENCE); },
-    get wisdom() { return getStatSources(CharacterStatProp.WISDOM); },
-    get charisma() { return getStatSources(CharacterStatProp.CHARISMA); },
+    get strength() { return getStatModifiers(CharacterStatProp.STRENGTH); },
+    get dexterity() { return getStatModifiers(CharacterStatProp.DEXTERITY); },
+    get constitution() { return getStatModifiers(CharacterStatProp.CONSTITUTION); },
+    get intelligence() { return getStatModifiers(CharacterStatProp.INTELLIGENCE); },
+    get wisdom() { return getStatModifiers(CharacterStatProp.WISDOM); },
+    get charisma() { return getStatModifiers(CharacterStatProp.CHARISMA); },
 
-    getStatSources: (prop) => getStatSources(prop)
+    getStatModifiers: (prop) => getStatModifiers(prop)
   };
 
-  function getStatSources(prop) {
+  function getStatModifiers(prop) {
     return state.featureList.reduce((a, feature) => {
-      if (feature.hasChange(prop)) {
-        const source = feature[prop];
-        a.sources.push(source);
-        a.value += source.value;
-        a.min += source.min;
-        a.max += source.max;
+      if (feature.hasModifier(prop)) {
+        const modifier = feature[prop];
+        a.modifiers.push(modifier);
+        a.value += modifier.value;
+        a.min += modifier.min;
+        a.max += modifier.max;
+        a.available += modifier.available;
       }
       return a;
     },
     {
-      sources: [],
+      modifiers: [],
       value: 0,
       min: 0,
-      max: 0
+      max: 0,
+      available: 0
     });
   }
 }
