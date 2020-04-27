@@ -1,7 +1,6 @@
 import {expect} from "chai";
-
-import {Fragment, createJSX, renderApp} from "../../src/kameleon-jsx";
 import {svg} from "../../src/kameleon-jsx";
+import {createJSX, Fragment, renderApp} from "../../src/kameleon-jsx";
 
 function TestElement(props, children) {
   return (<span class={props.class}>{children}</span>);
@@ -15,13 +14,7 @@ function TestNestedCustom(props, children) {
   return (<div><TestElement>{children}</TestElement></div>);
 }
 
-function TestElementNoProps(props, children) {
-  expect(props).to.deep.equal({});
-  return (<span class={props.class}>{children}</span>);
-}
-
 function TestElementFuncClass() {
-  // eslint-disable-next-line react/display-name
   TestElementFuncClass.prototype.render = (props) => {
     return <div props={props}/>;
   };
@@ -76,6 +69,11 @@ describe("CreateJSX:", () => {
   it("should create an element with class delegated props overridden by parameterized props", () => {
     const el = (<div className="def" props={{class: "abc"}}>Hello World!</div>);
     expect(el.outerHTML).to.equal("<div class=\"def\">Hello World!</div>");
+  });
+
+  it("should create an element ignoring custom delegated props", () => {
+    const el = (<div props={{"custom-prop": "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div>Hello World!</div>");
   });
 
   it("should create an element with custom delegated props overridden by parameterized props", () => {
@@ -134,6 +132,11 @@ describe("CreateJSX:", () => {
   });
 
   it("should create a custom element ensuring props is defined", () => {
+    function TestElementNoProps(props, children) {
+      expect(props).to.deep.equal({});
+      return (<span class={props.class}>{children}</span>);
+    }
+
     const el = (<TestElementNoProps>Hello World!</TestElementNoProps>);
     expect(el.outerHTML).to.equal("<span>Hello World!</span>");
   });

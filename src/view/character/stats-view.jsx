@@ -25,8 +25,6 @@ export function CharacterStatsView(baseProps) {
 
   function CharacterStat(props) {
     const statInfo = char.features[props.stat];
-    console.log(props.stat);
-    console.log(statInfo);
     const statEl = (
       <Col class={["character-stat boxed padded spaced", statInfo.available && "attention"]} center
            on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>

@@ -11,10 +11,11 @@ import * as _ from "lodash";
  * @param children
  * @returns {HTMLElement}
  */
-export function createJSX(tagOrFn, props, ...children) {
+export function createJSX(tagOrFn, srcProps, ...children) {
   // Make sure there is a props object, and if there are delegated props
   // merge the delegated props and the more specific parameterized props.
-  props = props || {};
+  srcProps = srcProps || {};
+  let props = srcProps;
   if (props.props) {
     // Make sure that if either class or className are given, that both are given.
     if (props.class || props.className) {
@@ -42,12 +43,13 @@ export function createJSX(tagOrFn, props, ...children) {
       el = document.createElement(tagOrFn);
     }
 
-    // Add all of the props to the element
+    // Set the class for the element
     const classes = processClassName(props);
     if (classes) {
       el.setAttribute("class", classes);
     }
 
+    // Add the rest of the props to the element
     for (const key of Object.keys(props)) {
       switch (key) {
         case "style": {
@@ -76,7 +78,11 @@ export function createJSX(tagOrFn, props, ...children) {
           break;
 
         default:
-          el.setAttribute(key, props[key]);
+          // A custom atribute, custom attributes are only applied when they are provided in the
+          // source props, not when they are provided in the delegated props.
+          if (srcProps.hasOwnProperty(key)) {
+            el.setAttribute(key, props[key]);
+          }
           break;
       }
     }
@@ -84,10 +90,7 @@ export function createJSX(tagOrFn, props, ...children) {
   } else if (typeof tagOrFn === "function") {
     // If custom elements pass the children through on a subnode they can get
     // nested inside arrays, so lets get rid of that nesting here.
-    // TODO: WOULD flat() work here ?
-    while (children.length === 1 && Array.isArray(children[0])) {
-      children = children[0];
-    }
+    children = children.flat(4);
 
     // If the props contain class or className make sure it contains both.
     if (props.className || props.class) {
