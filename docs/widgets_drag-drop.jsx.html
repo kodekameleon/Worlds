@@ -32,20 +32,13 @@
  * Manages a drop target by taking care of some of the housekeeping of highlighting a drop target during
  * drag and drop operations.
  *
- * @param props {
- *   class: classes to add to the element
- *
- *   canDrop(event): function returning true if the target can accept the source being dragged
- *
- *   onDrop(event): function called when the source is dropped on the target. This is only called in canDrop() returns true
- *
- *   onDragEnter(event): optional function called when the target is entered with the mouse
- *
- *   onDragLeave(event): optional function called when the target is exited with the mouse
- * }
- *
+ * @param props
+ * @param props.canDrop function returning true if the target can accept the source being dragged
+ * @param props.onDrop function called when the source is dropped on the target. This is only called in canDrop() returns true
+ * @param props.onDragEnter optional function called when the target is entered with the mouse
+ * @param props.onDragLeave optional function called when the target is exited with the mouse
  * @param children The child elements
- * @returns element
+ * @returns {element}
  */
 export function DropTarget(props, children) {
   const el = (
@@ -88,6 +81,115 @@ export function DropTarget(props, children) {
   }
 }
 
+/**
+ * Manages a drop target by taking care of some of the housekeeping of highlighting a drop target during
+ * drag and drop operations.
+ *
+ * @param props
+ * @param props.canDrag optional function returning true if the object can be dragged
+ * @param props.onDragStart optional function called when the drag begins
+ * @param props.onDragEnd optional function called when the drag ends
+ * @param props.createDragImage optional function used to create the drag image
+ * @param children The child elements
+ * @returns {element}
+ */
+export function DragSource(props, children) {
+  let parentTargetEl;
+  let dragDropSite;
+  const el = (
+    &lt;div className="drag-source" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+      {children}
+    &lt;/div>
+  );
+  return el;
+
+  function onDragStart(ev) {
+    // Check if the element can be dragged at this time
+    if (props.canDrag &amp;&amp; !props.canDrag(ev)) {
+      ev.preventDefault();
+      return false;
+    }
+
+    // Notify that the drag has started
+    if (props.onDragStart) {
+      props.onDragStart(ev);
+    }
+
+    // If the drag source is a child of a drag target, mark the target as also being the source
+    parentTargetEl = el.closest(".drop-target");
+    if (parentTargetEl) {
+      parentTargetEl.classList.add("drag-origin");
+      console.log("parentTargetEl=");
+      console.log(parentTargetEl);
+    }
+
+    // Mark the container, or document, to show that a drag operation is in progress
+    dragDropSite = el.closest(".drag-drop-site") || document.getElementById("root");
+    dragDropSite.classList.add("dragging");
+
+    // If a custom drag image is being used create it and position it correctly
+    if (props.createDragImage) {
+      const img = props.createDragImage(ev);
+      const elbr = el.getBoundingClientRect();
+      img.style.minWidth = `${elbr.width}px`;
+      setTimeout(() => img.remove());
+      el.appendChild(img);
+      const imgbr = img.getBoundingClientRect();
+      console.log(`ev.X=${ev.clientX} el.left=${elbr.left} img.width=${imgbr.width} el.width=${elbr.width}`);
+      console.log(`ev.Y=${ev.clientY} el.top=${elbr.top}`);
+      ev.dataTransfer.setDragImage(
+        img,
+        ev.clientX - elbr.left + (imgbr.width - elbr.width) / 2,
+        ev.clientY - elbr.top + (imgbr.height - elbr.height) / 2);
+    }
+  }
+
+  function onDragEnd(ev) {
+    if (props.onDragEnd) {
+      props.onDragEnd(ev);
+    }
+
+    if (parentTargetEl) {
+      parentTargetEl.classList.remove("drag-origin");
+      parentTargetEl = undefined;
+    }
+
+    if (dragDropSite) {
+      dragDropSite.classList.remove("dragging");
+      dragDropSite = undefined;
+    }
+  }
+}
+
+/**
+ * A simple container that helps with creating custom drag drop images
+ *
+ * @param props
+ * @param children
+ * @returns {element}
+ */
+export function DragImage(props, children) {
+  return (&lt;div class="drag-image" props={props}>{children}&lt;/div>);
+}
+
+/**
+ * A container for drag drop operations. In cases where elements can be dragged and dropped within the bounds
+ * of a parent widget, use DragDropSite for the parent. It will limit target highlighting to just the children
+ * of the DragDropSite.
+ *
+ * @param props
+ * @param children
+ * @returns {element}
+ */
+export function DragDropSite(props, children) {
+  return (&lt;div class="drag-drop-site" props={props}>{children}&lt;/div>);
+}
+
+/**
+ * A simple drag handle icon
+ *
+ * @returns {element}
+ */
 export function DragHandle() {
   return &lt;div className="drag-handle"/>;
 }
@@ -101,7 +203,7 @@ export function DragHandle() {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="View.html">View</a></li></ul><h3>Classes</h3><ul><li><a href="Fragment.html">Fragment</a></li><li><a href="Language.html">Language</a></li><li><a href="Route.html">Route</a></li><li><a href="UndoStack.html">UndoStack</a></li><li><a href="View.Spline.html">Spline</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createJSX">createJSX</a></li><li><a href="global.html#DropTarget">DropTarget</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="View.html">View</a></li></ul><h3>Classes</h3><ul><li><a href="Fragment.html">Fragment</a></li><li><a href="Language.html">Language</a></li><li><a href="Route.html">Route</a></li><li><a href="UndoStack.html">UndoStack</a></li><li><a href="View.Spline.html">Spline</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createJSX">createJSX</a></li><li><a href="global.html#DragDropSite">DragDropSite</a></li><li><a href="global.html#DragHandle">DragHandle</a></li><li><a href="global.html#DragImage">DragImage</a></li><li><a href="global.html#DragSource">DragSource</a></li><li><a href="global.html#DropTarget">DropTarget</a></li></ul>
 </nav>
 
 <br class="clear">

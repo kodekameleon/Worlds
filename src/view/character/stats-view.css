@@ -28,18 +28,15 @@
         }
       }
 
-      .drag-drop-container {
-        position: fixed;
-        left: -600px;
-        top: 600px;
-        padding: 0;
-        background-color: transparent;
+      .drag-source {
+        width: 100%;
+      }
 
+      .drag-image {
         .value-container {
           color: var(--text-color-dark);
           background: transparent;
           font-size: 2em;
-          text-shadow: 0 0 9px #444;
         }
 
         .value {
@@ -66,4 +63,8 @@
       font-size: 0.8em;
     }
   }
+}
+
+.drop-target.drag-origin .draggable * {
+  pointer-events: none;
 }

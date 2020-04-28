@@ -291,7 +291,7 @@
     
 
     
-    <h4 class="name" id="DropTarget"><span class="type-signature"></span>DropTarget<span class="signature">(props, children)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="DragDropSite"><span class="type-signature"></span>DragDropSite<span class="signature">(props, children)</span><span class="type-signature"> &rarr; {element}</span></h4>
     
 
     
@@ -299,8 +299,9 @@
 
 
 <div class="description">
-    Manages a drop target by taking care of some of the housekeeping of highlighting a drop target during
-drag and drop operations.
+    A container for drag drop operations. In cases where elements can be dragged and dropped within the bounds
+of a parent widget, use DragDropSite for the parent. It will limit target highlighting to just the children
+of the DragDropSite.
 </div>
 
 
@@ -365,6 +366,547 @@ drag and drop operations.
 
             
 
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line156">line 156</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="DragHandle"><span class="type-signature"></span>DragHandle<span class="signature">()</span><span class="type-signature"> &rarr; {element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    A simple drag handle icon
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line165">line 165</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="DragImage"><span class="type-signature"></span>DragImage<span class="signature">(props, children)</span><span class="type-signature"> &rarr; {element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    A simple container that helps with creating custom drag drop images
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>children</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line143">line 143</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="DragSource"><span class="type-signature"></span>DragSource<span class="signature">(props, children)</span><span class="type-signature"> &rarr; {element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Manages a drop target by taking care of some of the housekeeping of highlighting a drop target during
+drag and drop operations.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>canDrag</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function returning true if the object can be dragged</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDragStart</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function called when the drag begins</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDragEnd</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function called when the drag ends</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>createDragImage</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function used to create the drag image</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>children</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
             <td class="description last">The child elements</td>
         </tr>
 
@@ -406,7 +948,7 @@ drag and drop operations.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line22">line 22</a>
+        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line68">line 68</a>
     </li></ul></dd>
     
 
@@ -434,11 +976,286 @@ drag and drop operations.
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    element
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">element</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="DropTarget"><span class="type-signature"></span>DropTarget<span class="signature">(props, children)</span><span class="type-signature"> &rarr; {element}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Manages a drop target by taking care of some of the housekeeping of highlighting a drop target during
+drag and drop operations.
 </div>
 
 
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>canDrop</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function returning true if the target can accept the source being dragged</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDrop</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function called when the source is dropped on the target. This is only called in canDrop() returns true</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDragEnter</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function called when the target is entered with the mouse</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDragLeave</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional function called when the target is exited with the mouse</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>children</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The child elements</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="widgets_drag-drop.jsx.html">widgets/drag-drop.jsx</a>, <a href="widgets_drag-drop.jsx.html#line15">line 15</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">element</span>
+
+
+    </dd>
+</dl>
 
     
 
@@ -462,7 +1279,7 @@ drag and drop operations.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="View.html">View</a></li></ul><h3>Classes</h3><ul><li><a href="Fragment.html">Fragment</a></li><li><a href="Language.html">Language</a></li><li><a href="Route.html">Route</a></li><li><a href="UndoStack.html">UndoStack</a></li><li><a href="View.Spline.html">Spline</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createJSX">createJSX</a></li><li><a href="global.html#DropTarget">DropTarget</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="View.html">View</a></li></ul><h3>Classes</h3><ul><li><a href="Fragment.html">Fragment</a></li><li><a href="Language.html">Language</a></li><li><a href="Route.html">Route</a></li><li><a href="UndoStack.html">UndoStack</a></li><li><a href="View.Spline.html">Spline</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createJSX">createJSX</a></li><li><a href="global.html#DragDropSite">DragDropSite</a></li><li><a href="global.html#DragHandle">DragHandle</a></li><li><a href="global.html#DragImage">DragImage</a></li><li><a href="global.html#DragSource">DragSource</a></li><li><a href="global.html#DropTarget">DropTarget</a></li></ul>
 </nav>
 
 <br class="clear">

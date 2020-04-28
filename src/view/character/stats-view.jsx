@@ -1,8 +1,8 @@
 import {CharacterStatProp} from "../../model/character/stats";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
-import {Col, PopupTip, Row} from "../../widgets";
-import {DragHandle, DropTarget} from "../../widgets";
+import {Col, DragImage, PopupTip, Row} from "../../widgets";
+import {DragHandle, DragSource, DropTarget} from "../../widgets";
 import "./stats-view.css";
 
 export function CharacterStatsView(baseProps) {
@@ -29,7 +29,7 @@ export function CharacterStatsView(baseProps) {
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
         <Col class={["character-stat boxed padded", statInfo.available && "attention"]} center>
-          <div class="draggable" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+          <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
             <Row class="value-container" center>
               <DragHandle/>
               <div class="value">
@@ -38,7 +38,7 @@ export function CharacterStatsView(baseProps) {
                 </div>
               </div>
             </Row>
-          </div>
+          </DragSource>
           <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
           <label>{messages[props.stat]}</label>
 
@@ -48,45 +48,28 @@ export function CharacterStatsView(baseProps) {
     );
     return statEl;
 
+    function canDrag() {
+      return baseProps.viewState.editing;
+    }
+
     function onDragStart(ev) {
-      console.log("onDragStart");
-
-      // Cancel the drag if we are not in editing mode.
-      if (!baseProps.viewState.editing) {
-        ev.preventDefault();
-        return false;
-      }
-
       // Set what is being dragged
       ev.dataTransfer.setData("drag/CharacterStat", props.stat);
-
-      // Create an image to drag
-      const valueElement = statEl.querySelector(".value-container");
-      const vebr = valueElement.getBoundingClientRect();
-      const img = (
-        <div class="drag-drop-container" style={`width: ${vebr.width}px`}>
-          <div class="value-container">{char[props.stat]}</div>
-        </div>
-      );
-      valueElement.parentElement.insertBefore(img, valueElement.nextSibling);
-      const iebr = img.getBoundingClientRect();
-      ev.dataTransfer.setDragImage(img,
-        ev.clientX - valueElement.getBoundingClientRect().left + (iebr.width - vebr.width) / 2,
-        ev.clientY - valueElement.getBoundingClientRect().top + (iebr.height - vebr.height) / 2);
-      setTimeout(() => img.remove());
-
-      // Update styles to indicate a drag is in progress, and which is the source
-      statsEl.classList.add("dragging");
-      statEl.classList.add("drag-source");
 
       // Remember the element that is the origin
       dragOriginEl = statEl;
       dragOriginStat = props.stat;
     }
 
+    function createDragImage() {
+      return (
+        <DragImage>
+          <div class="value-container">{char[props.stat]}</div>
+        </DragImage>
+      );
+    }
+
     function onDragEnd() {
-      statsEl.classList.remove("dragging");
-      statEl.classList.remove("drag-source");
       dragOriginEl = undefined;
     }
 
