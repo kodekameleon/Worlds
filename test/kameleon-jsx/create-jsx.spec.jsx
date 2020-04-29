@@ -71,14 +71,24 @@ describe("CreateJSX:", () => {
     expect(el.outerHTML).to.equal("<div class=\"abc\">Hello World!</div>");
   });
 
-  it("should create an element with class delegated props overridden by parameterized props", () => {
+  it("should create an element with class delegated props merged into parameterized props", () => {
     const el = (<div className="def" props={{class: "abc"}}>Hello World!</div>);
-    expect(el.outerHTML).to.equal("<div class=\"def\">Hello World!</div>");
+    expect(el.outerHTML).to.equal("<div class=\"def abc\">Hello World!</div>");
+  });
+
+  it("should create an element without repeated class names after merging delegated props", () => {
+    const el = (<div className="abc def" props={{class: "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div class=\"abc def\">Hello World!</div>");
   });
 
   it("should create an element ignoring custom delegated props", () => {
     const el = (<div props={{"custom-prop": "abc"}}>Hello World!</div>);
     expect(el.outerHTML).to.equal("<div>Hello World!</div>");
+  });
+
+  it("should create an element with class delegated props merged into parameterized props", () => {
+    const el = (<div custom-prop="def" props={{"custom-prop": "abc"}}>Hello World!</div>);
+    expect(el.outerHTML).to.equal("<div custom-prop=\"def\">Hello World!</div>");
   });
 
   it("should create an element with custom delegated props overridden by parameterized props", () => {
@@ -93,6 +103,11 @@ describe("CreateJSX:", () => {
 
   it("should create an element with classes that are an empty string", () => {
     const el = (<div className={""}/>);
+    expect(el.outerHTML).to.equal("<div></div>");
+  });
+
+  it("should create a custom element without class if no class is provided", () => {
+    const el = (<div/>);
     expect(el.outerHTML).to.equal("<div></div>");
   });
 
@@ -195,9 +210,9 @@ describe("CreateJSX:", () => {
     expect(() => createJSX(27)).to.throw("JSX element must be a string for a standard element or a function");
   });
 
-  it("should ignore undefined, null, false elements", () => {
-    const el = (<div>{[undefined, null, false]}</div>);
-    expect(el.outerHTML).to.equal("<div></div>");
+  it("should ignore undefined, null, false, true elements", () => {
+    const el = (<div>{[undefined, null, false, true, "abc"]}</div>);
+    expect(el.outerHTML).to.equal("<div>abc</div>");
   });
 
   it("should render the app", () => {

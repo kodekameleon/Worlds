@@ -1,61 +1,79 @@
 .character-sheet {
-  .character-stat-block {
-    .character-stat {
-      position: relative;
+  .character-stat-block.dragging .stat-base {
+    pointer-events: none;
+  }
 
+  .character-stat {
+    position: relative;
+
+    .drag-source {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .value-container {
+      width: 100%;
+    }
+
+    .value {
+      font-size: 0.8em;
+      border: 1px solid;
+      border-radius: 50%;
+      display: inline-block;
+      min-width: 2.4em;
+      height: 1.6em;
+      max-height: 2.4em;
+      margin-top: -1px;
+      cursor: default;
+      padding: 0 0.25em;
+    }
+
+    .stat-spinner {
+      position: absolute;
+      right: 0;
+      top: 0.8em;
+
+      .icon {
+        margin-bottom: -0.5em;
+      }
+    }
+
+    .stat-spinner + .stat-bonus {
+      margin-left: -0.5em;
+    }
+
+    .stat-base {
+      position: relative;
+      top: 0;
+      width: 100%;
+      transition: top 1s ease-in-out;
+    }
+
+    .drag-image {
       .value-container {
-        width: 100%;
-        justify-content: center;
+        color: var(--text-color-dark);
+        background: transparent;
+        font-size: 2em;
       }
 
       .value {
-        font-size: 0.8em;
-        border: 1px solid;
-        border-radius: 50%;
-        display: inline-block;
-        width: 2.4em;
-        height: 1.6em;
-        max-height: 2.4em;
-        margin-top: -1px;
-        cursor: default;
-        position: relative;
-
-        .value-in-motion {
-          position: absolute;
-          top: 0;
-          width: 100%;
-          transition: top 1s ease-in-out;
-        }
+        margin-top: 0;
       }
+    }
 
-      .drag-source {
-        width: 100%;
-      }
+    label {
+      width: 100%;
+    }
 
-      .drag-image {
-        .value-container {
-          color: var(--text-color-dark);
-          background: transparent;
-          font-size: 2em;
-        }
-
-        .value {
-          margin-top: 0;
-        }
-      }
-
-      label {
-        width: 100%;
-      }
-
-      .grab-handle::before {
-        top: 1px;
-        right: 4px;
-      }
+    .drag-handle::before {
+      top: 1px;
+      right: 4px;
     }
   }
 
-  .stat-info {
+  .stat-info-popup {
     text-align: left;
     white-space: nowrap;
 
@@ -63,8 +81,4 @@
       font-size: 0.8em;
     }
   }
-}
-
-.drop-target.drag-origin .draggable * {
-  pointer-events: none;
 }

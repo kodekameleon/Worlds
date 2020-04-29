@@ -25,24 +25,6 @@
   }
 }
 
-.table {
-  & > .row {
-    display: table-row;
-
-    & > div {
-      display: table-cell;
-
-      & :not(:last-child) {
-        padding-right: 0.1em;
-      }
-    }
-
-    & > div:not(:last-child) {
-      padding-right: 0.4em;
-    }
-  }
-}
-
 .col {
   display: flex;
   flex-direction: column;
@@ -60,5 +42,23 @@
   &.right {
     align-items: flex-end;
     text-align: right;
+  }
+}
+
+.table {
+  & > .row {
+    display: table-row;
+
+    & > div {
+      display: table-cell;
+
+      & :not(:last-child) {
+        padding-right: 0.1em;
+      }
+    }
+
+    & > div:not(:last-child) {
+      padding-right: 0.4em;
+    }
   }
 }

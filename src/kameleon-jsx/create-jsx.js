@@ -5,28 +5,23 @@ import {getNamespaceUri} from "./namespaces";
  *
  * @param tagOrFn
  * @param props
- *  class || className:   A string, or list of messages, containing class names. For custom
- *                        components, this will always be a string.
+ * @param props.props     Delegated props
+ * @param props.class     A string, or list of strings, containing class names. For custom elements this will be
+ *                        flattened into a string before being passed to the element function.
+ * @param props.className Alias for props.class
  * @param children
  * @returns {HTMLElement}
  */
 export function createJSX(tagOrFn, srcProps, ...children) {
-  // Make sure there is a props object, and if there are delegated props
-  // merge the delegated props and the more specific parameterized props.
+  // Ensure there is a valid props object
   srcProps = srcProps || {};
-  let props = srcProps;
-  if (props.props) {
-    // Make sure that if either class or className are given, that both are given.
-    if (props.class || props.className) {
-      props.class = props.className = props.class || props.className;
-    }
-    if (props.props.class || props.props.className) {
-      props.props.class = props.props.className = props.props.class || props.props.className;
-    }
 
-    props = Object.assign({}, props.props, props);
-    delete props.props;
-  }
+  // Process the classes from a string or list, merge the source and delegated classes.
+  const classes = processClassName(srcProps);
+
+  // Make a mutable copy of the props, merging in the delegated props if there are any.
+  const props = Object.assign({}, srcProps.props, srcProps, classes ? {class: classes, className: classes} : {});
+  delete props.props;
 
   // Make sure that if a ref is required the ref object has been initialized.
   if (props.hasOwnProperty("ref") && !props.ref) {
@@ -42,10 +37,9 @@ export function createJSX(tagOrFn, srcProps, ...children) {
       el = document.createElement(tagOrFn);
     }
 
-    // Set the class for the element
-    const classes = processClassName(props);
-    if (classes) {
-      el.setAttribute("class", classes);
+    // Set the class for the element. Split the class into tokens so that repeated tokens are removed.
+    if (props.class) {
+      el.classList.add(...props.class.split(" "));
     }
 
     // Add the rest of the props to the element
@@ -89,12 +83,7 @@ export function createJSX(tagOrFn, srcProps, ...children) {
   } else if (typeof tagOrFn === "function") {
     // If custom elements pass the children through on a subnode they can get
     // nested inside arrays, so lets get rid of that nesting here.
-    children = children.flat(4);
-
-    // If the props contain class or className make sure it contains both.
-    if (props.className || props.class) {
-      props.class = props.className = processClassName(props);
-    }
+    children = children.flat(Infinity);
 
     // Call the function to create the element or object
     el = new tagOrFn(props, children);
@@ -127,7 +116,7 @@ export function appendJSX(el, child) {
   } else if (typeof child === "object" && child?.tagName === "FRAGMENT") {
     // Strip out fragments and just add the children, reduce the childnodes into an array
     appendJSX(el, [...child.childNodes].reduce((l, v) => [...l, v], []));
-  } else if (child !== undefined && child !== null && child !== false) {
+  } else if (child !== undefined && child !== null && child !== false && child !== true) {
     el.append(child);
   }
 }
@@ -143,9 +132,12 @@ export function renderApp(app) {
 }
 
 function processClassName(props) {
-  const classes = props.class || props.className;
+  let classes = props.class || props.className;
+  if (props.props?.class || props.props?.className) {
+    classes = [classes, props.props.class || props.props.className];
+  }
   if (classes && Array.isArray(classes)) {
-    return classes.reduce((l, v) => v && v !== "" ? [...l, v] : l, []).join(" ");
+    return classes.flat(Infinity).reduce((l, v) => v && v !== "" ? [...l, v] : l, []).join(" ");
   }
   return classes;
 }

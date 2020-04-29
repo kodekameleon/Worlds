@@ -1,8 +1,7 @@
 import {CharacterStatProp} from "../../model/character/stats";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
-import {Col, DragImage, PopupTip, Row} from "../../widgets";
-import {DragHandle, DragSource, DropTarget} from "../../widgets";
+import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip} from "../../widgets";
 import "./stats-view.css";
 
 export function CharacterStatsView(baseProps) {
@@ -17,31 +16,43 @@ export function CharacterStatsView(baseProps) {
   const chaEl = <CharacterStat stat={CharacterStatProp.CHARISMA}/>;
 
   const statsEl = (
-    <Col className="character-stat-block">
-      {[strEl, dexEl, conEl, intEl, wisEl, chaEl]}
-    </Col>
+    <DragDropSite class="character-stat-block">
+      <Col>
+        {[strEl, dexEl, conEl, intEl, wisEl, chaEl]}
+      </Col>
+    </DragDropSite>
   );
   return statsEl;
 
   function CharacterStat(props) {
     const statInfo = char.features[props.stat];
+    console.log(statInfo);
     const statEl = (
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
         <Col class={["character-stat boxed padded", statInfo.available && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
-            <Row class="value-container" center>
-              <DragHandle/>
+            {baseProps.viewState.editing && <DragHandle/>}
+            {baseProps.viewState.editing &&
               <div class="value">
-                <div class="value-in-motion">
-                  {char[props.stat]}
-                </div>
+                <span class="stat-base">{statInfo.base}</span>+
+                <span class="stat-mods">{statInfo.value - statInfo.base}</span>
               </div>
-            </Row>
+            }
+            {baseProps.viewState.editing ||
+              <div class="value">
+                <span>{statInfo.value}</span>
+              </div>
+            }
           </DragSource>
-          <div class="hiviz">{Utils.signed(char.bonus[props.stat])}</div>
+          {baseProps.viewState.editing &&
+            <Col class="stat-spinner">
+              <Icon glyph="&#xe006;"/>
+              <Icon glyph="&#xe005;"/>
+            </Col>
+          }
+          <div class="hiviz stat-bonus">{Utils.signed(char.bonus[props.stat])}</div>
           <label>{messages[props.stat]}</label>
-
           <StatInfo stat={props.stat}/>
         </Col>
       </DropTarget>
@@ -52,10 +63,7 @@ export function CharacterStatsView(baseProps) {
       return baseProps.viewState.editing;
     }
 
-    function onDragStart(ev) {
-      // Set what is being dragged
-      ev.dataTransfer.setData("drag/CharacterStat", props.stat);
-
+    function onDragStart() {
       // Remember the element that is the origin
       dragOriginEl = statEl;
       dragOriginStat = props.stat;
@@ -71,6 +79,7 @@ export function CharacterStatsView(baseProps) {
 
     function onDragEnd() {
       dragOriginEl = undefined;
+      dragOriginStat = undefined;
     }
 
     function canDrop() {
@@ -88,14 +97,14 @@ export function CharacterStatsView(baseProps) {
       // Get the positions of the two stats being swapped, and then swap them
       const valElTop = statEl.getBoundingClientRect().top;
       const origElTop = dragOriginEl.getBoundingClientRect().top;
-      statEl.querySelector(".value-in-motion").style.top = `${origElTop - valElTop}px`;
-      dragOriginEl.querySelector(".value-in-motion").style.top = `${valElTop - origElTop}px`;
+      statEl.querySelector(".stat-base").style.top = `${origElTop - valElTop}px`;
+      dragOriginEl.querySelector(".stat-base").style.top = `${valElTop - origElTop}px`;
     }
 
     function onDragLeave() {
       // Reset the positions of the values
-      statEl.querySelector(".value-in-motion").style.top = null;
-      dragOriginEl.querySelector(".value-in-motion").style.top = null;
+      statEl.querySelector(".stat-base").style.top = null;
+      dragOriginEl.querySelector(".stat-base").style.top = null;
     }
   }
 
@@ -110,7 +119,7 @@ export function CharacterStatsView(baseProps) {
     }, []);
 
     return (
-      <PopupTip class="stat-info" right>
+      <PopupTip class="stat-info-popup" right>
         {rows}
       </PopupTip>
     );

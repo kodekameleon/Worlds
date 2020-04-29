@@ -163,5 +163,5 @@ export function DragDropSite(props, children) {
  * @returns {element}
  */
 export function DragHandle() {
-  return <div className="drag-handle"/>;
+  return <div class="drag-handle"/>;
 }

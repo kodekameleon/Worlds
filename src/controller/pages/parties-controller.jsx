@@ -25,6 +25,8 @@ const standardArrayFeature = Feature({}, {
   uniqueId: "base-stats:standard-array",
   name: "Standard Array",
 
+  isBaseStat: true,
+
   strength: 15,
   dexterity: 14,
   constitution: 13,

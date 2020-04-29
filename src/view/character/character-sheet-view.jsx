@@ -51,7 +51,7 @@ export function CharacterInfoBlock(props) {
 
 export function SavingThrowBlock() {
   return (
-    <Col className={"saving-throw-block boxed padded spaced"}>
+    <Col class={"saving-throw-block boxed padded spaced"}>
       <SavingThrowStat stat={CharacterStatProp.STRENGTH} value={2} proficient={false}/>
       <SavingThrowStat stat={CharacterStatProp.DEXTERITY} value={2} proficient={false}/>
       <SavingThrowStat stat={CharacterStatProp.CONSTITUTION} value={1} proficient={false}/>
@@ -65,7 +65,7 @@ export function SavingThrowBlock() {
 
 export function SkillBlock() {
   return (
-    <Col className={"saving-throw-block boxed padded spaced"}>
+    <Col class={"saving-throw-block boxed padded spaced"}>
       <SavingThrowStat save={SkillProp.ACROBATICS} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
       <SavingThrowStat save={SkillProp.ANIMAL_HANDLING} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
       <SavingThrowStat save={SkillProp.ARCANA} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
@@ -111,17 +111,17 @@ export function CombatBlock() {
           <label>Armor Class</label>
         </Col>
         <Col class="boxed spaced" center>
-          <div className="value hiviz">+2</div>
+          <div class="value hiviz">+2</div>
           <label>Initiative</label>
         </Col>
         <Col class="boxed spaced" center>
-          <div className="value hiviz">25</div>
+          <div class="value hiviz">25</div>
           <label>Speed</label>
         </Col>
       </Row>
       <Col class="current-hit-points boxed spaced" center>
         <div class="value">
-          <Row className="max-value" center><div>17</div><span className="loviz"> (MAX)</span></Row>
+          <Row class="max-value" center><div>17</div><span class="loviz"> (MAX)</span></Row>
           <div class="hiviz"/>
         </div>
         <label>Current Hit Points</label>
@@ -132,9 +132,9 @@ export function CombatBlock() {
       </Col>
       <Row even>
         <Col class="current-hit-dice boxed spaced" center>
-          <div className="value">
-            <Row className="max-value" center><div>3</div><span className="loviz"> (TOTAL)</span></Row>
-            <div className="hiviz"/>
+          <div class="value">
+            <Row class="max-value" center><div>3</div><span class="loviz"> (TOTAL)</span></Row>
+            <div class="hiviz"/>
           </div>
           <label>Hit Dice</label>
         </Col>
@@ -200,7 +200,7 @@ export function PossessionsBlock() {
 export function MoneyBlock(props) {
   return (
     <Col class="money-block boxed spaced">
-      <div className="value">{props.amount}</div>
+      <div class="value">{props.amount}</div>
       <label>{props.coin}</label>
     </Col>
   );

@@ -41,7 +41,7 @@
 
 .drag-image {
   position: fixed;
-  left: 600px;
+  left: -600px;
   top: 600px;
   padding: 0;
   background-color: transparent;

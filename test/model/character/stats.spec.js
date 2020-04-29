@@ -530,7 +530,7 @@ describe("StatsFeatureSet", () => {
 
   it("should find no changes for a stat when there are no features that change the stat", () => {
     const stats = featureSet.intelligence;
-    expect(stats).to.deep.equal({modifiers: [], value: 0, min: 0, max: 0, available: 0});
+    expect(stats).to.deep.equal({modifiers: [], value: 0, base: 0, min: 0, max: 0, available: 0});
   });
 
   it("should find changes from every feature when every feature change the stat", () => {

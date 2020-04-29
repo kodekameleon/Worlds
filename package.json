@@ -83,6 +83,6 @@
     ],
     "all": true,
     "sourceMap": true,
-    "instrument": true
+    "instrument": false
   }
 }

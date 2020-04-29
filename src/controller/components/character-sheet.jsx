@@ -29,12 +29,12 @@ export function CharacterSheet(props) {
 
   function render() {
     const el = (
-      <div class={["character-sheet", viewState.editing ? "editmode" : "viewmode"]}>
+      <div class="character-sheet">
         <Row class="row1" center>
           <Row class="tools">
             <Icon glyph="&#xe003;" hoverEffect="crescent-moon" on:click={actionHandler.undo()} enabled={undoStack.canUndo} tip={messages.tips.undo}/>
             <Icon glyph="&#xe004;" hoverEffect="crescent-moon" on:click={actionHandler.redo()} enabled={undoStack.canRedo} tip={messages.tips.redo}/>
-            <Icon class="edit-button" hoverEffect="crescent-moon" on:click={onLockClick} tip={messages.tips.lockCharacter}/>
+            <Icon glyph={viewState.editing ? "\ue001" : "\ue000"} hoverEffect="crescent-moon" on:click={onLockClick} tip={messages.tips.lockCharacter}/>
           </Row>
           <CharacterInfoBlock character={character} viewState={viewState}/>
         </Row>
@@ -67,12 +67,6 @@ export function CharacterSheet(props) {
 
   function onLockClick() {
     viewState.editing = !viewState.editing;
-    if (viewState.editing) {
-      rootEl.classList.add("editmode");
-      rootEl.classList.remove("viewmode");
-    } else {
-      rootEl.classList.add("viewmode");
-      rootEl.classList.remove("editmode");
-    }
+    render();
   }
 }

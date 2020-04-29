@@ -11,39 +11,37 @@ export const CharacterStatProp = {
   CHARISMA: "charisma"
 };
 
-export function CharacterStats() {
-  const self = {
-    strength: undefined,
-    dexterity: undefined,
-    constitution: undefined,
-    intelligence: undefined,
-    wisdom: undefined,
-    charisma: undefined
-  };
+export function CharacterStats(state) {
+  const self = {};
 
   return {
-    get strength() { return self.strength; },
+    get strength() { return getStat(CharacterStatProp.STRENGTH); },
+    get dexterity() { return getStat(CharacterStatProp.DEXTERITY); },
+    get constitution() { return getStat(CharacterStatProp.CONSTITUTION); },
+    get intelligence() { return getStat(CharacterStatProp.INTELLIGENCE); },
+    get wisdom() { return getStat(CharacterStatProp.WISDOM); },
+    get charisma() { return getStat(CharacterStatProp.CHARISMA); },
+
     set strength(v) { self.strength = v; },
-    get dexterity() { return self.dexterity; },
     set dexterity(v) { self.dexterity = v; },
-    get constitution() { return self.constitution; },
     set constitution(v) { self.constitution = v; },
-    get intelligence() { return self.intelligence; },
     set intelligence(v) { self.intelligence = v; },
-    get wisdom() { return self.wisdom; },
     set wisdom(v) { self.wisdom = v; },
-    get charisma() { return self.charisma; },
     set charisma(v) { self.charisma = v; },
 
     bonus: {
-      get strength() { return calcStatBonus(self.strength); },
-      get dexterity() { return calcStatBonus(self.dexterity); },
-      get constitution() { return calcStatBonus(self.constitution); },
-      get intelligence() { return calcStatBonus(self.intelligence); },
-      get wisdom() { return calcStatBonus(self.wisdom); },
-      get charisma() { return calcStatBonus(self.charisma); },
+      get strength() { return calcStatBonus(getStat(CharacterStatProp.STRENGTH)); },
+      get dexterity() { return calcStatBonus(getStat(CharacterStatProp.DEXTERITY)); },
+      get constitution() { return calcStatBonus(getStat(CharacterStatProp.CONSTITUTION)); },
+      get intelligence() { return calcStatBonus(getStat(CharacterStatProp.INTELLIGENCE)); },
+      get wisdom() { return calcStatBonus(getStat(CharacterStatProp.WISDOM)); },
+      get charisma() { return calcStatBonus(getStat(CharacterStatProp.CHARISMA)); },
     }
   };
+
+  function getStat(stat) {
+    return state.features[stat].value;
+  }
 
   function calcStatBonus(n) {
     return Math.floor((n - 10) / 2);
@@ -52,6 +50,8 @@ export function CharacterStats() {
 
 export function StatsFeature(state, copyFrom) {
   const self = {
+    isBaseStat: null,
+
     strength: null,
     dexterity: null,
     constitution: null,
@@ -81,6 +81,8 @@ export function StatsFeature(state, copyFrom) {
     get intelligence() { return getModifier(CharacterStatProp.INTELLIGENCE); },
     get wisdom() { return getModifier(CharacterStatProp.WISDOM); },
     get charisma() { return getModifier(CharacterStatProp.CHARISMA); },
+
+    get isBaseStat() { return self.isBaseStat; },
 
     getModifier: (prop) => getModifier(prop),
     hasModifier: (prop) => self[prop] || self.chooseFrom.includes(prop) ? true : false,
@@ -122,6 +124,7 @@ export function StatsFeatureSet(state) {
         const modifier = feature[prop];
         a.modifiers.push(modifier);
         a.value += modifier.value;
+        a.base = feature.isBaseStat ? modifier.value : a.base;
         a.min += modifier.min;
         a.max += modifier.max;
         a.available += modifier.available;
@@ -131,6 +134,7 @@ export function StatsFeatureSet(state) {
     {
       modifiers: [],
       value: 0,
+      base: 0,
       min: 0,
       max: 0,
       available: 0

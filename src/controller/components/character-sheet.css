@@ -13,20 +13,4 @@
     width: 2em;
     height: 2em;
   }
-
-  .edit-button::before {
-    content: "\e000";
-  }
-
-  &.editmode {
-    .edit-button::before {
-      content: "\e001";
-    }
-  }
-
-  &.viewmode {
-    .drag-handle {
-      display: none;
-    }
-  }
 }
