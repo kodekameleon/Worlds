@@ -19,8 +19,7 @@ export function Row(props, children) {
         props.bottom && "bottom",
         props.even && "even",
         props.padded && "padded",
-        props.table && "table",
-        props.class]}
+        props.table && "table"]}
       props={props}
     >
       {children}
@@ -36,8 +35,7 @@ export function Col(props, children) {
         props.left && "left",
         props.center && "center",
         props.right && "right",
-        props.padded && "padded",
-        props.class]}
+        props.padded && "padded"]}
       props={props}
     >
       {children}

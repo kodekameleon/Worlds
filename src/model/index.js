@@ -1,3 +1,3 @@
 
-export {Character} from "./character";
+export * from "./character";
 

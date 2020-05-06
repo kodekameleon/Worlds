@@ -1,12 +1,15 @@
 import {CharacterStatProp} from "../../model/character/stats";
+import {FeatureIds} from "../../constants";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
 import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip} from "../../widgets";
 import "./stats-view.css";
 
 export function CharacterStatsView(baseProps) {
+  const isEditing = baseProps.viewState.editing;
   const char = baseProps.character;
-  let dragOriginEl, dragOriginStat;
+  const usingStandardArray = !!char.getFeature(FeatureIds.STANDARD_ARRAY);
+  let dragOriginEl, dragOriginStat, dragOriginStatValue;
 
   const strEl = <CharacterStat stat={CharacterStatProp.STRENGTH}/>;
   const dexEl = <CharacterStat stat={CharacterStatProp.DEXTERITY}/>;
@@ -26,53 +29,57 @@ export function CharacterStatsView(baseProps) {
 
   function CharacterStat(props) {
     const statInfo = char.features[props.stat];
-    console.log(statInfo);
     const statEl = (
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
         <Col class={["character-stat boxed padded", statInfo.available && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
-            {baseProps.viewState.editing && <DragHandle/>}
-            {baseProps.viewState.editing &&
+            {isEditing && <DragHandle/>}
+            {(isEditing && usingStandardArray) &&
               <div class="value">
                 <span class="stat-base">{statInfo.base}</span>+
                 <span class="stat-mods">{statInfo.value - statInfo.base}</span>
               </div>
             }
-            {baseProps.viewState.editing ||
+            {(isEditing && usingStandardArray) ||
               <div class="value">
                 <span>{statInfo.value}</span>
               </div>
             }
           </DragSource>
-          {baseProps.viewState.editing &&
+          {(isEditing || statInfo.available > 0) &&
             <Col class="stat-spinner">
-              <Icon glyph="&#xe006;"/>
-              <Icon glyph="&#xe005;"/>
+              <Icon glyph="&#xe006;"
+                    enabled={statInfo.available > 0}
+                    on:click={() => onApplyMod(+1)}/>
+              <Icon glyph="&#xe005;"
+                    enabled={statInfo.modifiers.some(v => v.min < v.value && (isEditing || v.available > 0))}
+                    on:click={() => onApplyMod(-1)}/>
             </Col>
           }
           <div class="hiviz stat-bonus">{Utils.signed(char.bonus[props.stat])}</div>
           <label>{messages[props.stat]}</label>
-          <StatInfo stat={props.stat}/>
+          <StatInfoPopup stat={props.stat}/>
         </Col>
       </DropTarget>
     );
     return statEl;
 
     function canDrag() {
-      return baseProps.viewState.editing;
+      return isEditing && usingStandardArray;
     }
 
     function onDragStart() {
       // Remember the element that is the origin
       dragOriginEl = statEl;
       dragOriginStat = props.stat;
+      dragOriginStatValue = statInfo.base;
     }
 
     function createDragImage() {
       return (
         <DragImage>
-          <div class="value-container">{char[props.stat]}</div>
+          <div class="value-container">{statInfo.base}</div>
         </DragImage>
       );
     }
@@ -80,6 +87,7 @@ export function CharacterStatsView(baseProps) {
     function onDragEnd() {
       dragOriginEl = undefined;
       dragOriginStat = undefined;
+      dragOriginStatValue = undefined;
     }
 
     function canDrop() {
@@ -87,9 +95,9 @@ export function CharacterStatsView(baseProps) {
     }
 
     function onDrop() {
-      baseProps.onChangeStats({
-        [props.stat]: char[dragOriginStat],
-        [dragOriginStat]: char[props.stat]
+      baseProps.onChangeStats(FeatureIds.STANDARD_ARRAY, {
+        [props.stat]: dragOriginStatValue,
+        [dragOriginStat]: statInfo.base
       });
     }
 
@@ -106,9 +114,24 @@ export function CharacterStatsView(baseProps) {
       statEl.querySelector(".stat-base").style.top = null;
       dragOriginEl.querySelector(".stat-base").style.top = null;
     }
+
+    function onApplyMod(sign) {
+      // Find the feature to apply the change to
+      let mod;
+      if (sign >= 0) {
+        mod = statInfo.modifiers.find(mod => mod.available > 0);
+      } else {
+        mod = statInfo.modifiers.find(mod => (isEditing || mod.available > 0) && mod.min < mod.value);
+      }
+
+      // If we found a feature, apply the change
+      if (mod) {
+        baseProps.onApplyMod(mod.source.uniqueId, props.stat, sign);
+      }
+    }
   }
 
-  function StatInfo(props) {
+  function StatInfoPopup(props) {
     const rows = char.features[props.stat].modifiers.reduce((res, modifier) => {
       if (modifier.min !== modifier.max) {
         res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);

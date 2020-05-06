@@ -9,4 +9,5 @@ chai.config.includeStack = true;
 
 chai.use(require("chai-as-promised"));
 chai.use(require("deep-equal-in-any-order"));
+chai.use(require("chai-truthy"));
 /* eslint-enable no-undef */

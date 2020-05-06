@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {UndoStack} from "../../src/actions/undo-stack";
+import {UndoStack} from "../../../src/controller/actions/undo-stack";
 
 describe("UndoStack", () => {
   let undoStack;

@@ -14,7 +14,7 @@ import "./drag-drop.css";
  */
 export function DropTarget(props, children) {
   const el = (
-    <div class={["drop-target", props.class]} on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
+    <div class="drop-target" props={props} on:dragover={onDragOver} on:drop={onDrop} on:dragenter={onDragEnter} on:dragleave={onDragLeave}>
       {children}
     </div>
   );
@@ -69,7 +69,7 @@ export function DragSource(props, children) {
   let parentTargetEl;
   let dragDropSite;
   const el = (
-    <div className="drag-source" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+    <div class="drag-source" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
       {children}
     </div>
   );
@@ -91,8 +91,6 @@ export function DragSource(props, children) {
     parentTargetEl = el.closest(".drop-target");
     if (parentTargetEl) {
       parentTargetEl.classList.add("drag-origin");
-      console.log("parentTargetEl=");
-      console.log(parentTargetEl);
     }
 
     // Mark the container, or document, to show that a drag operation is in progress
@@ -107,8 +105,6 @@ export function DragSource(props, children) {
       setTimeout(() => img.remove());
       el.appendChild(img);
       const imgbr = img.getBoundingClientRect();
-      console.log(`ev.X=${ev.clientX} el.left=${elbr.left} img.width=${imgbr.width} el.width=${elbr.width}`);
-      console.log(`ev.Y=${ev.clientY} el.top=${elbr.top}`);
       ev.dataTransfer.setDragImage(
         img,
         ev.clientX - elbr.left + (imgbr.width - elbr.width) / 2,

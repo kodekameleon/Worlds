@@ -12,35 +12,41 @@ export const CharacterStatProp = {
 };
 
 export function CharacterStats(state) {
-  const self = {};
-
   return {
-    get strength() { return getStat(CharacterStatProp.STRENGTH); },
-    get dexterity() { return getStat(CharacterStatProp.DEXTERITY); },
-    get constitution() { return getStat(CharacterStatProp.CONSTITUTION); },
-    get intelligence() { return getStat(CharacterStatProp.INTELLIGENCE); },
-    get wisdom() { return getStat(CharacterStatProp.WISDOM); },
-    get charisma() { return getStat(CharacterStatProp.CHARISMA); },
+    get strength() { return getStatValue(CharacterStatProp.STRENGTH); },
+    get dexterity() { return getStatValue(CharacterStatProp.DEXTERITY); },
+    get constitution() { return getStatValue(CharacterStatProp.CONSTITUTION); },
+    get intelligence() { return getStatValue(CharacterStatProp.INTELLIGENCE); },
+    get wisdom() { return getStatValue(CharacterStatProp.WISDOM); },
+    get charisma() { return getStatValue(CharacterStatProp.CHARISMA); },
 
-    set strength(v) { self.strength = v; },
-    set dexterity(v) { self.dexterity = v; },
-    set constitution(v) { self.constitution = v; },
-    set intelligence(v) { self.intelligence = v; },
-    set wisdom(v) { self.wisdom = v; },
-    set charisma(v) { self.charisma = v; },
+    get stats() {
+      return {
+        strength: getStatValue(CharacterStatProp.STRENGTH),
+        dexterity: getStatValue(CharacterStatProp.DEXTERITY),
+        constitution: getStatValue(CharacterStatProp.CONSTITUTION),
+        intelligence: getStatValue(CharacterStatProp.INTELLIGENCE),
+        wisdom: getStatValue(CharacterStatProp.WISDOM),
+        charisma: getStatValue(CharacterStatProp.CHARISMA)
+      };
+    },
 
     bonus: {
-      get strength() { return calcStatBonus(getStat(CharacterStatProp.STRENGTH)); },
-      get dexterity() { return calcStatBonus(getStat(CharacterStatProp.DEXTERITY)); },
-      get constitution() { return calcStatBonus(getStat(CharacterStatProp.CONSTITUTION)); },
-      get intelligence() { return calcStatBonus(getStat(CharacterStatProp.INTELLIGENCE)); },
-      get wisdom() { return calcStatBonus(getStat(CharacterStatProp.WISDOM)); },
-      get charisma() { return calcStatBonus(getStat(CharacterStatProp.CHARISMA)); },
+      get strength() { return getStatBonus(CharacterStatProp.STRENGTH); },
+      get dexterity() { return getStatBonus(CharacterStatProp.DEXTERITY); },
+      get constitution() { return getStatBonus(CharacterStatProp.CONSTITUTION); },
+      get intelligence() { return getStatBonus(CharacterStatProp.INTELLIGENCE); },
+      get wisdom() { return getStatBonus(CharacterStatProp.WISDOM); },
+      get charisma() { return getStatBonus(CharacterStatProp.CHARISMA); },
     }
   };
 
-  function getStat(stat) {
+  function getStatValue(stat) {
     return state.features[stat].value;
+  }
+
+  function getStatBonus(stat) {
+    return calcStatBonus(state.features[stat].value);
   }
 
   function calcStatBonus(n) {
@@ -84,23 +90,51 @@ export function StatsFeature(state, copyFrom) {
 
     get isBaseStat() { return self.isBaseStat; },
 
-    getModifier: (prop) => getModifier(prop),
-    hasModifier: (prop) => self[prop] || self.chooseFrom.includes(prop) ? true : false,
+    getModifier: (stat) => getModifier(stat),
+    hasModifier: (stat) => self[stat] || canChoose(stat) ? true : false,
+
+    getFixedStatModifier: (stat) => { return self[stat]; },
+    setFixedStatModifier: (stat, value) => { self[stat] = value; },
+
+    applyStatModifierIncrease: (stat) => applyModifierIncrease(stat),
+    applyStatModifierDecrease: (stat) => applyModifierDecrease(stat),
 
     serialize: () => Language.deflate(self)
   };
 
-  function getModifier(prop) {
-    const available = (self.chooseFrom.includes(ANY) || self.chooseFrom.includes(prop))
+  function canChoose(stat) {
+    return self.chooseFrom === ANY || self.chooseFrom.includes(stat);
+  }
+
+  function applyModifierIncrease(stat) {
+    if (self.chooseUpTo > 0 && self.choicesMade < self.chooseUpTo && canChoose(stat) && self.chosen[stat] < self.maxPerStat) {
+      self.choicesMade += 1;
+      self.chosen[stat] += 1;
+      return true;
+    }
+    return false;
+  }
+
+  function applyModifierDecrease(stat) {
+    if (self.chooseUpTo > 0 && self.choicesMade > 0 && canChoose(stat) && self.chosen[stat] > 0) {
+      self.choicesMade -= 1;
+      self.chosen[stat] -= 1;
+      return true;
+    }
+    return false;
+  }
+
+  function getModifier(stat) {
+    const available = canChoose(stat)
       && self.chooseUpTo > self.choicesMade
-      && self.maxPerStat > self.chosen[prop]
-      ? Math.min(self.chooseUpTo - self.choicesMade, self.maxPerStat - Math.max(self.chosen[prop], 0))
+      && self.maxPerStat > self.chosen[stat]
+      ? Math.min(self.chooseUpTo - self.choicesMade, self.maxPerStat - Math.max(self.chosen[stat], 0))
       : 0;
     return {
       source: UniqueObject(undefined, state),
-      value: self[prop] + self.chosen[prop],
-      min: +self[prop],
-      max: +self[prop] + ((self.chooseFrom.includes(ANY) || self.chooseFrom.includes(prop)) && self.maxPerStat),
+      value: self[stat] + self.chosen[stat],
+      min: +self[stat],
+      max: +self[stat] + (canChoose(stat) && self.maxPerStat),
       available
     };
   }
@@ -122,9 +156,16 @@ export function StatsFeatureSet(state) {
     return state.featureList.reduce((a, feature) => {
       if (feature.hasModifier(prop)) {
         const modifier = feature[prop];
+        if (feature.isBaseStat) {
+          a.modifiers = [];
+          a.value = 0;
+          a.base = modifier.value;
+          a.min = 0;
+          a.max = 0;
+          a.available = 0;
+        }
         a.modifiers.push(modifier);
         a.value += modifier.value;
-        a.base = feature.isBaseStat ? modifier.value : a.base;
         a.min += modifier.min;
         a.max += modifier.max;
         a.available += modifier.available;

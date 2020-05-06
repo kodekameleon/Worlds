@@ -1,6 +1,6 @@
-import {ActionHandler} from "../../src/actions/action-handler";
+import {ActionHandler} from "../../../src/controller/actions/action-handler";
 import spies from "chai-spies";
-import {UndoStack} from "../../src/actions/undo-stack";
+import {UndoStack} from "../../../src/controller/actions/undo-stack";
 import chai, {expect} from "chai";
 
 chai.use(spies);

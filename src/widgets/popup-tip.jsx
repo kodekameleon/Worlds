@@ -11,7 +11,7 @@ export function PopupTip(props, children) {
   }
   return (
     <div class={["popup-tip-container", side]}>
-      <div class={["popup-tip", side, props.class]}>{children}</div>
+      <div class={["popup-tip", side]} props={props}>{children}</div>
     </div>
   );
 }

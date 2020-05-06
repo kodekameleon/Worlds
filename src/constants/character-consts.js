@@ -36,3 +36,7 @@ export const DamageProp = {
   SLASHING: "slashing",
   THUNDER: "thunder"
 };
+
+export const FeatureIds = {
+  STANDARD_ARRAY: "base-stats:standard-array"
+};
