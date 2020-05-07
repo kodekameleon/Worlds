@@ -48,6 +48,14 @@ textarea::-moz-focus-inner {
   border: 0 none !important;
 }
 
+input[type='button'],
+button {
+  font: inherit;
+  font-size: inherit;
+  text-align: inherit;
+  border-color: inherit;
+}
+
 input[type='button']:not(:disabled),
 input[type='image']:not(:disabled),
 button:not(:disabled) {

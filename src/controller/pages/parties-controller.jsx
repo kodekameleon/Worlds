@@ -13,17 +13,11 @@ character.player = "Justin";
 character.race = "Rock Gnome";
 character.alignment = "Chaotic Neutral";
 character.xp = 600;
-character.strength = 15;
-character.dexterity = 14;
-character.constitution = 13;
-character.intelligence = 12;
-character.wisdom = 10;
-character.charisma = 8;
 
 // Create base stats, Half Elf, Level 4 stat upgrade features
 const standardArrayFeature = Feature({}, {
   uniqueId: "base-stats:standard-array",
-  name: "Standard Array",
+  name: "Standard Scores",
 
   isBaseStat: true,
 

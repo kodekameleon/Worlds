@@ -18,10 +18,12 @@ export function CharacterStatsView(baseProps) {
   const wisEl = <CharacterStat stat={CharacterStatProp.WISDOM}/>;
   const chaEl = <CharacterStat stat={CharacterStatProp.CHARISMA}/>;
 
+  const selector = isEditing && BaseStatTypeSelector();
+
   const statsEl = (
     <DragDropSite class="character-stat-block">
       <Col>
-        {[strEl, dexEl, conEl, intEl, wisEl, chaEl]}
+        {[selector, strEl, dexEl, conEl, intEl, wisEl, chaEl]}
       </Col>
     </DragDropSite>
   );
@@ -32,7 +34,7 @@ export function CharacterStatsView(baseProps) {
     const statEl = (
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
-        <Col class={["character-stat boxed padded", statInfo.available && "attention"]} center>
+        <Col class={["character-stat boxed", statInfo.available && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
             {isEditing && <DragHandle/>}
             {(isEditing && usingStandardArray) &&
@@ -145,6 +147,27 @@ export function CharacterStatsView(baseProps) {
       <PopupTip class="stat-info-popup" right>
         {rows}
       </PopupTip>
+    );
+  }
+
+  function BaseStatTypeSelector() {
+    return (
+      <div class="stat-type-selector">
+        <Col class="spaced boxed">
+          <div class="drop-list">
+            <button>
+              Standard Scores
+            </button>
+            <ul>
+              <li>Standard Scores</li>
+              <li>Points Buy</li>
+              <li>Roll</li>
+              <li>Manual Entry</li>
+            </ul>
+          </div>
+          <label>Abilities Variant</label>
+        </Col>
+      </div>
     );
   }
 }

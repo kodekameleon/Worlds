@@ -51,7 +51,7 @@ export function CharacterInfoBlock(props) {
 
 export function SavingThrowBlock() {
   return (
-    <Col class={"saving-throw-block boxed padded spaced"}>
+    <Col class={"saving-throw-block boxed spaced"}>
       <SavingThrowStat stat={CharacterStatProp.STRENGTH} value={2} proficient={false}/>
       <SavingThrowStat stat={CharacterStatProp.DEXTERITY} value={2} proficient={false}/>
       <SavingThrowStat stat={CharacterStatProp.CONSTITUTION} value={1} proficient={false}/>
@@ -65,7 +65,7 @@ export function SavingThrowBlock() {
 
 export function SkillBlock() {
   return (
-    <Col class={"saving-throw-block boxed padded spaced"}>
+    <Col class={"saving-throw-block boxed spaced"}>
       <SavingThrowStat save={SkillProp.ACROBATICS} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
       <SavingThrowStat save={SkillProp.ANIMAL_HANDLING} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
       <SavingThrowStat save={SkillProp.ARCANA} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>

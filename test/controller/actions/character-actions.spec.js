@@ -11,7 +11,7 @@ describe("Character Actions", () => {
       character = Character();
       character.features.featureList.push(Feature({}, {
         uniqueId: "base-stats:standard-array",
-        name: "Standard Array",
+        name: "Standard Scores",
         isBaseStat: true,
         strength: 15,
         dexterity: 14,
@@ -130,7 +130,7 @@ describe("Character Actions", () => {
       character = Character();
       character.features.featureList.push(Feature({}, {
         uniqueId: "base-stats:standard-array",
-        name: "Standard Array",
+        name: "Standard Scores",
         isBaseStat: true,
         strength: 15,
         dexterity: 14,

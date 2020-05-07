@@ -3,6 +3,10 @@
     pointer-events: none;
   }
 
+  .character-stat-block {
+    position: relative;
+  }
+
   .character-stat {
     position: relative;
 
@@ -63,10 +67,6 @@
       }
     }
 
-    label {
-      width: 100%;
-    }
-
     .drag-handle::before {
       top: 1px;
       right: 4px;
@@ -79,6 +79,76 @@
 
     &.popup-tip {
       font-size: 0.8em;
+    }
+  }
+
+  .stat-type-selector {
+    position: absolute;
+    bottom: 100%;
+    width: 100vw;
+    height: 0;
+
+    & > div {
+      position: absolute;
+      bottom: 0;
+      width: fit-content;
+    }
+  }
+
+  .drop-list {
+    padding: 0.2em 0.4em;
+    border-color: var(--border-color-light);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--text-color-dark);
+      border-color: var(--border-color);
+    }
+
+    &:focus-within {
+      background-color: pink;
+
+      ul {
+        display: block;
+      }
+    }
+
+    & > button {
+      display: inline-block;
+      line-height: 1;
+
+      &::after {
+        content: "\E007";
+        font-family: "worlds-icons"; /* stylelint-disable-line */
+        border-left: 1px solid;
+        padding-left: 0.4em;
+        margin-left: 0.4em;
+        vertical-align: bottom;
+      }
+
+      &:focus::after {
+        content: "\E008";
+      }
+    }
+
+    ul {
+      display: none;
+      position: absolute;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-tight);
+      z-index: 1;
+      left: -1px;
+      width: calc(100% + 2px);
+
+      & > li {
+        padding: 0 0.4em;
+
+        &:hover {
+          color: var(--text-color-dark);
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+      }
     }
   }
 }
