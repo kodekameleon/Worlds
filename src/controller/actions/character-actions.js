@@ -1,25 +1,25 @@
 
-export function doChangeStats(character, featureId, stats) {
+export function doChangeAbilityScores(character, featureId, abilityScores) {
   let changed;
   const undo = {};
   const feature = character.getFeature(featureId);
   if (feature) {
-    for (const stat in stats) {
-      if (feature.getFixedStatModifier(stat) !== stats[stat]) {
+    for (const abilityScore in abilityScores) {
+      if (feature.getFixedAbilityScoreModifier(abilityScore) !== abilityScores[abilityScore]) {
         changed = true;
-        undo[stat] = feature.getFixedStatModifier(stat);
-        feature.setFixedStatModifier(stat, stats[stat]);
+        undo[abilityScore] = feature.getFixedAbilityScoreModifier(abilityScore);
+        feature.setFixedAbilityScoreModifier(abilityScore, abilityScores[abilityScore]);
       }
     }
   }
-  return changed && (() => doChangeStats(character, featureId, undo));
+  return changed && (() => doChangeAbilityScores(character, featureId, undo));
 }
 
-export function doApplyStatMod(character, featureId, stat, sign) {
+export function doApplyAbilityScoreModifier(character, featureId, ability, sign) {
   let changed;
   const feature = character.getFeature(featureId);
   if (feature) {
-    changed = sign >= 0 ? feature.applyStatModifierIncrease(stat) : feature.applyStatModifierDecrease(stat);
+    changed = sign >= 0 ? feature.applyAbilityScoreModifierIncrease(ability) : feature.applyAbilityScoreModifierDecrease(ability);
   }
-  return changed && (() => doApplyStatMod(character, featureId, stat, -sign));
+  return changed && (() => doApplyAbilityScoreModifier(character, featureId, ability, -sign));
 }

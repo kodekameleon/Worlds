@@ -1,16 +1,15 @@
 import {ANY} from "../../../src/constants";
 import {expect} from "chai";
-import {StatsFeatureSet} from "../../../src/model/character/stats";
 import {UniqueObject} from "../../../src/model/unique-object";
-import {Character,  StatsFeature} from "../../../src/model/character";
+import {AbilityScoresFeature, AbilityScoresFeatureSet, Character} from "../../../src/model";
 
 const uniqueObject = UniqueObject({}, {name: "Elf", uniqueId: "elf-race-feature"});
 
-describe("Stats", () => {
-  describe("CharacterStats", () => {
+describe("Ability Scores", () => {
+  describe("AbilityScores", () => {
     const character = Character();
-    character.features.featureList.push(StatsFeature({}, {
-      isBaseStat: true,
+    character.features.featureList.push(AbilityScoresFeature({}, {
+      isBaseScore: true,
       strength: 15,
       dexterity: 14,
       constitution: 13,
@@ -38,7 +37,7 @@ describe("Stats", () => {
     });
   });
 
-  describe("StatsFeature", () => {
+  describe("AbilityScoresFeature", () => {
     it("should serialize and deserialize", () => {
       const orig = {
         strength: 6,
@@ -50,7 +49,7 @@ describe("Stats", () => {
 
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["intelligence", "charisma"],
         chosen: {
           strength: 1,
@@ -62,26 +61,26 @@ describe("Stats", () => {
         }
       };
 
-      const feat = StatsFeature({}, orig);
+      const feat = AbilityScoresFeature({}, orig);
       const serialized = feat.serialize();
 
       expect(serialized).to.deep.equalInAnyOrder(orig);
     });
 
     it("should serialize without undefined values", () => {
-      const feat = StatsFeature({});
+      const feat = AbilityScoresFeature({});
       const serialized = feat.serialize();
 
       expect(serialized).to.deep.equal({});
     });
 
     it("should report no modifiers available for an empty object", () => {
-      const feat = StatsFeature(uniqueObject);
+      const feat = AbilityScoresFeature(uniqueObject);
       expect(feat.strength).to.deep.equal({source: uniqueObject, value: 0, min: 0, max: 0, available: 0});
     });
 
-    it("should return the same when using getters or getStatModifiers with a named stat", () => {
-      const feat = StatsFeature({}, {
+    it("should return the same when using getters or getAbilityScoreModifiers with a named ability score", () => {
+      const feat = AbilityScoresFeature({}, {
         strength: 0,
         dexterity: 1,
         constitution: 2,
@@ -99,28 +98,28 @@ describe("Stats", () => {
     });
 
     it("should recognize an optional modifier is present when it is listed", () => {
-      const feature = StatsFeature({}, {
+      const feature = AbilityScoresFeature({}, {
         chooseFrom: ["strength"]
       });
       expect(feature.hasModifier("strength")).to.be.true;
     });
 
     it("should recognize an optional modifier is not present when it is not listed", () => {
-      const feature = StatsFeature({}, {
+      const feature = AbilityScoresFeature({}, {
         chooseFrom: ["strength"]
       });
       expect(feature.hasModifier("dexterity")).to.be.false;
     });
 
     it("should recognize an optional modifier is not present when it is not listed", () => {
-      const feature = StatsFeature({}, {
+      const feature = AbilityScoresFeature({}, {
         chooseFrom: ANY
       });
       expect(feature.hasModifier("dexterity")).to.be.true;
     });
 
     describe("Detect modifiers", () => {
-      const feature = StatsFeature({}, {
+      const feature = AbilityScoresFeature({}, {
         strength: 0,
         dexterity: 1,
         constitution: 0,
@@ -130,7 +129,7 @@ describe("Stats", () => {
 
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           strength: 0,
@@ -142,21 +141,21 @@ describe("Stats", () => {
         }
       });
 
-      it("should report that a stat has no modifiers if there are no modifiers", () => {
+      it("should report that an ability score has no modifiers if there are no modifiers", () => {
         expect(feature.hasModifier("strength")).to.equal(false);
       });
 
-      it("should report that a stat has modifiers if there is a fixed modifier", () => {
+      it("should report that an ability score has modifiers if there is a fixed modifier", () => {
         expect(feature.hasModifier("dexterity")).to.equal(true);
       });
 
-      it("should report that a stat has modifiers if there is an optional modifier", () => {
+      it("should report that an ability score has modifiers if there is an optional modifier", () => {
         expect(feature.hasModifier("constitution")).to.equal(true);
       });
     });
 
     describe("Fixed modifiers", () => {
-      const feature = StatsFeature(uniqueObject, {
+      const feature = AbilityScoresFeature(uniqueObject, {
         strength: 0,
         dexterity: 1,
         constitution: 0,
@@ -166,7 +165,7 @@ describe("Stats", () => {
 
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           strength: 0,
@@ -178,11 +177,11 @@ describe("Stats", () => {
         }
       });
 
-      it("should report correct modifier when stat is not modified", () => {
+      it("should report correct modifier when an ability score is not modified", () => {
         expect(feature.strength.value).to.equal(0);
       });
 
-      it("should report correct modifier when stat is modified", () => {
+      it("should report correct modifier when an ability score is modified", () => {
         expect(feature.dexterity.value).to.equal(1);
       });
 
@@ -196,8 +195,8 @@ describe("Stats", () => {
       });
     });
 
-    describe("Single choice allowed per stat", () => {
-      const feature = StatsFeature(uniqueObject, {
+    describe("Single choice allowed per ability score", () => {
+      const feature = AbilityScoresFeature(uniqueObject, {
         strength: 0,
         dexterity: 1,
         constitution: 0,
@@ -207,7 +206,7 @@ describe("Stats", () => {
 
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           strength: 0,
@@ -219,27 +218,27 @@ describe("Stats", () => {
         }
       });
 
-      const featureUnassigned = StatsFeature(uniqueObject, {
+      const featureUnassigned = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"]
       });
 
-      const featureAssigned1 = StatsFeature(uniqueObject, {
+      const featureAssigned1 = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 1,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           constitution: 1
         }
       });
 
-      const featureAssigned2 = StatsFeature(uniqueObject, {
+      const featureAssigned2 = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 2,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           constitution: 1,
@@ -247,61 +246,61 @@ describe("Stats", () => {
         }
       });
 
-      it("should report correct values when stat cannot be modified", () => {
+      it("should report correct values when an ability score cannot be modified", () => {
         expect(feature.strength).to.deep.equal({source: uniqueObject, value: 0, min: 0, max: 0, available: 0});
       });
 
-      it("should report correct values when stat has not been modified", () => {
+      it("should report correct values when an ability score has not been modified", () => {
         expect(feature.dexterity).to.deep.equal({source: uniqueObject, value: 1, min: 1, max: 2, available: 1});
       });
 
-      it("should report correct values when stat has been modified to its limit", () => {
+      it("should report correct values when an ability score has been modified to its limit", () => {
         expect(feature.constitution).to.deep.equal({source: uniqueObject, value: 1, min: 0, max: 1, available: 0});
       });
 
-      it("should report correct values when stat has a modifier below the minimum", () => {
+      it("should report correct values when an ability score has a modifier below the minimum", () => {
         expect(feature.wisdom).to.deep.equal({source: uniqueObject, value: -1, min: 0, max: 1, available: 1});
       });
 
-      it("should report correct values when stat has a modifier above the maximum", () => {
+      it("should report correct values when an ability score has a modifier above the maximum", () => {
         expect(feature.charisma).to.deep.equal({source: uniqueObject, value: 3, min: 1, max: 2, available: 0});
       });
 
-      it("should report correct availability when no option is assigned and stat cannot be modified", () => {
+      it("should report correct availability when no option is assigned and ability score cannot be modified", () => {
         expect(featureUnassigned.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when no option is assigned and stat can be modified", () => {
+      it("should report correct availability when no option is assigned and ability score can be modified", () => {
         expect(featureUnassigned.dexterity.available).to.equal(1);
       });
 
-      it("should report correct availability when one option is assigned and the stat cannot be modified", () => {
+      it("should report correct availability when one option is assigned and the ability score cannot be modified", () => {
         expect(featureAssigned1.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when one option is assigned and stat can be modified", () => {
+      it("should report correct availability when one option is assigned and ability score can be modified", () => {
         expect(featureAssigned1.dexterity.available).to.equal(1);
       });
 
-      it("should report correct availability when one option is assigned and stat has been modified", () => {
+      it("should report correct availability when one option is assigned and ability score has been modified", () => {
         expect(featureAssigned1.constitution.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned and the stat cannot be modified", () => {
+      it("should report correct availability when two options are assigned and the ability score cannot be modified", () => {
         expect(featureAssigned2.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned and stat can be modified", () => {
+      it("should report correct availability when two options are assigned and ability score can be modified", () => {
         expect(featureAssigned2.dexterity.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned and stat has been modified", () => {
+      it("should report correct availability when two options are assigned and ability score has been modified", () => {
         expect(featureAssigned2.constitution.available).to.equal(0);
       });
     });
 
-    describe("Multiple choices allowed per stat", () => {
-      const feature = StatsFeature(uniqueObject, {
+    describe("Multiple choices allowed per ability score", () => {
+      const feature = AbilityScoresFeature(uniqueObject, {
         strength: 0,
         dexterity: 1,
         constitution: 0,
@@ -311,7 +310,7 @@ describe("Stats", () => {
 
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           strength: 0,
@@ -323,27 +322,27 @@ describe("Stats", () => {
         }
       });
 
-      const featureUnassigned = StatsFeature(uniqueObject, {
+      const featureUnassigned = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 0,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"]
       });
 
-      const featureAssigned1 = StatsFeature(uniqueObject, {
+      const featureAssigned1 = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 1,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           constitution: 1
         }
       });
 
-      const featureAssigned2 = StatsFeature(uniqueObject, {
+      const featureAssigned2 = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 2,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           constitution: 1,
@@ -351,92 +350,92 @@ describe("Stats", () => {
         }
       });
 
-      const featureAssigned2OnOne = StatsFeature(uniqueObject, {
+      const featureAssigned2OnOne = AbilityScoresFeature(uniqueObject, {
         chooseUpTo: 2,
         choicesMade: 2,
-        maxPerStat: 2,
+        maxPerAbility: 2,
         chooseFrom: ["dexterity", "constitution", "intelligence", "wisdom", "charisma"],
         chosen: {
           constitution: 2
         }
       });
 
-      it("should report correct values when stat cannot be modified", () => {
+      it("should report correct values when an ability score cannot be modified", () => {
         expect(feature.strength).to.deep.equal({source: uniqueObject, value: 0, min: 0, max: 0, available: 0});
       });
 
-      it("should report correct values when stat has not been modified", () => {
+      it("should report correct values when an ability score has not been modified", () => {
         expect(feature.dexterity).to.deep.equal({source: uniqueObject, value: 1, min: 1, max: 3, available: 2});
       });
 
-      it("should report correct values when stat has been modified", () => {
+      it("should report correct values when an ability score has been modified", () => {
         expect(feature.constitution).to.deep.equal({source: uniqueObject, value: 1, min: 0, max: 2, available: 1});
       });
 
-      it("should report correct values when stat has been modified to its limit", () => {
+      it("should report correct values when an ability score has been modified to its limit", () => {
         expect(feature.intelligence).to.deep.equal({source: uniqueObject, value: 3, min: 1, max: 3, available: 0});
       });
 
-      it("should report correct values when stat has a modifier below the minimum", () => {
+      it("should report correct values when an ability score has a modifier below the minimum", () => {
         expect(feature.wisdom).to.deep.equal({source: uniqueObject, value: -1, min: 0, max: 2, available: 2});
       });
 
-      it("should report correct values when stat has a modifier above the maximum", () => {
+      it("should report correct values when an ability score has a modifier above the maximum", () => {
         expect(feature.charisma).to.deep.equal({source: uniqueObject, value: 4, min: 1, max: 3, available: 0});
       });
 
-      it("should report correct availability when no option is assigned and stat cannot be modified", () => {
+      it("should report correct availability when no option is assigned and ability score cannot be modified", () => {
         expect(featureUnassigned.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when no option is assigned and stat can be modified", () => {
+      it("should report correct availability when no option is assigned and ability score can be modified", () => {
         expect(featureUnassigned.dexterity.available).to.equal(2);
       });
 
-      it("should report correct availability when one option is assigned and the stat cannot be modified", () => {
+      it("should report correct availability when one option is assigned and the ability score cannot be modified", () => {
         expect(featureAssigned1.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when one option is assigned and stat can be modified", () => {
+      it("should report correct availability when one option is assigned and ability score can be modified", () => {
         expect(featureAssigned1.dexterity.available).to.equal(1);
       });
 
-      it("should report correct availability when one option is assigned and stat has been modified", () => {
+      it("should report correct availability when one option is assigned and ability score has been modified", () => {
         expect(featureAssigned1.constitution.available).to.equal(1);
       });
 
-      it("should report correct availability when two options are assigned and the stat cannot be modified", () => {
+      it("should report correct availability when two options are assigned and the ability score cannot be modified", () => {
         expect(featureAssigned2.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned and stat can be modified", () => {
+      it("should report correct availability when two options are assigned and ability score can be modified", () => {
         expect(featureAssigned2.dexterity.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned and stat has been modified", () => {
+      it("should report correct availability when two options are assigned and ability score has been modified", () => {
         expect(featureAssigned2.constitution.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned to one stat and the stat cannot be modified", () => {
+      it("should report correct availability when two options are assigned to one ability score and the ability score cannot be modified", () => {
         expect(featureAssigned2OnOne.strength.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned to one stat and stat can be modified", () => {
+      it("should report correct availability when two options are assigned to one ability score and ability score can be modified", () => {
         expect(featureAssigned2OnOne.dexterity.available).to.equal(0);
       });
 
-      it("should report correct availability when two options are assigned to one stat and stat has been modified", () => {
+      it("should report correct availability when two options are assigned to one ability score and ability score has been modified", () => {
         expect(featureAssigned2OnOne.constitution.available).to.equal(0);
       });
     });
 
     describe("Partially defined", () => {
-      const feature = StatsFeature({}, {
+      const feature = AbilityScoresFeature({}, {
         intelligence: 1,
         wisdom: 1,
         charisma: 1,
         chooseUpTo: 2,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["dexterity", "constitution", "wisdom", "charisma"],
         chosen: {
           constitution: 1,
@@ -469,8 +468,8 @@ describe("Stats", () => {
       });
     });
 
-    describe("Change base stat", () => {
-      const feature = StatsFeature({}, {
+    describe("Change base ability score", () => {
+      const feature = AbilityScoresFeature({}, {
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -479,16 +478,16 @@ describe("Stats", () => {
         charisma: 8
       });
 
-      it("should return the correct base stat", () => {
-        expect(feature.getFixedStatModifier("strength")).to.equal(15);
-        expect(feature.getFixedStatModifier("charisma")).to.equal(8);
+      it("should return the correct base ability score", () => {
+        expect(feature.getFixedAbilityScoreModifier("strength")).to.equal(15);
+        expect(feature.getFixedAbilityScoreModifier("charisma")).to.equal(8);
       });
 
-      it("should set the correct base stat", () => {
-        feature.setFixedStatModifier("strength", 12);
-        feature.setFixedStatModifier("charisma", 6);
-        expect(feature.getFixedStatModifier("strength")).to.equal(12);
-        expect(feature.getFixedStatModifier("charisma")).to.equal(6);
+      it("should set the correct base ability score", () => {
+        feature.setFixedAbilityScoreModifier("strength", 12);
+        feature.setFixedAbilityScoreModifier("charisma", 6);
+        expect(feature.getFixedAbilityScoreModifier("strength")).to.equal(12);
+        expect(feature.getFixedAbilityScoreModifier("charisma")).to.equal(6);
       });
     });
 
@@ -496,10 +495,10 @@ describe("Stats", () => {
       let feature;
 
       beforeEach(() => {
-        feature = StatsFeature(uniqueObject, {
+        feature = AbilityScoresFeature(uniqueObject, {
           chooseUpTo: 2,
           choicesMade: 1,
-          maxPerStat: 1,
+          maxPerAbility: 1,
           chooseFrom: ["strength", "constitution"],
           chosen: {
             constitution: 1
@@ -507,47 +506,47 @@ describe("Stats", () => {
         });
       });
 
-      it("should increase the stat value when a modifier is applied", () => {
-        feature.applyStatModifierIncrease("strength");
+      it("should increase the ability score value when a modifier is applied", () => {
+        feature.applyAbilityScoreModifierIncrease("strength");
         expect(feature["strength"].value).to.equal(1);
       });
 
-      it("should decrease the stat value when a modifier is removed", () => {
-        feature.applyStatModifierDecrease("constitution");
+      it("should decrease the ability score value when a modifier is removed", () => {
+        feature.applyAbilityScoreModifierDecrease("constitution");
         expect(feature["constitution"].value).to.equal(0);
       });
 
       it("should ignore an increase that cannot be applied", () => {
-        const res = feature.applyStatModifierIncrease("constitution");
+        const res = feature.applyAbilityScoreModifierIncrease("constitution");
         expect(res).to.be.false;
         expect(feature["constitution"].value).to.equal(1);
       });
 
       it("should ignore a decrease that cannot be applied", () => {
-        const res = feature.applyStatModifierDecrease("strength");
+        const res = feature.applyAbilityScoreModifierDecrease("strength");
         expect(res).to.be.false;
         expect(feature["strength"].value).to.equal(0);
       });
 
       it("should ignore an increase that is not in the list", () => {
-        const res = feature.applyStatModifierIncrease("dexterity");
+        const res = feature.applyAbilityScoreModifierIncrease("dexterity");
         expect(res).to.be.false;
         expect(feature["strength"].value).to.equal(0);
       });
 
       it("should ignore a decrease that is not in the list", () => {
-        const res = feature.applyStatModifierDecrease("charisma");
+        const res = feature.applyAbilityScoreModifierDecrease("charisma");
         expect(res).to.be.false;
         expect(feature["strength"].value).to.equal(0);
       });
     });
   });
 
-  describe("StatsFeatureSet", () => {
+  describe("AbilityScoresFeatureSet", () => {
     describe("Cumulative modifiers", () => {
-      const featureSet = StatsFeatureSet({
+      const featureSet = AbilityScoresFeatureSet({
         featureList: [
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 1,
             dexterity: 1,
             constitution: 1,
@@ -556,7 +555,7 @@ describe("Stats", () => {
             charisma: 0
           }),
 
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 1,
             dexterity: 1,
             constitution: 0,
@@ -565,7 +564,7 @@ describe("Stats", () => {
             charisma: 0
           }),
 
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 1,
             dexterity: 0,
             constitution: 0,
@@ -575,7 +574,7 @@ describe("Stats", () => {
 
             chooseUpTo: 2,
             choicesMade: 0,
-            maxPerStat: 2,
+            maxPerAbility: 2,
             chooseFrom: ["wisdom", "charisma"],
             chosen: {
               strength: 0,
@@ -587,7 +586,7 @@ describe("Stats", () => {
             }
           }),
 
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 0,
             dexterity: 0,
             constitution: 0,
@@ -597,7 +596,7 @@ describe("Stats", () => {
 
             chooseUpTo: 2,
             choicesMade: 0,
-            maxPerStat: 1,
+            maxPerAbility: 1,
             chooseFrom: ["strength", "charisma"],
             chosen: {
               strength: 0,
@@ -611,79 +610,79 @@ describe("Stats", () => {
         ]
       });
 
-      it("should find no modifiers for a stat when there are no features that modify the stat", () => {
-        const stats = featureSet.intelligence;
-        expect(stats).to.deep.equal({modifiers: [], value: 0, base: 0, min: 0, max: 0, available: 0});
+      it("should find no modifiers for an ability score when there are no features that modify the ability score", () => {
+        const abilityInfo = featureSet.intelligence;
+        expect(abilityInfo).to.deep.equal({modifiers: [], value: 0, base: 0, min: 0, max: 0, available: 0});
       });
 
-      it("should find modifiers from every feature when every feature modifier the stat", () => {
-        const stats = featureSet.strength;
-        expect(stats.modifiers).to.have.lengthOf(4);
+      it("should find modifiers from every feature when every feature modifier the ability score", () => {
+        const abilityInfo = featureSet.strength;
+        expect(abilityInfo.modifiers).to.have.lengthOf(4);
       });
 
-      it("should calculate the correct range for stats with multiple optional features", () => {
-        const stats = featureSet.charisma;
-        expect(stats.min).to.equal(0);
-        expect(stats.max).to.equal(3);
+      it("should calculate the correct range for abilityScores with multiple optional features", () => {
+        const abilityInfo = featureSet.charisma;
+        expect(abilityInfo.min).to.equal(0);
+        expect(abilityInfo.max).to.equal(3);
       });
 
-      it("should calculate the correct range for stats with multiple optional and fixed features", () => {
-        const stats = featureSet.strength;
-        expect(stats.min).to.equal(3);
-        expect(stats.max).to.equal(4);
+      it("should calculate the correct range for abilityScores with multiple optional and fixed features", () => {
+        const abilityInfo = featureSet.strength;
+        expect(abilityInfo.min).to.equal(3);
+        expect(abilityInfo.max).to.equal(4);
       });
 
-      it("should calculate the correct range for stats with no optional features", () => {
-        const stats = featureSet.constitution;
-        expect(stats.min).to.equal(1);
-        expect(stats.max).to.equal(1);
+      it("should calculate the correct range for abilityScores with no optional features", () => {
+        const abilityInfo = featureSet.constitution;
+        expect(abilityInfo.min).to.equal(1);
+        expect(abilityInfo.max).to.equal(1);
       });
 
-      it("should calculate the correct value for stats with multiple optional features", () => {
-        const stats = featureSet.charisma;
-        expect(stats.value).to.equal(0);
+      it("should calculate the correct value for abilityScores with multiple optional features", () => {
+        const abilityInfo = featureSet.charisma;
+        expect(abilityInfo.value).to.equal(0);
       });
 
-      it("should calculate the correct value for stats with multiple optional and fixed features", () => {
-        const stats = featureSet.strength;
-        expect(stats.value).to.equal(3);
+      it("should calculate the correct value for abilityScores with multiple optional and fixed features", () => {
+        const abilityInfo = featureSet.strength;
+        expect(abilityInfo.value).to.equal(3);
       });
 
-      it("should calculate the correct value for stats with no optional features", () => {
-        const stats = featureSet.constitution;
-        expect(stats.value).to.equal(1);
+      it("should calculate the correct value for abilityScores with no optional features", () => {
+        const abilityInfo = featureSet.constitution;
+        expect(abilityInfo.value).to.equal(1);
       });
 
-      it("should calculate the correct availability for stats with multiple optional features", () => {
-        const stats = featureSet.charisma;
-        expect(stats.available).to.equal(3);
+      it("should calculate the correct availability for abilityScores with multiple optional features", () => {
+        const abilityInfo = featureSet.charisma;
+        expect(abilityInfo.available).to.equal(3);
       });
 
-      it("should calculate the correct availability for stats with multiple optional and fixed features", () => {
-        const stats = featureSet.strength;
-        expect(stats.available).to.equal(1);
+      it("should calculate the correct availability for abilityScores with multiple optional and fixed features", () => {
+        const abilityInfo = featureSet.strength;
+        expect(abilityInfo.available).to.equal(1);
       });
 
-      it("should calculate the correct availability for stats with no optional features", () => {
-        const stats = featureSet.constitution;
-        expect(stats.available).to.equal(0);
+      it("should calculate the correct availability for abilityScores with no optional features", () => {
+        const abilityInfo = featureSet.constitution;
+        expect(abilityInfo.available).to.equal(0);
       });
 
-      it("should return the same when using getters or getStatModifiers with a named stat", () => {
-        expect(featureSet.strength).to.deep.equal(featureSet.getStatModifiers("strength"));
-        expect(featureSet.dexterity).to.deep.equal(featureSet.getStatModifiers("dexterity"));
-        expect(featureSet.constitution).to.deep.equal(featureSet.getStatModifiers("constitution"));
-        expect(featureSet.intelligence).to.deep.equal(featureSet.getStatModifiers("intelligence"));
-        expect(featureSet.wisdom).to.deep.equal(featureSet.getStatModifiers("wisdom"));
-        expect(featureSet.charisma).to.deep.equal(featureSet.getStatModifiers("charisma"));
+      it("should return the same when using getters or getAbilityScoreModifiers with a named ability score", () => {
+        expect(featureSet.strength).to.deep.equal(featureSet.getAbilityScoreModifiers("strength"));
+        expect(featureSet.dexterity).to.deep.equal(featureSet.getAbilityScoreModifiers("dexterity"));
+        expect(featureSet.constitution).to.deep.equal(featureSet.getAbilityScoreModifiers("constitution"));
+        expect(featureSet.intelligence).to.deep.equal(featureSet.getAbilityScoreModifiers("intelligence"));
+        expect(featureSet.wisdom).to.deep.equal(featureSet.getAbilityScoreModifiers("wisdom"));
+        expect(featureSet.charisma).to.deep.equal(featureSet.getAbilityScoreModifiers("charisma"));
       });
     });
 
     describe("Base and modifiers", () => {
-      const featureSet = StatsFeatureSet({
+      const featureSet = AbilityScoresFeatureSet({
         featureList: [
-          StatsFeature({}, {
-            isBaseStat: true,
+          AbilityScoresFeature({}, {
+            isBaseScore: true,
             strength: 15,
             dexterity: 14,
             constitution: 13,
@@ -692,7 +691,7 @@ describe("Stats", () => {
             charisma: 8
           }),
 
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 1,
             dexterity: 1,
             constitution: 0,
@@ -702,7 +701,7 @@ describe("Stats", () => {
 
             chooseUpTo: 2,
             choicesMade: 2,
-            maxPerStat: 2,
+            maxPerAbility: 2,
             chooseFrom: ["wisdom", "charisma"],
             chosen: {
               wisdom: 1,
@@ -710,17 +709,17 @@ describe("Stats", () => {
             }
           }),
 
-          StatsFeature({}, {
-            isBaseStat: true,
+          AbilityScoresFeature({}, {
+            isBaseScore: true,
             strength: 18
           }),
 
-          StatsFeature({}, {
+          AbilityScoresFeature({}, {
             strength: 1,
 
             chooseUpTo: 2,
             choicesMade: 1,
-            maxPerStat: 1,
+            maxPerAbility: 1,
             chooseFrom: ["strength", "dexterity"],
             chosen: {
               dexterity: 1
@@ -730,23 +729,23 @@ describe("Stats", () => {
       });
 
       it("should ignore modifiers that are overridden by a base ", () => {
-        const stats = featureSet.strength;
-        expect(stats.modifiers).to.have.length(2);
-        expect(stats.value).to.equal(19);
-        expect(stats.base).to.equal(18);
-        expect(stats.min).to.equal(19);
-        expect(stats.max).to.equal(20);
-        expect(stats.available).to.equal(1);
+        const abilityInfo = featureSet.strength;
+        expect(abilityInfo.modifiers).to.have.length(2);
+        expect(abilityInfo.value).to.equal(19);
+        expect(abilityInfo.base).to.equal(18);
+        expect(abilityInfo.min).to.equal(19);
+        expect(abilityInfo.max).to.equal(20);
+        expect(abilityInfo.available).to.equal(1);
       });
 
       it("should not override values when a base value is not provided", () => {
-        const stats = featureSet.dexterity;
-        expect(stats.modifiers).to.have.length(3);
-        expect(stats.value).to.equal(16);
-        expect(stats.base).to.equal(14);
-        expect(stats.min).to.equal(15);
-        expect(stats.max).to.equal(16);
-        expect(stats.available).to.equal(0);
+        const abilityInfo = featureSet.dexterity;
+        expect(abilityInfo.modifiers).to.have.length(3);
+        expect(abilityInfo.value).to.equal(16);
+        expect(abilityInfo.base).to.equal(14);
+        expect(abilityInfo.min).to.equal(15);
+        expect(abilityInfo.max).to.equal(16);
+        expect(abilityInfo.available).to.equal(0);
       });
     });
   });

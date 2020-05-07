@@ -1,4 +1,4 @@
 
 export {Character} from "./character";
-export {CharacterStats, StatsFeature} from "./stats";
+export {AbilityScores, AbilityScoresFeature, AbilityScoresFeatureSet} from "./ability-scores";
 export {Feature, FeatureSet} from "./feature";

@@ -1,21 +1,21 @@
 
-import {CharacterStatProp} from "../../model/character/stats";
+import {Abilities} from "../../model/character/ability-scores";
 import {DamageProp, SkillProp} from "../../constants";
 
 export const messages = {
-  [CharacterStatProp.STRENGTH]: "Strength",
-  [CharacterStatProp.DEXTERITY]: "Dexterity",
-  [CharacterStatProp.CONSTITUTION]: "Constitution",
-  [CharacterStatProp.INTELLIGENCE]: "Intelligence",
-  [CharacterStatProp.WISDOM]: "Wisdom",
-  [CharacterStatProp.CHARISMA]: "Charisma",
+  [Abilities.STRENGTH]: "Strength",
+  [Abilities.DEXTERITY]: "Dexterity",
+  [Abilities.CONSTITUTION]: "Constitution",
+  [Abilities.INTELLIGENCE]: "Intelligence",
+  [Abilities.WISDOM]: "Wisdom",
+  [Abilities.CHARISMA]: "Charisma",
   short: {
-    [CharacterStatProp.STRENGTH]: "STR",
-    [CharacterStatProp.DEXTERITY]: "DEX",
-    [CharacterStatProp.CONSTITUTION]: "CON",
-    [CharacterStatProp.INTELLIGENCE]: "INT",
-    [CharacterStatProp.WISDOM]: "WIS",
-    [CharacterStatProp.CHARISMA]: "CHA"
+    [Abilities.STRENGTH]: "STR",
+    [Abilities.DEXTERITY]: "DEX",
+    [Abilities.CONSTITUTION]: "CON",
+    [Abilities.INTELLIGENCE]: "INT",
+    [Abilities.WISDOM]: "WIS",
+    [Abilities.CHARISMA]: "CHA"
   },
 
   [SkillProp.ACROBATICS]: "Acrobatics",

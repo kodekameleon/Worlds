@@ -14,12 +14,12 @@ character.race = "Rock Gnome";
 character.alignment = "Chaotic Neutral";
 character.xp = 600;
 
-// Create base stats, Half Elf, Level 4 stat upgrade features
+// Create base abilityScores, Half Elf, Level 4 ability upgrade features
 const standardArrayFeature = Feature({}, {
-  uniqueId: "base-stats:standard-array",
+  uniqueId: "base-abilityScores:standard-array",
   name: "Standard Scores",
 
-  isBaseStat: true,
+  isBaseScore: true,
 
   strength: 15,
   dexterity: 14,
@@ -34,7 +34,7 @@ const halfElfFeature = Feature({}, {
   charisma: 2,
   chooseUpTo: 2,
   choicesMade: 2,
-  maxPerStat: 1,
+  maxPerAbility: 1,
   chooseFrom: ["strength", "dexterity", "constitution", "intelligence", "wisdom"],
   chosen: {
     constitution: 1,
@@ -45,7 +45,7 @@ const level4Feature = Feature({}, {
   uniqueId: "class:wizard-level-4",
   name: "Wizard Level 4",
   chooseUpTo: 2,
-  maxPerStat: 1,
+  maxPerAbility: 1,
   chooseFrom: ["strength", "dexterity", "intelligence", "wisdom", "charisma"]
 });
 

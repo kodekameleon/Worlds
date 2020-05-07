@@ -1,18 +1,18 @@
 import {ANY} from "../../../src/constants";
 import {expect} from "chai";
 import {Character, Feature} from "../../../src/model";
-import {doApplyStatMod, doChangeStats} from "../../../src/controller/actions/character-actions";
+import {doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions/character-actions";
 
 describe("Character Actions", () => {
   let character;
 
-  describe("Change base statistics", () => {
+  describe("Change base ability scores", () => {
     beforeEach(() => {
       character = Character();
       character.features.featureList.push(Feature({}, {
-        uniqueId: "base-stats:standard-array",
+        uniqueId: "base-abilityScores:standard-array",
         name: "Standard Scores",
-        isBaseStat: true,
+        isBaseScore: true,
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -23,9 +23,9 @@ describe("Character Actions", () => {
     });
 
     it("should make the correct changes", () => {
-      doChangeStats(character, "base-stats:standard-array", {strength: 18, dexterity: 15});
+      doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 18,
         dexterity: 15,
         constitution: 13,
@@ -36,9 +36,9 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if nothing has changed", () => {
-      const res = doChangeStats(character, "base-stats:standard-array", {strength: 15, dexterity: 14});
+      const res = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 15, dexterity: 14});
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -51,9 +51,9 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if nothing if the feature cannot be found", () => {
-      const res = doChangeStats(character, "xxx", {strength: 15, dexterity: 14});
+      const res = doChangeAbilityScores(character, "xxx", {strength: 15, dexterity: 14});
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -66,9 +66,9 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes", () => {
-      const undo = doChangeStats(character, "base-stats:standard-array", {strength: 18, dexterity: 15});
+      const undo = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 18,
         dexterity: 15,
         constitution: 13,
@@ -79,7 +79,7 @@ describe("Character Actions", () => {
 
       undo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -90,9 +90,9 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes, and that should return a redo function", () => {
-      const undo = doChangeStats(character, "base-stats:standard-array", {strength: 18, dexterity: 15});
+      const undo = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 18,
         dexterity: 15,
         constitution: 13,
@@ -103,7 +103,7 @@ describe("Character Actions", () => {
 
       const redo = undo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -114,7 +114,7 @@ describe("Character Actions", () => {
 
       redo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 18,
         dexterity: 15,
         constitution: 13,
@@ -125,13 +125,13 @@ describe("Character Actions", () => {
     });
   });
 
-  describe("Apply stat mods", () => {
+  describe("Apply ability score mods", () => {
     beforeEach(() => {
       character = Character();
       character.features.featureList.push(Feature({}, {
-        uniqueId: "base-stats:standard-array",
+        uniqueId: "base-abilityScores:standard-array",
         name: "Standard Scores",
-        isBaseStat: true,
+        isBaseScore: true,
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -145,7 +145,7 @@ describe("Character Actions", () => {
         charisma: 2,
         chooseUpTo: 2,
         choicesMade: 1,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ["strength", "dexterity", "constitution", "intelligence", "wisdom"],
         chosen: {
           dexterity: 1
@@ -155,15 +155,15 @@ describe("Character Actions", () => {
         uniqueId: "class:wizard-level-4",
         name: "Wizard Level 4",
         chooseUpTo: 2,
-        maxPerStat: 1,
+        maxPerAbility: 1,
         chooseFrom: ANY
       }));
     });
 
-    it("should make the correct changes to increase stat", () => {
-      doApplyStatMod(character, "race:half-elf", "strength", +1);
+    it("should make the correct changes to increase ability score", () => {
+      doApplyAbilityScoreModifier(character, "race:half-elf", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 16,
         dexterity: 15,
         constitution: 13,
@@ -173,10 +173,10 @@ describe("Character Actions", () => {
       });
     });
 
-    it("should make the correct changes to decrease stat", () => {
-      doApplyStatMod(character, "race:half-elf", "dexterity", -1);
+    it("should make the correct changes to decrease ability score", () => {
+      doApplyAbilityScoreModifier(character, "race:half-elf", "dexterity", -1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,
@@ -187,9 +187,9 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if the feature cannot be found", () => {
-      const res = doApplyStatMod(character, "xxx", "strength", +1);
+      const res = doApplyAbilityScoreModifier(character, "xxx", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 15,
         constitution: 13,
@@ -202,9 +202,9 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if the feature cannot be changed", () => {
-      const res = doApplyStatMod(character, "base-stats:standard-array", "strength", +1);
+      const res = doApplyAbilityScoreModifier(character, "base-abilityScores:standard-array", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 15,
         constitution: 13,
@@ -217,9 +217,9 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes", () => {
-      const undo = doApplyStatMod(character, "race:half-elf", "strength", +1);
+      const undo = doApplyAbilityScoreModifier(character, "race:half-elf", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 16,
         dexterity: 15,
         constitution: 13,
@@ -230,7 +230,7 @@ describe("Character Actions", () => {
 
       undo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 15,
         constitution: 13,
@@ -241,9 +241,9 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes, and that should return a redo function", () => {
-      const undo = doApplyStatMod(character, "race:half-elf", "strength", +1);
+      const undo = doApplyAbilityScoreModifier(character, "race:half-elf", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 16,
         dexterity: 15,
         constitution: 13,
@@ -254,7 +254,7 @@ describe("Character Actions", () => {
 
       const redo = undo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 15,
         constitution: 13,
@@ -265,7 +265,7 @@ describe("Character Actions", () => {
 
       redo();
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 16,
         dexterity: 15,
         constitution: 13,
@@ -279,9 +279,9 @@ describe("Character Actions", () => {
       // Check that the availability is really 1 before we start
       expect(character.getFeature("class:wizard-level-4").getModifier("strength").available).to.equal(1);
 
-      doApplyStatMod(character, "class:wizard-level-4", "strength", +1);
+      doApplyAbilityScoreModifier(character, "class:wizard-level-4", "strength", +1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 16,
         dexterity: 15,
         constitution: 13,
@@ -297,9 +297,9 @@ describe("Character Actions", () => {
       // Check that the availability is really 1 before we start
       expect(character.getFeature("race:half-elf").getModifier("dexterity").available).to.equal(0);
 
-      doApplyStatMod(character, "race:half-elf", "dexterity", -1);
+      doApplyAbilityScoreModifier(character, "race:half-elf", "dexterity", -1);
 
-      expect(character.stats).to.deep.equal({
+      expect(character.abilityScores).to.deep.equal({
         strength: 15,
         dexterity: 14,
         constitution: 13,

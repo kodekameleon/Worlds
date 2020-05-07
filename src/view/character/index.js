@@ -1,2 +1,2 @@
-export {CharacterStatsView} from "./stats-view";
+export {AbilityScoresView} from "./ability-scores-view";
 export * from "./character-sheet-view";

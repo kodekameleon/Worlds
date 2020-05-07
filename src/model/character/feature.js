@@ -1,9 +1,9 @@
 import {Language} from "../../utils";
 import {UniqueObject} from "../unique-object";
-import {StatsFeature, StatsFeatureSet} from "./stats";
+import {AbilityScoresFeature, AbilityScoresFeatureSet} from "./ability-scores";
 
 export function Feature(state, copyFrom) {
-  Language.compose(state, UniqueObject(state, copyFrom), StatsFeature(state, copyFrom));
+  Language.compose(state, UniqueObject(state, copyFrom), AbilityScoresFeature(state, copyFrom));
   return state;
 }
 
@@ -16,7 +16,7 @@ export function FeatureSet() {
     get featureList() { return self.features; }
   };
 
-  Language.compose(features, StatsFeatureSet(features));
+  Language.compose(features, AbilityScoresFeatureSet(features));
 
   return {
     get features() { return features; },

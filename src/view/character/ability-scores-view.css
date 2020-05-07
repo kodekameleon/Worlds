@@ -1,13 +1,13 @@
 .character-sheet {
-  .character-stat-block.dragging .stat-base {
+  .ability-score-block.dragging .ability-score-base {
     pointer-events: none;
   }
 
-  .character-stat-block {
+  .ability-score-block {
     position: relative;
   }
 
-  .character-stat {
+  .ability-score {
     position: relative;
 
     .drag-source {
@@ -34,7 +34,7 @@
       padding: 0 0.25em;
     }
 
-    .stat-spinner {
+    .spinner {
       position: absolute;
       right: 0;
       top: 0.8em;
@@ -44,11 +44,11 @@
       }
     }
 
-    .stat-spinner + .stat-bonus {
+    .spinner + .ability-score-bonus {
       margin-left: -0.5em;
     }
 
-    .stat-base {
+    .ability-score-base {
       position: relative;
       top: 0;
       width: 100%;
@@ -73,7 +73,7 @@
     }
   }
 
-  .stat-info-popup {
+  .ability-score-info-popup {
     text-align: left;
     white-space: nowrap;
 
@@ -82,7 +82,7 @@
     }
   }
 
-  .stat-type-selector {
+  .ability-score-method-selector {
     position: absolute;
     bottom: 100%;
     width: 100vw;

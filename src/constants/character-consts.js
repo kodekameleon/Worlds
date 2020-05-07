@@ -38,5 +38,5 @@ export const DamageProp = {
 };
 
 export const FeatureIds = {
-  STANDARD_ARRAY: "base-stats:standard-array"
+  STANDARD_ARRAY: "base-abilityScores:standard-array"
 };

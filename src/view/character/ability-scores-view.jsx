@@ -1,67 +1,67 @@
-import {CharacterStatProp} from "../../model/character/stats";
+import {Abilities} from "../../model/character/ability-scores";
 import {FeatureIds} from "../../constants";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
 import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip} from "../../widgets";
-import "./stats-view.css";
+import "./ability-scores-view.css";
 
-export function CharacterStatsView(baseProps) {
+export function AbilityScoresView(baseProps) {
   const isEditing = baseProps.viewState.editing;
   const char = baseProps.character;
   const usingStandardArray = !!char.getFeature(FeatureIds.STANDARD_ARRAY);
-  let dragOriginEl, dragOriginStat, dragOriginStatValue;
+  let dragOriginEl, dragOriginAbility, dragOriginAbilityScore;
 
-  const strEl = <CharacterStat stat={CharacterStatProp.STRENGTH}/>;
-  const dexEl = <CharacterStat stat={CharacterStatProp.DEXTERITY}/>;
-  const conEl = <CharacterStat stat={CharacterStatProp.CONSTITUTION}/>;
-  const intEl = <CharacterStat stat={CharacterStatProp.INTELLIGENCE}/>;
-  const wisEl = <CharacterStat stat={CharacterStatProp.WISDOM}/>;
-  const chaEl = <CharacterStat stat={CharacterStatProp.CHARISMA}/>;
+  const strEl = <CharacterAbilityScore ability={Abilities.STRENGTH}/>;
+  const dexEl = <CharacterAbilityScore ability={Abilities.DEXTERITY}/>;
+  const conEl = <CharacterAbilityScore ability={Abilities.CONSTITUTION}/>;
+  const intEl = <CharacterAbilityScore ability={Abilities.INTELLIGENCE}/>;
+  const wisEl = <CharacterAbilityScore ability={Abilities.WISDOM}/>;
+  const chaEl = <CharacterAbilityScore ability={Abilities.CHARISMA}/>;
 
-  const selector = isEditing && BaseStatTypeSelector();
+  const selector = isEditing && AbilityScoreMethodSelector();
 
-  const statsEl = (
-    <DragDropSite class="character-stat-block">
+  const blockEl = (
+    <DragDropSite class="ability-score-block">
       <Col>
         {[selector, strEl, dexEl, conEl, intEl, wisEl, chaEl]}
       </Col>
     </DragDropSite>
   );
-  return statsEl;
+  return blockEl;
 
-  function CharacterStat(props) {
-    const statInfo = char.features[props.stat];
+  function CharacterAbilityScore(props) {
+    const abilityInfo = char.features[props.ability];
     const statEl = (
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
-        <Col class={["character-stat boxed", statInfo.available && "attention"]} center>
+        <Col class={["ability-score boxed", abilityInfo.available && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
             {isEditing && <DragHandle/>}
             {(isEditing && usingStandardArray) &&
               <div class="value">
-                <span class="stat-base">{statInfo.base}</span>+
-                <span class="stat-mods">{statInfo.value - statInfo.base}</span>
+                <span class="ability-score-base">{abilityInfo.base}</span>+
+                <span class="ability-score-mods">{abilityInfo.value - abilityInfo.base}</span>
               </div>
             }
             {(isEditing && usingStandardArray) ||
               <div class="value">
-                <span>{statInfo.value}</span>
+                <span>{abilityInfo.value}</span>
               </div>
             }
           </DragSource>
-          {(isEditing || statInfo.available > 0) &&
-            <Col class="stat-spinner">
+          {(isEditing || abilityInfo.available > 0) &&
+            <Col class="spinner">
               <Icon glyph="&#xe006;"
-                    enabled={statInfo.available > 0}
+                    enabled={abilityInfo.available > 0}
                     on:click={() => onApplyMod(+1)}/>
               <Icon glyph="&#xe005;"
-                    enabled={statInfo.modifiers.some(v => v.min < v.value && (isEditing || v.available > 0))}
+                    enabled={abilityInfo.modifiers.some(v => v.min < v.value && (isEditing || v.available > 0))}
                     on:click={() => onApplyMod(-1)}/>
             </Col>
           }
-          <div class="hiviz stat-bonus">{Utils.signed(char.bonus[props.stat])}</div>
-          <label>{messages[props.stat]}</label>
-          <StatInfoPopup stat={props.stat}/>
+          <div class="hiviz ability-score-bonus">{Utils.signed(char.bonus[props.ability])}</div>
+          <label>{messages[props.ability]}</label>
+          <AbilityScoreInfoPopup ability={props.ability}/>
         </Col>
       </DropTarget>
     );
@@ -74,22 +74,22 @@ export function CharacterStatsView(baseProps) {
     function onDragStart() {
       // Remember the element that is the origin
       dragOriginEl = statEl;
-      dragOriginStat = props.stat;
-      dragOriginStatValue = statInfo.base;
+      dragOriginAbility = props.ability;
+      dragOriginAbilityScore = abilityInfo.base;
     }
 
     function createDragImage() {
       return (
         <DragImage>
-          <div class="value-container">{statInfo.base}</div>
+          <div class="value-container">{abilityInfo.base}</div>
         </DragImage>
       );
     }
 
     function onDragEnd() {
       dragOriginEl = undefined;
-      dragOriginStat = undefined;
-      dragOriginStatValue = undefined;
+      dragOriginAbility = undefined;
+      dragOriginAbilityScore = undefined;
     }
 
     function canDrop() {
@@ -97,44 +97,44 @@ export function CharacterStatsView(baseProps) {
     }
 
     function onDrop() {
-      baseProps.onChangeStats(FeatureIds.STANDARD_ARRAY, {
-        [props.stat]: dragOriginStatValue,
-        [dragOriginStat]: statInfo.base
+      baseProps.onChangeAbilityScores(FeatureIds.STANDARD_ARRAY, {
+        [props.ability]: dragOriginAbilityScore,
+        [dragOriginAbility]: abilityInfo.base
       });
     }
 
     function onDragEnter() {
-      // Get the positions of the two stats being swapped, and then swap them
+      // Get the positions of the two abilityScores being swapped, and then swap them
       const valElTop = statEl.getBoundingClientRect().top;
       const origElTop = dragOriginEl.getBoundingClientRect().top;
-      statEl.querySelector(".stat-base").style.top = `${origElTop - valElTop}px`;
-      dragOriginEl.querySelector(".stat-base").style.top = `${valElTop - origElTop}px`;
+      statEl.querySelector(".ability-score-base").style.top = `${origElTop - valElTop}px`;
+      dragOriginEl.querySelector(".ability-score-base").style.top = `${valElTop - origElTop}px`;
     }
 
     function onDragLeave() {
       // Reset the positions of the values
-      statEl.querySelector(".stat-base").style.top = null;
-      dragOriginEl.querySelector(".stat-base").style.top = null;
+      statEl.querySelector(".ability-score-base").style.top = null;
+      dragOriginEl.querySelector(".ability-score-base").style.top = null;
     }
 
     function onApplyMod(sign) {
       // Find the feature to apply the change to
       let mod;
       if (sign >= 0) {
-        mod = statInfo.modifiers.find(mod => mod.available > 0);
+        mod = abilityInfo.modifiers.find(mod => mod.available > 0);
       } else {
-        mod = statInfo.modifiers.find(mod => (isEditing || mod.available > 0) && mod.min < mod.value);
+        mod = abilityInfo.modifiers.find(mod => (isEditing || mod.available > 0) && mod.min < mod.value);
       }
 
       // If we found a feature, apply the change
       if (mod) {
-        baseProps.onApplyMod(mod.source.uniqueId, props.stat, sign);
+        baseProps.onApplyMod(mod.source.uniqueId, props.ability, sign);
       }
     }
   }
 
-  function StatInfoPopup(props) {
-    const rows = char.features[props.stat].modifiers.reduce((res, modifier) => {
+  function AbilityScoreInfoPopup(props) {
+    const rows = char.features[props.ability].modifiers.reduce((res, modifier) => {
       if (modifier.min !== modifier.max) {
         res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);
       } else if (modifier.value !== 0) {
@@ -144,15 +144,15 @@ export function CharacterStatsView(baseProps) {
     }, []);
 
     return (
-      <PopupTip class="stat-info-popup" right>
+      <PopupTip class="ability-score-info-popup" right>
         {rows}
       </PopupTip>
     );
   }
 
-  function BaseStatTypeSelector() {
+  function AbilityScoreMethodSelector() {
     return (
-      <div class="stat-type-selector">
+      <div class="ability-score-method-selector">
         <Col class="spaced boxed">
           <div class="drop-list">
             <button>

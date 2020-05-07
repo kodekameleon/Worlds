@@ -1,4 +1,4 @@
-import {CharacterStatProp} from "../../model/character/stats";
+import {Abilities} from "../../model/character/ability-scores";
 import {messages} from "./messages";
 import {Utils} from "../../utils";
 import {Col, Row, Table} from "../../widgets/layout";
@@ -52,12 +52,12 @@ export function CharacterInfoBlock(props) {
 export function SavingThrowBlock() {
   return (
     <Col class={"saving-throw-block boxed spaced"}>
-      <SavingThrowStat stat={CharacterStatProp.STRENGTH} value={2} proficient={false}/>
-      <SavingThrowStat stat={CharacterStatProp.DEXTERITY} value={2} proficient={false}/>
-      <SavingThrowStat stat={CharacterStatProp.CONSTITUTION} value={1} proficient={false}/>
-      <SavingThrowStat stat={CharacterStatProp.INTELLIGENCE} value={2} proficient/>
-      <SavingThrowStat stat={CharacterStatProp.WISDOM} value={2} proficient/>
-      <SavingThrowStat stat={CharacterStatProp.CHARISMA} value={-1} proficient={false}/>
+      <SavingThrowModifier ability={Abilities.STRENGTH} value={2} proficient={false}/>
+      <SavingThrowModifier ability={Abilities.DEXTERITY} value={2} proficient={false}/>
+      <SavingThrowModifier ability={Abilities.CONSTITUTION} value={1} proficient={false}/>
+      <SavingThrowModifier ability={Abilities.INTELLIGENCE} value={2} proficient/>
+      <SavingThrowModifier ability={Abilities.WISDOM} value={2} proficient/>
+      <SavingThrowModifier ability={Abilities.CHARISMA} value={-1} proficient={false}/>
       <label>Saving Throws</label>
     </Col>
   );
@@ -66,38 +66,36 @@ export function SavingThrowBlock() {
 export function SkillBlock() {
   return (
     <Col class={"saving-throw-block boxed spaced"}>
-      <SavingThrowStat save={SkillProp.ACROBATICS} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
-      <SavingThrowStat save={SkillProp.ANIMAL_HANDLING} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
-      <SavingThrowStat save={SkillProp.ARCANA} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
-      <SavingThrowStat save={SkillProp.ATHLETICS} value={2} proficient={false} stat={CharacterStatProp.STRENGTH}/>
-      <SavingThrowStat save={SkillProp.DECEPTION} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
-      <SavingThrowStat save={SkillProp.HISTORY} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
-      <SavingThrowStat save={SkillProp.INSIGHT} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
-      <SavingThrowStat save={SkillProp.INTIMIDATION} value={1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
-      <SavingThrowStat save={SkillProp.INVESTIGATION} value={3} proficient={true}
-                       stat={CharacterStatProp.INTELLIGENCE}/>
-      <SavingThrowStat save={SkillProp.MEDICINE} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
-      <SavingThrowStat save={SkillProp.NATURE} value={3} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
-      <SavingThrowStat save={SkillProp.PERCEPTION} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
-      <SavingThrowStat save={SkillProp.PERFORMANCE} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
-      <SavingThrowStat save={SkillProp.PERSUASION} value={-1} proficient={false} stat={CharacterStatProp.CHARISMA}/>
-      <SavingThrowStat save={SkillProp.RELIGION} value={18} proficient={true} stat={CharacterStatProp.INTELLIGENCE}/>
-      <SavingThrowStat save={SkillProp.SLEIGHT_OF_HAND} value={2} proficient={false}
-                       stat={CharacterStatProp.DEXTERITY}/>
-      <SavingThrowStat save={SkillProp.STEALTH} value={2} proficient={false} stat={CharacterStatProp.DEXTERITY}/>
-      <SavingThrowStat save={SkillProp.SURVIVAL} value={0} proficient={false} stat={CharacterStatProp.WISDOM}/>
+      <SavingThrowModifier save={SkillProp.ACROBATICS} value={2} proficient={false} ability={Abilities.DEXTERITY}/>
+      <SavingThrowModifier save={SkillProp.ANIMAL_HANDLING} value={0} proficient={false} ability={Abilities.WISDOM}/>
+      <SavingThrowModifier save={SkillProp.ARCANA} value={3} proficient={true} ability={Abilities.INTELLIGENCE}/>
+      <SavingThrowModifier save={SkillProp.ATHLETICS} value={2} proficient={false} ability={Abilities.STRENGTH}/>
+      <SavingThrowModifier save={SkillProp.DECEPTION} value={-1} proficient={false} ability={Abilities.CHARISMA}/>
+      <SavingThrowModifier save={SkillProp.HISTORY} value={3} proficient={true} ability={Abilities.INTELLIGENCE}/>
+      <SavingThrowModifier save={SkillProp.INSIGHT} value={0} proficient={false} ability={Abilities.WISDOM}/>
+      <SavingThrowModifier save={SkillProp.INTIMIDATION} value={1} proficient={false} ability={Abilities.CHARISMA}/>
+      <SavingThrowModifier save={SkillProp.INVESTIGATION} value={3} proficient={true} ability={Abilities.INTELLIGENCE}/>
+      <SavingThrowModifier save={SkillProp.MEDICINE} value={0} proficient={false} ability={Abilities.WISDOM}/>
+      <SavingThrowModifier save={SkillProp.NATURE} value={3} proficient={true} ability={Abilities.INTELLIGENCE}/>
+      <SavingThrowModifier save={SkillProp.PERCEPTION} value={0} proficient={false} ability={Abilities.WISDOM}/>
+      <SavingThrowModifier save={SkillProp.PERFORMANCE} value={-1} proficient={false} ability={Abilities.CHARISMA}/>
+      <SavingThrowModifier save={SkillProp.PERSUASION} value={-1} proficient={false} ability={Abilities.CHARISMA}/>
+      <SavingThrowModifier save={SkillProp.RELIGION} value={18} proficient={true} ability={Abilities.INTELLIGENCE}/>
+      <SavingThrowModifier save={SkillProp.SLEIGHT_OF_HAND} value={2} proficient={false} ability={Abilities.DEXTERITY}/>
+      <SavingThrowModifier save={SkillProp.STEALTH} value={2} proficient={false} ability={Abilities.DEXTERITY}/>
+      <SavingThrowModifier save={SkillProp.SURVIVAL} value={0} proficient={false} ability={Abilities.WISDOM}/>
       <label>Skill</label>
     </Col>
   );
 }
 
-export function SavingThrowStat(props) {
+export function SavingThrowModifier(props) {
   return (
-    <Row class="saving-throw-stat" baseline>
+    <Row class="saving-throw" baseline>
       <div class={["check", props.proficient && "checked"]}/>
       <div class="value">{Utils.signed(props.value)}</div>
-      <div class="name">{messages[props.save || props.stat]}</div>
-      {props.save && <div class="attr">{`(${messages.short[props.stat]})`}</div>}
+      <div class="name">{messages[props.save || props.ability]}</div>
+      {props.save && <div class="attr">{`(${messages.short[props.ability]})`}</div>}
     </Row>
   );
 }

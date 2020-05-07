@@ -3,8 +3,8 @@ import {Icon} from "../../widgets";
 import {messages} from "../messages";
 import {UndoStack} from "../actions/undo-stack";
 import {
+  AbilityScoresView,
   CharacterInfoBlock,
-  CharacterStatsView,
   CombatBlock,
   MeleeBlock,
   PossessionsBlock,
@@ -13,7 +13,7 @@ import {
   SkillBlock
 } from "../../view/character";
 import {Col, Row} from "../../widgets/layout";
-import {doApplyStatMod, doChangeStats} from "../actions/character-actions";
+import {doApplyAbilityScoreModifier, doChangeAbilityScores} from "../actions/character-actions";
 import "./character-sheet.css";
 
 export function CharacterSheet(props) {
@@ -40,7 +40,7 @@ export function CharacterSheet(props) {
         </Row>
         <div class="row2">
           <Col>
-            <CharacterStatsView character={character} viewState={viewState} onChangeStats={actionHandler.do(doChangeStats)} onApplyMod={actionHandler.do(doApplyStatMod)}/>
+            <AbilityScoresView character={character} viewState={viewState} onChangeAbilityScores={actionHandler.do(doChangeAbilityScores)} onApplyMod={actionHandler.do(doApplyAbilityScoreModifier)}/>
           </Col>
           <Col>
             <SavingThrowBlock character={character} viewState={viewState}/>
