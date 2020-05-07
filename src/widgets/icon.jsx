@@ -6,6 +6,6 @@ export function Icon(props) {
     class={["icon", props.hoverEffect, props.enabled !== undefined && (props.enabled ? "enabled" : "disabled")]}
     glyph={props.glyph}
     props={props}>
-    {props.tip && <PopupTip top>{props.tip}</PopupTip>}
+    {props.tip && <PopupTip above>{props.tip}</PopupTip>}
   </div>;
 }
