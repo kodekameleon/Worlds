@@ -93,61 +93,18 @@
       bottom: 0;
       width: fit-content;
     }
-  }
 
-  .drop-list {
-    padding: 0.2em 0.4em;
-    border-color: var(--border-color-light);
-    cursor: pointer;
+    .select {
+      font-size: 0.8em;
+      border: none;
 
-    &:hover {
-      color: var(--text-color-dark);
-      border-color: var(--border-color);
-    }
-
-    &:focus-within {
-      background-color: pink;
+      button {
+        width: 100%;
+      }
 
       ul {
-        display: block;
-      }
-    }
-
-    & > button {
-      display: inline-block;
-      line-height: 1;
-
-      &::after {
-        content: "\E007";
-        font-family: "worlds-icons"; /* stylelint-disable-line */
-        border-left: 1px solid;
-        padding-left: 0.4em;
-        margin-left: 0.4em;
-        vertical-align: bottom;
-      }
-
-      &:focus::after {
-        content: "\E008";
-      }
-    }
-
-    ul {
-      display: none;
-      position: absolute;
-      background: white;
-      border: 1px solid var(--border-color);
-      border-radius: var(--border-radius-tight);
-      z-index: 1;
-      left: -1px;
-      width: calc(100% + 2px);
-
-      & > li {
-        padding: 0 0.4em;
-
-        &:hover {
-          color: var(--text-color-dark);
-          background-color: rgba(0, 0, 0, 0.1);
-        }
+        left: -1px;
+        min-width: calc(100% + 2px);
       }
     }
   }

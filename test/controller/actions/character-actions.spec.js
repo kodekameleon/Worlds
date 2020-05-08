@@ -1,4 +1,4 @@
-import {ANY} from "../../../src/constants";
+import {ANY, FeatureIds} from "../../../src/constants";
 import {expect} from "chai";
 import {Character, Feature} from "../../../src/model";
 import {doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions/character-actions";
@@ -10,7 +10,7 @@ describe("Character Actions", () => {
     beforeEach(() => {
       character = Character();
       character.features.featureList.push(Feature({}, {
-        uniqueId: "base-abilityScores:standard-array",
+        uniqueId: FeatureIds.STANDARD_ARRAY,
         name: "Standard Scores",
         isBaseScore: true,
         strength: 15,
@@ -23,7 +23,7 @@ describe("Character Actions", () => {
     });
 
     it("should make the correct changes", () => {
-      doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
+      doChangeAbilityScores(character, FeatureIds.STANDARD_ARRAY, {strength: 18, dexterity: 15});
 
       expect(character.abilityScores).to.deep.equal({
         strength: 18,
@@ -36,7 +36,7 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if nothing has changed", () => {
-      const res = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 15, dexterity: 14});
+      const res = doChangeAbilityScores(character, FeatureIds.STANDARD_ARRAY, {strength: 15, dexterity: 14});
 
       expect(character.abilityScores).to.deep.equal({
         strength: 15,
@@ -66,7 +66,7 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes", () => {
-      const undo = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
+      const undo = doChangeAbilityScores(character, FeatureIds.STANDARD_ARRAY, {strength: 18, dexterity: 15});
 
       expect(character.abilityScores).to.deep.equal({
         strength: 18,
@@ -90,7 +90,7 @@ describe("Character Actions", () => {
     });
 
     it("should return a function to undo the changes, and that should return a redo function", () => {
-      const undo = doChangeAbilityScores(character, "base-abilityScores:standard-array", {strength: 18, dexterity: 15});
+      const undo = doChangeAbilityScores(character, FeatureIds.STANDARD_ARRAY, {strength: 18, dexterity: 15});
 
       expect(character.abilityScores).to.deep.equal({
         strength: 18,
@@ -129,7 +129,7 @@ describe("Character Actions", () => {
     beforeEach(() => {
       character = Character();
       character.features.featureList.push(Feature({}, {
-        uniqueId: "base-abilityScores:standard-array",
+        uniqueId: FeatureIds.STANDARD_ARRAY,
         name: "Standard Scores",
         isBaseScore: true,
         strength: 15,
@@ -202,7 +202,7 @@ describe("Character Actions", () => {
     });
 
     it("should do nothing if the feature cannot be changed", () => {
-      const res = doApplyAbilityScoreModifier(character, "base-abilityScores:standard-array", "strength", +1);
+      const res = doApplyAbilityScoreModifier(character, FeatureIds.STANDARD_ARRAY, "strength", +1);
 
       expect(character.abilityScores).to.deep.equal({
         strength: 15,

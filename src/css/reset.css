@@ -62,11 +62,6 @@ button:not(:disabled) {
   cursor: pointer;
 }
 
-input[type='button']:empty,
-button:empty {
-  vertical-align: bottom;
-}
-
 body {
   overflow: auto;
   overflow-x: hidden;

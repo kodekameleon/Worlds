@@ -1,6 +1,7 @@
 import {Character} from "../../model";
 import {CharacterSheet} from "../components/character-sheet";
 import {Feature} from "../../model/character/feature";
+import {FeatureIds} from "../../constants";
 import {RoughPaper} from "../../view/rough-paper";
 import "./parties-controller.css";
 
@@ -16,7 +17,7 @@ character.xp = 600;
 
 // Create base abilityScores, Half Elf, Level 4 ability upgrade features
 const standardArrayFeature = Feature({}, {
-  uniqueId: "base-abilityScores:standard-array",
+  uniqueId: FeatureIds.STANDARD_ARRAY,
   name: "Standard Scores",
 
   isBaseScore: true,

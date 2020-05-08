@@ -1,6 +1,7 @@
-import {Abilities} from "../../model/character/ability-scores";
+import {Abilities} from "../../model";
 import {FeatureIds} from "../../constants";
 import {messages} from "./messages";
+import {Select} from "../../widgets";
 import {Utils} from "../../utils";
 import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip} from "../../widgets";
 import "./ability-scores-view.css";
@@ -151,24 +152,42 @@ export function AbilityScoresView(baseProps) {
   }
 
   function AbilityScoreMethodSelector() {
+    // TODO: THESE HAVE TO COME FROM THE CONTROLLER, FROM THE API
+    const opts = [
+      {
+        uniqueId: FeatureIds.STANDARD_ARRAY,
+        name: "Standard Scores"
+      },
+      {
+        uniqueId: FeatureIds.POINTS_BUY,
+        name: "Points Buy"
+      },
+      {
+        uniqueId: FeatureIds.RANDOM,
+        name: "Random"
+      },
+      {
+        uniqueId: FeatureIds.MANUAL,
+        name: "Manual Entry"
+      }
+    ];
+
     return (
       <div class="ability-score-method-selector">
         <Col class="spaced boxed">
-          <div class="drop-list">
-            <button>
-              Standard Scores
-            </button>
-            <ul>
-              <li>Standard Scores</li>
-              <li>Points Buy</li>
-              <li>Roll</li>
-              <li>Manual Entry</li>
-            </ul>
-          </div>
+          <Select placeholder={messages.abilityScoreMethod.placeholder}
+                  selected={null}
+                  onChange={onChange}>
+            {opts.map(v => ({id: v.uniqueId, label: v.name, tip: messages.tips.select[v.uniqueId]}))}
+          </Select>
           <label>Abilities Variant</label>
         </Col>
       </div>
     );
+
+    function onChange(index, id) {
+      console.log(`index=${index} id=${id}`);
+    }
   }
 }
 
