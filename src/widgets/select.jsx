@@ -2,15 +2,11 @@ import {PopupTip} from "./popup-tip";
 import "./select.css";
 
 export function Select(props, children) {
-  /*
-        {(props.selected || props.selected === 0) && (props.selections[props.selected] || props.selections.find(v => v.id === props.selected))}
-  */
-
   let selected;
   let current = -1;
 
   const listEls = children.map((v, i) => (
-    <li on:mousedown={() => select(i)}
+    <li on:mousedown={(ev) => ev.button === 0 && select(i)}
         on:mouseenter={() => setCurrent(i)}
         on:mouseleave={() => onMouseLeave(i)}>
       {typeof v === "string" ? <>{v}</> : <>{v.label}{v.tip && <PopupTip right>{v.tip}</PopupTip>}</>}
@@ -20,11 +16,18 @@ export function Select(props, children) {
   const buttonEl = <button placeholder={props.placeholder} on:focus={open} on:blur={close} on:keydown={onKeyDown}/>;
 
   const selectEl = (
-    <div class="select" on:mousedown={toggleOpen}>
+    <div class="select" on:mousedown={(ev) => ev.button === 0 && toggleOpen()}>
       {buttonEl}
       <ul>{listEls}</ul>
     </div>
   );
+
+  if (typeof props.selected === "number") {
+    if (props.selected >= 0 && props.selected < children.length) {
+      selected = props.selected;
+      setButtonText();
+    }
+  }
 
   return selectEl;
 
@@ -67,7 +70,7 @@ export function Select(props, children) {
     if (i >= 0 && i < children.length) {
       selected = i;
       setButtonText();
-      if (props.onChange && i >= 0) {
+      if (props.onChange) {
         props.onChange(i, getChildId(i));
       }
     }
@@ -84,7 +87,7 @@ export function Select(props, children) {
   function open() {
     if (!isOpen()) {
       if (selected >= 0) {
-        listEls[selected].classList.add("current");
+        setCurrent(selected);
       }
       selectEl.classList.add("open");
     }
@@ -111,7 +114,7 @@ export function Select(props, children) {
   }
 
   function setButtonText() {
-    buttonEl.innerText = selected >= 0 ? getChildText(selected) : "";
+    buttonEl.innerText = getChildText(selected);
   }
 
   function getChildText(i) {

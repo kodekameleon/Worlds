@@ -1,9 +1,7 @@
 import {ActionHandler} from "../../../src/controller/actions/action-handler";
-import spies from "chai-spies";
+import {expect} from "chai";
+import sinon from "sinon";
 import {UndoStack} from "../../../src/controller/actions/undo-stack";
-import chai, {expect} from "chai";
-
-chai.use(spies);
 
 describe("ActionHandler", () => {
   let undoStack;
@@ -90,11 +88,11 @@ describe("ActionHandler", () => {
 
     expect(typeof undo).to.equal("function");
 
-    const spy = chai.spy.on(undoStack, "undo");
+    const spy = sinon.spy(undoStack, "undo");
 
     undo();
 
-    expect(spy).to.have.been.called.once;
+    expect(spy).to.have.been.calledOnce;
   });
 
   it("should create an undo function that calls UndoStack.undo, and renders", () => {
@@ -104,11 +102,11 @@ describe("ActionHandler", () => {
 
     expect(typeof undo).to.equal("function");
 
-    const spy = chai.spy.on(undoStack, "undo", () => true);
+    const spy = sinon.stub(undoStack, "undo").callsFake(() => true);
 
     undo();
 
-    expect(spy).to.have.been.called.once;
+    expect(spy).to.have.been.calledOnce;
     expect(rendered).to.equal(true);
   });
 
@@ -118,11 +116,11 @@ describe("ActionHandler", () => {
 
     expect(typeof redo).to.equal("function");
 
-    const spy = chai.spy.on(undoStack, "redo");
+    const spy = sinon.spy(undoStack, "redo");
 
     redo();
 
-    expect(spy).to.have.been.called.once;
+    expect(spy).to.have.been.calledOnce;
   });
 
   it("should create a redo function that calls UndoStack.redo, and renders", () => {
@@ -132,11 +130,11 @@ describe("ActionHandler", () => {
 
     expect(typeof redo).to.equal("function");
 
-    const spy = chai.spy.on(undoStack, "redo", () => true);
+    const spy = sinon.stub(undoStack, "redo").callsFake(() => true);
 
     redo();
 
-    expect(spy).to.have.been.called.once;
+    expect(spy).to.have.been.calledOnce;
     expect(rendered).to.equal(true);
   });
 });
