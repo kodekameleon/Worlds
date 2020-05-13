@@ -1,11 +1,11 @@
 import {ANY} from "../../../src/constants";
 import {expect} from "chai";
 import {UniqueObject} from "../../../src/model/unique-object";
-import {AbilityScoresFeature, AbilityScoresFeatureSet, Character} from "../../../src/model";
+import {Abilities, AbilityScoresFeature, AbilityScoresFeatureSet, Character} from "../../../src/model";
 
 const uniqueObject = UniqueObject({}, {name: "Elf", uniqueId: "elf-race-feature"});
 
-describe("Ability Scores", () => {
+describe("Ability Scores Model", () => {
   describe("AbilityScores", () => {
     const character = Character();
     character.features.featureList.push(AbilityScoresFeature({}, {
@@ -34,6 +34,18 @@ describe("Ability Scores", () => {
       expect(character.bonus.intelligence).to.equal(1);
       expect(character.bonus.wisdom).to.equal(0);
       expect(character.bonus.charisma).to.equal(-1);
+    });
+
+
+    it("should return all of the ability scores correctly in an object", () => {
+      expect(character.abilityScores).to.deep.equal({
+        strength: character.strength,
+        dexterity: character.dexterity,
+        constitution: character.constitution,
+        intelligence: character.intelligence,
+        wisdom: character.wisdom,
+        charisma: character.charisma,
+      });
     });
   });
 
@@ -538,6 +550,173 @@ describe("Ability Scores", () => {
         const res = feature.applyAbilityScoreModifierDecrease("charisma");
         expect(res).to.be.false;
         expect(feature["strength"].value).to.equal(0);
+      });
+    });
+
+    describe("Points buy", () => {
+      let standardArrayFeature, pointsAvailableFeature, outOfRangeFeature;
+
+      beforeEach(() => {
+        standardArrayFeature = AbilityScoresFeature(uniqueObject, {
+          strength: 15,
+          dexterity: 14,
+          constitution: 13,
+          intelligence: 12,
+          wisdom: 10,
+          charisma: 8
+        });
+
+        pointsAvailableFeature = AbilityScoresFeature(uniqueObject, {
+          strength: 15,
+          dexterity: 14,
+          constitution: 11,
+          intelligence: 9,
+          wisdom: 9,
+          charisma: 8
+        });
+
+        outOfRangeFeature = AbilityScoresFeature(uniqueObject, {
+          strength: 21,
+          dexterity: 18,
+          constitution: 16,
+          intelligence: 7,
+          wisdom: 4,
+          charisma: -1
+        });
+      });
+
+      it("should calculate available points correctly for standard array", () => {
+        expect(standardArrayFeature.getPointsRemaining()).to.equal(0);
+      });
+
+      it("should calculate available points correctly for other values", () => {
+        expect(pointsAvailableFeature.getPointsRemaining()).to.equal(6);
+      });
+
+      it("should calculate 0 points available if any ability is over the max", () => {
+        expect(outOfRangeFeature.getPointsRemaining()).to.equal(0);
+      });
+
+      it("should calculate point buy cost correctly for values above maximum", () => {
+        expect(outOfRangeFeature.getPointBuyCost(Abilities.CONSTITUTION)).to.be.NaN;
+      });
+
+      it("should calculate point buy cost correctly for values at maximum", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.STRENGTH)).to.be.NaN;
+      });
+
+      it("should calculate point buy cost correctly for value 14", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.DEXTERITY)).to.equal(2);
+      });
+
+      it("should calculate point buy cost correctly for value 13", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.CONSTITUTION)).to.equal(2);
+      });
+
+      it("should calculate point buy cost correctly for value 12", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.INTELLIGENCE)).to.equal(1);
+      });
+
+      it("should calculate point buy cost correctly for value 11", () => {
+        expect(pointsAvailableFeature.getPointBuyCost(Abilities.CONSTITUTION)).to.equal(1);
+      });
+
+      it("should calculate point buy cost correctly for value 10", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.WISDOM)).to.equal(1);
+      });
+
+      it("should calculate point buy cost correctly for value 9", () => {
+        expect(pointsAvailableFeature.getPointBuyCost(Abilities.INTELLIGENCE)).to.equal(1);
+      });
+
+      it("should calculate point buy cost correctly for value 8", () => {
+        expect(standardArrayFeature.getPointBuyCost(Abilities.CHARISMA)).to.equal(1);
+      });
+
+      it("should calculate point buy cost correctly for values below minimum", () => {
+        expect(outOfRangeFeature.getPointBuyCost(Abilities.INTELLIGENCE)).to.equal(0);
+      });
+
+      it("should allow buying a point when available", () => {
+        const res = pointsAvailableFeature.buyPoint(Abilities.DEXTERITY);
+        expect(pointsAvailableFeature[Abilities.DEXTERITY].value).to.equal(15);
+        expect(res).to.be.true;
+      });
+
+      it("should disallow buying a point when the score is already maxed", () => {
+        const res = pointsAvailableFeature.buyPoint(Abilities.STRENGTH);
+        expect(pointsAvailableFeature[Abilities.STRENGTH].value).to.equal(15);
+        expect(res).to.be.false;
+      });
+
+      it("should disallow buying a point when all points are used", () => {
+        const res = standardArrayFeature.buyPoint(Abilities.WISDOM);
+        expect(standardArrayFeature[Abilities.WISDOM].value).to.equal(10);
+        expect(res).to.be.false;
+      });
+
+      it("should allow buying a point when the score is below minimum", () => {
+        const res = outOfRangeFeature.buyPoint(Abilities.WISDOM);
+        expect(outOfRangeFeature[Abilities.WISDOM].value).to.equal(5);
+        expect(res).to.be.true;
+      });
+
+      it("should calculate point sell value correctly for values above maximum", () => {
+        expect(outOfRangeFeature.getPointSellValue(Abilities.CONSTITUTION)).to.be.NaN;
+      });
+
+      it("should calculate point sell value correctly for values at maximum", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.STRENGTH)).to.equal(2);
+      });
+
+      it("should calculate point sell value correctly for value 14", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.DEXTERITY)).to.equal(2);
+      });
+
+      it("should calculate point sell value correctly for value 13", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.CONSTITUTION)).to.equal(1);
+      });
+
+      it("should calculate point sell value correctly for value 12", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.INTELLIGENCE)).to.equal(1);
+      });
+
+      it("should calculate point sell value correctly for value 11", () => {
+        expect(pointsAvailableFeature.getPointSellValue(Abilities.CONSTITUTION)).to.equal(1);
+      });
+
+      it("should calculate point sell value correctly for value 10", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.WISDOM)).to.equal(1);
+      });
+
+      it("should calculate point sell value correctly for value 9", () => {
+        expect(pointsAvailableFeature.getPointSellValue(Abilities.INTELLIGENCE)).to.equal(1);
+      });
+
+      it("should calculate point sell value correctly for value 8", () => {
+        expect(standardArrayFeature.getPointSellValue(Abilities.CHARISMA)).to.equal(0);
+      });
+
+      it("should calculate point sell value correctly for values below minimum", () => {
+        expect(outOfRangeFeature.getPointSellValue(Abilities.INTELLIGENCE)).to.equal(0);
+      });
+
+      it("should allow selling a point when available", () => {
+        const res = pointsAvailableFeature.sellPoint(Abilities.DEXTERITY);
+        expect(pointsAvailableFeature[Abilities.DEXTERITY].value).to.equal(13);
+        expect(res).to.be.true;
+      });
+
+      it("should disallow selling a point when the score is already at minimum", () => {
+        const res = pointsAvailableFeature.sellPoint(Abilities.CHARISMA);
+        expect(pointsAvailableFeature[Abilities.CHARISMA].value).to.equal(8);
+        expect(res).to.be.false;
+      });
+
+      it("should allow selling a point when the score is above maximum", () => {
+        const res = outOfRangeFeature.buyPoint(Abilities.WISDOM);
+        expect(outOfRangeFeature[Abilities.WISDOM].value).to.equal(5);
+        expect(res).to.be.true;
       });
     });
   });

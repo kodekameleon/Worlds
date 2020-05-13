@@ -23,3 +23,18 @@ export function doApplyAbilityScoreModifier(character, featureId, ability, sign)
   }
   return changed && (() => doApplyAbilityScoreModifier(character, featureId, ability, -sign));
 }
+
+export function doActivateFeatureChoice(character, featureChoice, choice) {
+  const active = character.features.getActiveFeatureChoice(featureChoice);
+  if (active?.uniqueId === choice) {
+    return false;
+  }
+
+  // If there is a choice, activate it, but if there is no choice deactivate the current choice
+  choice
+    ? character.features.activateFeatureChoice(featureChoice, choice)
+    : character.features.deactivateFeatureChoice(featureChoice);
+
+  // Return a function that will reactivate the old choice, or deactivate this choice.
+  return () => doActivateFeatureChoice(character, featureChoice, active?.uniqueId);
+}

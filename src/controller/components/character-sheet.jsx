@@ -1,4 +1,4 @@
-import {ActionHandler} from "../actions/action-handler";
+import {FeatureIds} from "../../constants";
 import {Icon} from "../../widgets";
 import {messages} from "../messages";
 import {UndoStack} from "../actions/undo-stack";
@@ -12,8 +12,8 @@ import {
   SavingThrowBlock,
   SkillBlock
 } from "../../view/character";
+import {ActionHandler, doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../actions";
 import {Col, Row} from "../../widgets/layout";
-import {doApplyAbilityScoreModifier, doChangeAbilityScores} from "../actions/character-actions";
 import "./character-sheet.css";
 
 export function CharacterSheet(props) {
@@ -40,7 +40,13 @@ export function CharacterSheet(props) {
         </Row>
         <div class="row2">
           <Col>
-            <AbilityScoresView character={character} viewState={viewState} onChangeAbilityScores={actionHandler.do(doChangeAbilityScores)} onApplyMod={actionHandler.do(doApplyAbilityScoreModifier)}/>
+            <AbilityScoresView
+              character={character}
+              viewState={viewState}
+              onChangeAbilityScores={actionHandler.do(doChangeAbilityScores)}
+              onApplyMod={actionHandler.do(doApplyAbilityScoreModifier)}
+              onActivateAbilitiesVariant={actionHandler.do(doActivateFeatureChoice, FeatureIds.BASE_ABILITY_SCORES_CHOICES)}
+            />
           </Col>
           <Col>
             <SavingThrowBlock character={character} viewState={viewState}/>

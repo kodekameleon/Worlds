@@ -11,6 +11,8 @@ export const Abilities = {
   CHARISMA: "charisma"
 };
 
+const POINT_BUY_TABLE = [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 7, 9];
+
 export function AbilityScores(state) {
   return {
     get strength() { return getAbilityScore(Abilities.STRENGTH); },
@@ -99,6 +101,12 @@ export function AbilityScoresFeature(state, copyFrom) {
     applyAbilityScoreModifierIncrease: (ability) => applyModifierIncrease(ability),
     applyAbilityScoreModifierDecrease: (ability) => applyModifierDecrease(ability),
 
+    buyPoint: (ability) => buyPoint(ability),
+    sellPoint: (ability) => sellPoint(ability),
+    getPointBuyCost: (ability) => getPointBuyCost(ability),
+    getPointSellValue: (ability) => getPointSellValue(ability),
+    getPointsRemaining: () => getPointsRemaining(),
+
     serialize: () => Language.deflate(self)
   };
 
@@ -138,9 +146,48 @@ export function AbilityScoresFeature(state, copyFrom) {
       available
     };
   }
+
+  function buyPoint(ability) {
+    if (getPointsRemaining() >= getPointBuyCost(ability)) {
+      self[ability] += 1;
+      return true;
+    }
+    return false;
+  }
+
+  function sellPoint(ability) {
+    if (self[ability] > 8) {
+      self[ability] -= 1;
+      return true;
+    }
+    return false;
+  }
+
+  function getPointBuyCost(ability) {
+    return pointCostLookup(self[ability] + 1) - pointCostLookup(self[ability]);
+  }
+
+  function getPointSellValue(ability) {
+    return pointCostLookup(self[ability]) - pointCostLookup(self[ability] - 1);
+  }
+
+  function pointCostLookup(score) {
+    if (score < 0) {
+      return 0;
+    }
+    if (score >= POINT_BUY_TABLE.length) {
+      return NaN;
+    }
+    return POINT_BUY_TABLE[score];
+  }
+
+  function getPointsRemaining() {
+    const total = Object.values(Abilities).reduce((total, key) => total + pointCostLookup(self[key]), 0);
+    return Number.isNaN(total) | total > 27 ? 0 : 27 - total;
+  }
 }
 
-export function AbilityScoresFeatureSet(state) {
+export function AbilityScoresFeatureSet(features) {
   return {
     get strength() { return getAbilityScoreModifiers(Abilities.STRENGTH); },
     get dexterity() { return getAbilityScoreModifiers(Abilities.DEXTERITY); },
@@ -153,7 +200,7 @@ export function AbilityScoresFeatureSet(state) {
   };
 
   function getAbilityScoreModifiers(prop) {
-    return state.featureList.reduce((a, feature) => {
+    return features.featureList.reduce((a, feature) => {
       if (feature.hasModifier(prop)) {
         const modifier = feature[prop];
         if (feature.isBaseScore) {

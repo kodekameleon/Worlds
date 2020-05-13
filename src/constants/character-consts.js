@@ -38,6 +38,7 @@ export const DamageProp = {
 };
 
 export const FeatureIds = {
+  BASE_ABILITY_SCORES_CHOICES: "base-ability-scores:feature-choices",
   STANDARD_ARRAY: "base-ability-scores:standard-array",
   POINTS_BUY: "base-ability-scores:points-buy",
   RANDOM: "base-ability-scores:random",

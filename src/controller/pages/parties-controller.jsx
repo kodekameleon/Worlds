@@ -15,13 +15,10 @@ character.race = "Rock Gnome";
 character.alignment = "Chaotic Neutral";
 character.xp = 600;
 
-// Create base abilityScores, Half Elf, Level 4 ability upgrade features
 const standardArrayFeature = Feature({}, {
   uniqueId: FeatureIds.STANDARD_ARRAY,
   name: "Standard Scores",
-
   isBaseScore: true,
-
   strength: 15,
   dexterity: 14,
   constitution: 13,
@@ -29,6 +26,49 @@ const standardArrayFeature = Feature({}, {
   wisdom: 10,
   charisma: 8
 });
+
+const pointsBuyFeature = Feature({}, {
+  uniqueId: FeatureIds.POINTS_BUY,
+  name: "Points Buy",
+  isBaseScore: true,
+  strength: 8,
+  dexterity: 8,
+  constitution: 8,
+  intelligence: 8,
+  wisdom: 8,
+  charisma: 8
+});
+
+const dieRollFeature = Feature({}, {
+  uniqueId: FeatureIds.RANDOM,
+  name: "Dice Roll",
+  isBaseScore: true,
+  strength: 8,
+  dexterity: 8,
+  constitution: 8,
+  intelligence: 8,
+  wisdom: 8,
+  charisma: 8
+});
+
+const manualScoresFeature = Feature({}, {
+  uniqueId: FeatureIds.MANUAL,
+  name: "Manual Entry",
+  isBaseScore: true,
+  strength: 8,
+  dexterity: 8,
+  constitution: 8,
+  intelligence: 8,
+  wisdom: 8,
+  charisma: 8
+});
+
+const baseAbilityScoresFeature = Feature({}, {
+  uniqueId: FeatureIds.BASE_ABILITY_SCORES_CHOICES,
+  name: "Ability scores options",
+  featureChoices: [standardArrayFeature, pointsBuyFeature, dieRollFeature, manualScoresFeature]
+});
+
 const halfElfFeature = Feature({}, {
   uniqueId: "race:half-elf",
   name: "Half Elf",
@@ -50,7 +90,7 @@ const level4Feature = Feature({}, {
   chooseFrom: ["strength", "dexterity", "intelligence", "wisdom", "charisma"]
 });
 
-character.features.featureList.push(standardArrayFeature, halfElfFeature, level4Feature);
+character.features.featureList.push(baseAbilityScoresFeature, halfElfFeature, level4Feature);
 
 
 console.log(character);

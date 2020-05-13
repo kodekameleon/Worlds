@@ -7,9 +7,11 @@ import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, 
 import "./ability-scores-view.css";
 
 export function AbilityScoresView(baseProps) {
-  const isEditing = baseProps.viewState.editing;
+  const editing = baseProps.viewState.editing;
   const char = baseProps.character;
+  const abilitiesVariant = char.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES);
   const usingStandardArray = !!char.getFeature(FeatureIds.STANDARD_ARRAY);
+
   let dragOriginEl, dragOriginAbility, dragOriginAbilityScore;
 
   const strEl = <CharacterAbilityScore ability={Abilities.STRENGTH}/>;
@@ -19,7 +21,7 @@ export function AbilityScoresView(baseProps) {
   const wisEl = <CharacterAbilityScore ability={Abilities.WISDOM}/>;
   const chaEl = <CharacterAbilityScore ability={Abilities.CHARISMA}/>;
 
-  const selector = isEditing && AbilityScoreMethodSelector();
+  const selector = (editing || !abilitiesVariant) && AbilityScoreMethodSelector();
 
   const blockEl = (
     <DragDropSite class="ability-score-block">
@@ -37,26 +39,26 @@ export function AbilityScoresView(baseProps) {
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
         <Col class={["ability-score boxed", abilityInfo.available && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
-            {isEditing && <DragHandle/>}
-            {(isEditing && usingStandardArray) &&
+            {editing && <DragHandle/>}
+            {(editing && usingStandardArray) &&
               <div class="value">
                 <span class="ability-score-base">{abilityInfo.base}</span>+
                 <span class="ability-score-mods">{abilityInfo.value - abilityInfo.base}</span>
               </div>
             }
-            {(isEditing && usingStandardArray) ||
+            {(editing && usingStandardArray) ||
               <div class="value">
                 <span>{abilityInfo.value}</span>
               </div>
             }
           </DragSource>
-          {(isEditing || abilityInfo.available > 0) &&
+          {(editing || abilityInfo.available > 0) &&
             <Col class="spinner">
               <Icon glyph="&#xe006;"
                     enabled={abilityInfo.available > 0}
                     on:click={() => onApplyMod(+1)}/>
               <Icon glyph="&#xe005;"
-                    enabled={abilityInfo.modifiers.some(v => v.min < v.value && (isEditing || v.available > 0))}
+                    enabled={abilityInfo.modifiers.some(v => v.min < v.value && (editing || v.available > 0))}
                     on:click={() => onApplyMod(-1)}/>
             </Col>
           }
@@ -69,7 +71,7 @@ export function AbilityScoresView(baseProps) {
     return statEl;
 
     function canDrag() {
-      return isEditing && usingStandardArray;
+      return editing && usingStandardArray;
     }
 
     function onDragStart() {
@@ -124,7 +126,7 @@ export function AbilityScoresView(baseProps) {
       if (sign >= 0) {
         mod = abilityInfo.modifiers.find(mod => mod.available > 0);
       } else {
-        mod = abilityInfo.modifiers.find(mod => (isEditing || mod.available > 0) && mod.min < mod.value);
+        mod = abilityInfo.modifiers.find(mod => (editing || mod.available > 0) && mod.min < mod.value);
       }
 
       // If we found a feature, apply the change
@@ -152,33 +154,14 @@ export function AbilityScoresView(baseProps) {
   }
 
   function AbilityScoreMethodSelector() {
-    // TODO: THESE HAVE TO COME FROM THE CONTROLLER, FROM THE API
-    const opts = [
-      {
-        uniqueId: FeatureIds.STANDARD_ARRAY,
-        name: "Standard Scores"
-      },
-      {
-        uniqueId: FeatureIds.POINTS_BUY,
-        name: "Points Buy"
-      },
-      {
-        uniqueId: FeatureIds.RANDOM,
-        name: "Random"
-      },
-      {
-        uniqueId: FeatureIds.MANUAL,
-        name: "Manual Entry"
-      }
-    ];
-
+    const choices = char.features.getFeature(FeatureIds.BASE_ABILITY_SCORES_CHOICES).featureChoices;
     return (
       <div class="ability-score-method-selector">
-        <Col class="spaced boxed">
+        <Col class={["spaced boxed", abilitiesVariant || "attention"]}>
           <Select placeholder={messages.abilityScoreMethod.placeholder}
                   selected={null}
                   onChange={onChange}>
-            {opts.map(v => ({id: v.uniqueId, label: v.name, tip: messages.tips.select[v.uniqueId]}))}
+            {choices.map(v => ({id: v.uniqueId, label: v.name, tip: messages.tips.select[v.uniqueId]}))}
           </Select>
           <label>Abilities Variant</label>
         </Col>
@@ -186,7 +169,7 @@ export function AbilityScoresView(baseProps) {
     );
 
     function onChange(index, id) {
-      console.log(`index=${index} id=${id}`);
+      baseProps.onActivateAbilitiesVariant(id);
     }
   }
 }

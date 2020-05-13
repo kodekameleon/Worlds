@@ -1,7 +1,7 @@
-import {ANY, FeatureIds} from "../../../src/constants";
 import {expect} from "chai";
+import {ANY, FeatureIds} from "../../../src/constants";
 import {Character, Feature} from "../../../src/model";
-import {doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions/character-actions";
+import {doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions/character-actions";
 
 describe("Character Actions", () => {
   let character;
@@ -309,6 +309,139 @@ describe("Character Actions", () => {
       });
 
       expect(character.getFeature("race:half-elf").getModifier("dexterity").available).to.equal(1);
+    });
+  });
+
+  describe("Activate a feature choice", () => {
+    beforeEach(() => {
+      character = Character();
+      character.features.featureList.push(Feature({}, {
+        uniqueId: FeatureIds.BASE_ABILITY_SCORES_CHOICES,
+        name: "Ability scores options",
+        featureChoices: [
+          Feature({}, {
+            uniqueId: FeatureIds.STANDARD_ARRAY,
+            name: "Standard Scores",
+            isBaseScore: true,
+            strength: 15,
+            dexterity: 14,
+            constitution: 13,
+            intelligence: 12,
+            wisdom: 10,
+            charisma: 8
+          }),
+          Feature({}, {
+            uniqueId: FeatureIds.POINTS_BUY,
+            name: "Points Buy",
+            isBaseScore: true,
+            strength: 8,
+            dexterity: 8,
+            constitution: 8,
+            intelligence: 8,
+            wisdom: 8,
+            charisma: 8
+          }),
+          Feature({}, {
+            uniqueId: FeatureIds.RANDOM,
+            name: "Dice Roll",
+            isBaseScore: true,
+            strength: 8,
+            dexterity: 8,
+            constitution: 8,
+            intelligence: 8,
+            wisdom: 8,
+            charisma: 8
+          }),
+          Feature({}, {
+            uniqueId: FeatureIds.MANUAL,
+            name: "Manual Entry",
+            isBaseScore: true,
+            strength: 8,
+            dexterity: 8,
+            constitution: 8,
+            intelligence: 8,
+            wisdom: 8,
+            charisma: 8
+          })
+        ]
+      }));
+    });
+
+    it("should activate a feature choice", () => {
+      const res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+    });
+
+    it("should activate a feature choice and return a function to undo the change", () => {
+      const res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.a("function");
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+
+      expect(res()).to.be.a("function");
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)).to.be.undefined;
+      expect(character.features.featureList).to.have.length(1);
+    });
+
+    it("should activate a feature choice and deactivate the feature already active", () => {
+      let res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+
+      res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.POINTS_BUY);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.POINTS_BUY);
+      expect(character.features.featureList).to.have.length(2);
+    });
+
+    it("should activate a feature choice and deactivate the feature already active and return a function to undo the change", () => {
+      let res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+
+      res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.POINTS_BUY);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.POINTS_BUY);
+      expect(character.features.featureList).to.have.length(2);
+
+      expect(res()).to.be.a("function");
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+    });
+
+    it("should deactivate a feature choice when no choice is provided", () => {
+      let res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+
+      res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)).to.be.undefined;
+      expect(character.features.featureList).to.have.length(1);
+    });
+
+    it("should do nothing when the feature being activated is already active", () => {
+      let res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.truthy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+
+      res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES, FeatureIds.RANDOM);
+      expect(res).to.be.falsy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)?.uniqueId).to.equal(FeatureIds.RANDOM);
+      expect(character.features.featureList).to.have.length(2);
+    });
+
+    it("should do nothing when deactivating a feature and there is no active feature", () => {
+      const res = doActivateFeatureChoice(character, FeatureIds.BASE_ABILITY_SCORES_CHOICES);
+      expect(res).to.be.falsy;
+      expect(character.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES)).to.be.undefined;
+      expect(character.features.featureList).to.have.length(1);
     });
   });
 });
