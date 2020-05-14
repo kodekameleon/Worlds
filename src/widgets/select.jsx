@@ -27,6 +27,9 @@ export function Select(props, children) {
       selected = props.selected;
       setButtonText();
     }
+  } else if (typeof props.selected === "string" && props.selected !== "") {
+    selected = children.findIndex(v => typeof v === "string" ? v === props.selected : v.id === props.selected);
+    setButtonText();
   }
 
   return selectEl;
@@ -71,7 +74,7 @@ export function Select(props, children) {
       selected = i;
       setButtonText();
       if (props.onChange) {
-        props.onChange(i, getChildId(i));
+        props.onChange(i, typeof children[i] === "string" ? children[i] : children[i].id);
       }
     }
   }
@@ -114,18 +117,8 @@ export function Select(props, children) {
   }
 
   function setButtonText() {
-    buttonEl.innerText = getChildText(selected);
-  }
-
-  function getChildText(i) {
-    if (i >= 0 && i < children.length) {
-      return typeof children[i] === "string" ? children[i] : children[i].label;
-    }
-  }
-
-  function getChildId(i) {
-    if (i >= 0 && i < children.length) {
-      return typeof children[i] === "string" ? children[i] : children[i].id;
+    if (selected >= 0 && selected < children.length) {
+      buttonEl.innerText = typeof children[selected] === "string" ? children[selected] : children[selected].label;
     }
   }
 }

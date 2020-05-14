@@ -3,14 +3,14 @@ import {FeatureIds} from "../../constants";
 import {messages} from "./messages";
 import {Select} from "../../widgets";
 import {Utils} from "../../utils";
-import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip} from "../../widgets";
+import {Col, DragDropSite, DragHandle, DragImage, DragSource, DropTarget, Icon, PopupTip, Row} from "../../widgets";
 import "./ability-scores-view.css";
 
 export function AbilityScoresView(baseProps) {
   const editing = baseProps.viewState.editing;
   const char = baseProps.character;
   const abilitiesVariant = char.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES);
-  const usingStandardArray = !!char.getFeature(FeatureIds.STANDARD_ARRAY);
+  const abilitiesVariantId = abilitiesVariant?.uniqueId;
 
   let dragOriginEl, dragOriginAbility, dragOriginAbilityScore;
 
@@ -38,21 +38,33 @@ export function AbilityScoresView(baseProps) {
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
         <Col class={["ability-score boxed", abilityInfo.available && "attention"]} center>
-          <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd}>
-            {editing && <DragHandle/>}
-            {(editing && usingStandardArray) &&
-              <div class="value">
-                <span class="ability-score-base">{abilityInfo.base}</span>+
-                <span class="ability-score-mods">{abilityInfo.value - abilityInfo.base}</span>
+          <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd} draggable={editing}>
+            {editing && abilitiesVariant && <DragHandle/>}
+            {editing &&
+              <div class={["value", abilitiesVariantId === FeatureIds.MANUAL && "editable"]}
+                   on:mousedown={onMouseDownValue}
+                   on:focusout={onBlurValue}
+                   on:keydown={onKeyDownValue}>
+                {abilitiesVariant &&
+                  <>
+                    <span class="ability-score-base">{abilityInfo.base}</span>
+                    <span>+</span>
+                    <span class="ability-score-mods">{abilityInfo.value - abilityInfo.base}</span>
+                    {abilitiesVariantId === FeatureIds.MANUAL &&
+                      <input type="number" min="1" max="30" maxlength="2" value={`${abilityInfo.base}`}
+                      on:keydown={onKeyDownValueInput}/>
+                    }
+                  </>
+                }
               </div>
             }
-            {(editing && usingStandardArray) ||
+            {editing ||
               <div class="value">
-                <span>{abilityInfo.value}</span>
+                <div>{abilitiesVariant && abilityInfo.value}</div>
               </div>
             }
           </DragSource>
-          {(editing || abilityInfo.available > 0) &&
+          {(editing || abilityInfo.available > 0) && abilitiesVariant &&
             <Col class="spinner">
               <Icon glyph="&#xe006;"
                     enabled={abilityInfo.available > 0}
@@ -62,7 +74,7 @@ export function AbilityScoresView(baseProps) {
                     on:click={() => onApplyMod(-1)}/>
             </Col>
           }
-          <div class="hiviz ability-score-bonus">{Utils.signed(char.bonus[props.ability])}</div>
+          <div class="hiviz ability-score-bonus">{abilitiesVariant && Utils.signed(char.bonus[props.ability])}</div>
           <label>{messages[props.ability]}</label>
           <AbilityScoreInfoPopup ability={props.ability}/>
         </Col>
@@ -71,7 +83,7 @@ export function AbilityScoresView(baseProps) {
     return statEl;
 
     function canDrag() {
-      return editing && usingStandardArray;
+      return editing;
     }
 
     function onDragStart() {
@@ -134,6 +146,38 @@ export function AbilityScoresView(baseProps) {
         baseProps.onApplyMod(mod.source.uniqueId, props.ability, sign);
       }
     }
+
+    function onKeyDownValueInput(ev) {
+      if ((ev.target.value.length >= 2 && ev.key.length > 0 && ev.key.charCodeAt(0) >= 48 && ev.key.charCodeAt(0) <= 57)
+        || ev.key === "." || ev.key === "-") {
+        ev.preventDefault();
+      }
+    }
+
+    function onMouseDownValue(ev) {
+      if (abilitiesVariantId === FeatureIds.MANUAL) {
+        statEl.querySelector("input")?.focus();
+        ev.preventDefault();
+      }
+    }
+
+    function onBlurValue(ev) {
+      console.log(`blur=${ev.target.value}`);
+      baseProps.onChangeAbilityScores(FeatureIds.MANUAL, {[props.ability]: Number.parseInt(ev.target.value)});
+    }
+
+    function onKeyDownValue(ev) {
+      switch (ev.code) {
+        case "Enter":
+          console.log(`enter=${ev.target.value}`);
+          baseProps.onChangeAbilityScores(FeatureIds.MANUAL, {[props.ability]: Number.parseInt(ev.target.value)});
+          break;
+
+        case "Escape":
+          ev.target.value = char[props.ability];
+          break;
+      }
+    }
   }
 
   function AbilityScoreInfoPopup(props) {
@@ -155,21 +199,36 @@ export function AbilityScoresView(baseProps) {
 
   function AbilityScoreMethodSelector() {
     const choices = char.features.getFeature(FeatureIds.BASE_ABILITY_SCORES_CHOICES).featureChoices;
+    const active = char.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES);
     return (
       <div class="ability-score-method-selector">
-        <Col class={["spaced boxed", abilitiesVariant || "attention"]}>
-          <Select placeholder={messages.abilityScoreMethod.placeholder}
-                  selected={null}
-                  onChange={onChange}>
-            {choices.map(v => ({id: v.uniqueId, label: v.name, tip: messages.tips.select[v.uniqueId]}))}
-          </Select>
-          <label>Abilities Variant</label>
-        </Col>
+        <Row>
+          <Col class={["spaced boxed", abilitiesVariant || "attention"]}>
+            <Select placeholder={messages.abilityScoreMethod.placeholder}
+                    selected={active?.uniqueId}
+                    onChange={onChange}>
+              {choices.map(v => ({id: v.uniqueId, label: v.name, tip: messages.tips.select[v.uniqueId]}))}
+            </Select>
+            <label>Abilities Variant</label>
+          </Col>
+          {abilitiesVariantId === FeatureIds.RANDOM && <div class="dice" on:click={onRoll}/>}
+        </Row>
       </div>
     );
 
     function onChange(index, id) {
       baseProps.onActivateAbilitiesVariant(id);
+    }
+
+    function onRoll() {
+      baseProps.onChangeAbilityScores(FeatureIds.RANDOM, {
+        [Abilities.STRENGTH]: Utils.rollDice("3/4d6").total,
+        [Abilities.DEXTERITY]: Utils.rollDice("3/4d6").total,
+        [Abilities.CONSTITUTION]: Utils.rollDice("3/4d6").total,
+        [Abilities.INTELLIGENCE]: Utils.rollDice("3/4d6").total,
+        [Abilities.WISDOM]: Utils.rollDice("3/4d6").total,
+        [Abilities.CHARISMA]: Utils.rollDice("3/4d6").total
+      });
     }
   }
 }

@@ -4,6 +4,7 @@
   border-color: var(--border-color-light);
   cursor: pointer;
   border: 1px solid;
+  position: relative;
 
   &:hover {
     color: var(--text-color-dark);
@@ -11,10 +12,6 @@
   }
 
   &.open {
-    ul {
-      display: block;
-    }
-
     & > button::after {
       content: "\E008";
     }
@@ -41,14 +38,25 @@
     }
   }
 
+  &.open ul {
+    z-index: 1;
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity var(--transition-fast) ease-in-out;
+    box-shadow: 3px 3px 4px var(--shadow-color);
+  }
+
   ul {
-    display: none;
+    display: block;
     position: absolute;
     background: white;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-tight);
-    z-index: 1;
     min-width: 100%;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast) ease-in-out, z-index 0s var(--transition-fast);
 
     & > li {
       position: relative;

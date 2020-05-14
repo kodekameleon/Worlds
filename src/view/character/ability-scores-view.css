@@ -22,6 +22,7 @@
     }
 
     .value {
+      position: relative;
       font-size: 0.8em;
       border: 1px solid;
       border-radius: 50%;
@@ -30,18 +31,58 @@
       height: 1.6em;
       max-height: 2.4em;
       margin-top: -1px;
-      cursor: default;
       padding: 0 0.25em;
+      transition: border-radius var(--transition-fast) linear, background-color var(--transition-fast);
+
+      &.editable {
+        cursor: pointer;
+      }
+
+      &:focus-within {
+        border-radius: 2px;
+        background-color: var(--color-background);
+
+        span {
+          opacity: 0;
+        }
+      }
+
+      input {
+        background: transparent;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        z-index: -1;
+        border: none;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+
+        &:focus {
+          z-index: 1;
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
     }
 
     .spinner {
       position: absolute;
-      right: 0;
-      top: 0.8em;
+      right: 0.3em;
+      top: 1.3em;
+      padding: 0;
 
       .icon {
-        margin-bottom: -0.5em;
+        width: 1.4em;
+        height: 1.4em;
+        padding-bottom: 0.2em;
       }
+    }
+
+    .ability-score-bonus {
+      height: calc(1.5em + 1px);
     }
 
     .spinner + .ability-score-bonus {
@@ -105,6 +146,19 @@
       ul {
         left: -1px;
         min-width: calc(100% + 2px);
+      }
+    }
+
+    .dice {
+      background-image: inline("dice.svg");
+      width: 4.5em;
+      background-size: contain;
+      background-repeat: no-repeat;
+      transition: transform var(--transition-fast) ease;
+      opacity: 0.9;
+
+      &:hover {
+        transform: scale(1.1);
       }
     }
   }

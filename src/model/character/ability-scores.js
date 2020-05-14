@@ -96,7 +96,7 @@ export function AbilityScoresFeature(state, copyFrom) {
     hasModifier: (ability) => self[ability] || canChoose(ability) ? true : false,
 
     getFixedAbilityScoreModifier: (ability) => { return self[ability]; },
-    setFixedAbilityScoreModifier: (ability, value) => { self[ability] = value; },
+    setFixedAbilityScoreModifier: (ability, value) => { self[ability] = Math.max(Math.min(value, 30), 3); },
 
     applyAbilityScoreModifierIncrease: (ability) => applyModifierIncrease(ability),
     applyAbilityScoreModifierDecrease: (ability) => applyModifierDecrease(ability),

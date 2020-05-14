@@ -1,7 +1,7 @@
 import {expect} from "chai";
 import {ANY, FeatureIds} from "../../../src/constants";
 import {Character, Feature} from "../../../src/model";
-import {doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions/character-actions";
+import {doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions";
 
 describe("Character Actions", () => {
   let character;

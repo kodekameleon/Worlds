@@ -68,8 +68,12 @@ export function DropTarget(props, children) {
 export function DragSource(props, children) {
   let parentTargetEl;
   let dragDropSite;
+
   const el = (
-    <div class="drag-source" draggable={true} on:dragstart={onDragStart} on:dragend={onDragEnd}>
+    <div class="drag-source"
+         draggable={props.draggable != undefined ? props.draggable : true}
+         on:dragstart={onDragStart}
+         on:dragend={onDragEnd}>
       {children}
     </div>
   );

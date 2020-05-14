@@ -1,7 +1,6 @@
-import {ActionHandler} from "../../../src/controller/actions/action-handler";
 import {expect} from "chai";
 import sinon from "sinon";
-import {UndoStack} from "../../../src/controller/actions/undo-stack";
+import {ActionHandler, UndoStack} from "../../../src/controller/actions";
 
 describe("ActionHandler", () => {
   let undoStack;

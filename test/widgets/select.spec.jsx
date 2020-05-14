@@ -42,10 +42,28 @@ describe("Select widget", () => {
     expect([...el.querySelectorAll(".popup-tip")]).to.have.length(2);
   });
 
-  it("should show the selected element if provided", () => {
+  it("should show the selected element if provided by index", () => {
     const el = (
       <Select selected={1}>
         {["text a", "text b"]}
+      </Select>
+    );
+    expect(el.querySelector("button").innerText).to.equal("text b");
+  });
+
+  it("should show the selected element if provided by text value", () => {
+    const el = (
+      <Select selected="text b">
+        {["text a", "text b"]}
+      </Select>
+    );
+    expect(el.querySelector("button").innerText).to.equal("text b");
+  });
+
+  it("should show the selected element if provided by id", () => {
+    const el = (
+      <Select selected="item-b">
+        {[{label: "text a", id: "item-a"}, {label: "text b", id: "item-b"}]}
       </Select>
     );
     expect(el.querySelector("button").innerText).to.equal("text b");
@@ -58,6 +76,15 @@ describe("Select widget", () => {
       </Select>
     );
     expect(el.querySelector("button").innerText).to.equal(undefined);
+  });
+
+  it("should ignore the selected element if invalid when provided by text", () => {
+    const el = (
+      <Select selected="abc">
+        {["text a", "text b"]}
+      </Select>
+    );
+    expect(el.querySelector("button").innerText).to.be.undefined;
   });
 
   describe("Event handlers", () => {

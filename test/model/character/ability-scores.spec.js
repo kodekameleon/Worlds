@@ -501,6 +501,16 @@ describe("Ability Scores Model", () => {
         expect(feature.getFixedAbilityScoreModifier("strength")).to.equal(12);
         expect(feature.getFixedAbilityScoreModifier("charisma")).to.equal(6);
       });
+
+      it("should limit the base ability score to max 30", () => {
+        feature.setFixedAbilityScoreModifier("strength", 33);
+        expect(feature.getFixedAbilityScoreModifier("strength")).to.equal(30);
+      });
+
+      it("should limit the base ability score to min 3", () => {
+        feature.setFixedAbilityScoreModifier("strength", 1);
+        expect(feature.getFixedAbilityScoreModifier("strength")).to.equal(3);
+      });
     });
 
     describe("Apply Modifiers", () => {
