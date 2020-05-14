@@ -1,7 +1,12 @@
 import {expect} from "chai";
 import {ANY, FeatureIds} from "../../../src/constants";
 import {Character, Feature} from "../../../src/model";
-import {doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../../../src/controller/actions";
+import {
+  doActivateFeatureChoice,
+  doApplyAbilityScoreModifier,
+  doBuyPoint,
+  doChangeAbilityScores
+} from "../../../src/controller/actions";
 
 describe("Character Actions", () => {
   let character;
@@ -309,6 +314,111 @@ describe("Character Actions", () => {
       });
 
       expect(character.getFeature("race:half-elf").getModifier("dexterity").available).to.equal(1);
+    });
+  });
+
+  describe("Point Buy actions", () => {
+    beforeEach(() => {
+      character = Character();
+      character.features.featureList.push(Feature({}, {
+        uniqueId: FeatureIds.POINTS_BUY,
+        name: "Points Buy",
+        isBaseScore: true,
+        strength: 8,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      }));
+    });
+
+    it("should make the correct changes to buy a point", () => {
+      const res = doBuyPoint(character, FeatureIds.POINTS_BUY, "strength", +1);
+      expect(res).to.be.truthy;
+      expect(character.abilityScores).to.deep.equal({
+        strength: 9,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+    });
+
+    it("should make the correct changes to unbuy a point", () => {
+      const res = doBuyPoint(character, FeatureIds.POINTS_BUY, "constitution", -1);
+      expect(res).to.be.truthy;
+      expect(character.abilityScores).to.deep.equal({
+        strength: 8,
+        dexterity: 9,
+        constitution: 9,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+    });
+
+    it("should do nothing if the feature cannot be found", () => {
+      const res = doBuyPoint(character, "xxx", "strength", +1);
+      expect(res).to.be.falsy;
+      expect(character.abilityScores).to.deep.equal({
+        strength: 8,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+    });
+
+    it("should do nothing if a point cannot be bought", () => {
+      const res = doBuyPoint(character, FeatureIds.POINTS_BUY, "charisma", +1);
+      expect(res).to.be.falsy;
+      expect(character.abilityScores).to.deep.equal({
+        strength: 8,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+    });
+
+    it("should do nothing if a point cannot be unbought", () => {
+      const res = doBuyPoint(character, FeatureIds.POINTS_BUY, "strength", -1);
+      expect(res).to.be.falsy;
+      expect(character.abilityScores).to.deep.equal({
+        strength: 8,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+    });
+
+    it("should return a function to undo the changes", () => {
+      const undo = doBuyPoint(character, FeatureIds.POINTS_BUY, "strength", +1);
+      expect(character.abilityScores).to.deep.equal({
+        strength: 9,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
+
+      undo();
+
+      expect(character.abilityScores).to.deep.equal({
+        strength: 8,
+        dexterity: 9,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 14,
+        charisma: 15
+      });
     });
   });
 
