@@ -12,7 +12,7 @@ import {
   SavingThrowBlock,
   SkillBlock
 } from "../../view/character";
-import {ActionHandler, doActivateFeatureChoice, doApplyAbilityScoreModifier, doChangeAbilityScores} from "../actions";
+import {ActionHandler, doActivateFeatureChoice, doApplyAbilityScoreModifier, doBuyPoint, doChangeAbilityScores} from "../actions";
 import {Col, Row} from "../../widgets/layout";
 import "./character-sheet.css";
 
@@ -46,6 +46,7 @@ export function CharacterSheet(props) {
               onChangeAbilityScores={actionHandler.do(doChangeAbilityScores)}
               onApplyMod={actionHandler.do(doApplyAbilityScoreModifier)}
               onActivateAbilitiesVariant={actionHandler.do(doActivateFeatureChoice, FeatureIds.BASE_ABILITY_SCORES_CHOICES)}
+              onBuyPoint={actionHandler.do(doBuyPoint)}
             />
           </Col>
           <Col>

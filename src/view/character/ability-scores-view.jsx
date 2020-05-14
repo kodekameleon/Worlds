@@ -11,6 +11,7 @@ export function AbilityScoresView(baseProps) {
   const char = baseProps.character;
   const abilitiesVariant = char.features.getActiveFeatureChoice(FeatureIds.BASE_ABILITY_SCORES_CHOICES);
   const abilitiesVariantId = abilitiesVariant?.uniqueId;
+  const pointsAvailable = abilitiesVariantId === FeatureIds.POINTS_BUY ? abilitiesVariant.getPointsRemaining() : 0;
 
   let dragOriginEl, dragOriginAbility, dragOriginAbilityScore;
 
@@ -37,7 +38,7 @@ export function AbilityScoresView(baseProps) {
     const statEl = (
       <DropTarget class="spaced"
         canDrop={canDrop} onDrop={onDrop} onDragEnter={onDragEnter} onDragLeave={onDragLeave}>
-        <Col class={["ability-score boxed", abilityInfo.available && "attention"]} center>
+        <Col class={["ability-score boxed", abilityInfo.available && abilitiesVariant && "attention"]} center>
           <DragSource canDrag={canDrag} onDragStart={onDragStart} createDragImage={createDragImage} onDragEnd={onDragEnd} draggable={editing}>
             {editing && abilitiesVariant && <DragHandle/>}
             {editing &&
@@ -64,19 +65,19 @@ export function AbilityScoresView(baseProps) {
               </div>
             }
           </DragSource>
-          {(editing || abilityInfo.available > 0) && abilitiesVariant &&
+          {(editing || abilityInfo.available > 0 || pointsAvailable > 0) && abilitiesVariant &&
             <Col class="spinner">
               <Icon glyph="&#xe006;"
-                    enabled={abilityInfo.available > 0}
-                    on:click={() => onApplyMod(+1)}/>
+                    enabled={isStatIncreaseAvailable()}
+                    on:click={() => onStatChange(+1)}/>
               <Icon glyph="&#xe005;"
-                    enabled={abilityInfo.modifiers.some(v => v.min < v.value && (editing || v.available > 0))}
-                    on:click={() => onApplyMod(-1)}/>
+                    enabled={isStateDecreaseAvailable()}
+                    on:click={() => onStatChange(-1)}/>
             </Col>
           }
           <div class="hiviz ability-score-bonus">{abilitiesVariant && Utils.signed(char.bonus[props.ability])}</div>
           <label>{messages[props.ability]}</label>
-          <AbilityScoreInfoPopup ability={props.ability}/>
+          <AbilityScoreInfoPopup/>
         </Col>
       </DropTarget>
     );
@@ -132,18 +133,34 @@ export function AbilityScoresView(baseProps) {
       dragOriginEl.querySelector(".ability-score-base").style.top = null;
     }
 
-    function onApplyMod(sign) {
-      // Find the feature to apply the change to
-      let mod;
-      if (sign >= 0) {
-        mod = abilityInfo.modifiers.find(mod => mod.available > 0);
-      } else {
-        mod = abilityInfo.modifiers.find(mod => (editing || mod.available > 0) && mod.min < mod.value);
-      }
+    function isStatIncreaseAvailable() {
+      return abilitiesVariantId === FeatureIds.POINTS_BUY && pointsAvailable > 0
+        ? pointsAvailable && pointsAvailable >= abilitiesVariant.getPointBuyCost(props.ability)
+        : abilityInfo.available > 0;
+    }
 
-      // If we found a feature, apply the change
-      if (mod) {
-        baseProps.onApplyMod(mod.source.uniqueId, props.ability, sign);
+    function isStateDecreaseAvailable() {
+      return abilitiesVariantId === FeatureIds.POINTS_BUY && pointsAvailable > 0
+        ? pointsAvailable && abilityInfo.base > 8
+        : abilityInfo.modifiers.some(v => v.min < v.value && (editing || v.available > 0));
+    }
+
+    function onStatChange(sign) {
+      if (abilitiesVariantId === FeatureIds.POINTS_BUY && pointsAvailable > 0) {
+        baseProps.onBuyPoint(FeatureIds.POINTS_BUY, props.ability, sign);
+      } else {
+        // Find the feature to apply the change to
+        let mod;
+        if (sign >= 0) {
+          mod = abilityInfo.modifiers.find(mod => mod.available > 0);
+        } else {
+          mod = abilityInfo.modifiers.find(mod => (editing || mod.available > 0) && mod.min < mod.value);
+        }
+
+        // If we found a feature, apply the change
+        if (mod) {
+          baseProps.onApplyMod(mod.source.uniqueId, props.ability, sign);
+        }
       }
     }
 
@@ -162,7 +179,6 @@ export function AbilityScoresView(baseProps) {
     }
 
     function onBlurValue(ev) {
-      console.log(`blur=${ev.target.value}`);
       baseProps.onChangeAbilityScores(FeatureIds.MANUAL, {[props.ability]: Number.parseInt(ev.target.value)});
     }
 
@@ -178,23 +194,33 @@ export function AbilityScoresView(baseProps) {
           break;
       }
     }
-  }
 
-  function AbilityScoreInfoPopup(props) {
-    const rows = char.features[props.ability].modifiers.reduce((res, modifier) => {
-      if (modifier.min !== modifier.max) {
-        res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);
-      } else if (modifier.value !== 0) {
-        res.push(<div>{`${modifier.source.name}: ${modifier.value}`}</div>);
+    function AbilityScoreInfoPopup() {
+      let rows;
+      if (abilitiesVariantId === FeatureIds.POINTS_BUY && pointsAvailable > 0) {
+        rows = [
+          <div>{`${abilitiesVariant.name}: ${abilityInfo.base}`}</div>,
+          <div>{`${messages["points available"]}: ${pointsAvailable}`}</div>,
+          <div>{`${messages["point buy cost"]}: ${abilitiesVariant.getPointBuyCost(props.ability)}`}</div>,
+          <div>{`${messages["point sell value"]}: ${abilitiesVariant.getPointSellValue(props.ability)}`}</div>
+        ];
+      } else {
+        rows = char.features[props.ability].modifiers.reduce((res, modifier) => {
+          if (modifier.min !== modifier.max) {
+            res.push(<div>{`${modifier.source.name}: ${modifier.value}/${modifier.max}`}</div>);
+          } else if (modifier.value !== 0) {
+            res.push(<div>{`${modifier.source.name}: ${modifier.value}`}</div>);
+          }
+          return res;
+        }, []);
       }
-      return res;
-    }, []);
 
-    return (
-      <PopupTip class="ability-score-info-popup" right>
-        {rows}
-      </PopupTip>
-    );
+      return (
+        <PopupTip class="ability-score-info-popup" right>
+          {rows}
+        </PopupTip>
+      );
+    }
   }
 
   function AbilityScoreMethodSelector() {

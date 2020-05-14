@@ -24,6 +24,15 @@ export function doApplyAbilityScoreModifier(character, featureId, ability, sign)
   return changed && (() => doApplyAbilityScoreModifier(character, featureId, ability, -sign));
 }
 
+export function doBuyPoint(character, featureId, ability, sign) {
+  let changed;
+  const feature = character.getFeature(featureId);
+  if (feature) {
+    changed = sign >= 0 ? feature.buyPoint(ability) : feature.sellPoint(ability);
+  }
+  return changed && (() => doBuyPoint(character, featureId, ability, -sign));
+}
+
 export function doActivateFeatureChoice(character, featureChoice, choice) {
   const active = character.features.getActiveFeatureChoice(featureChoice);
   if (active?.uniqueId === choice) {
