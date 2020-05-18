@@ -1,0 +1,7 @@
+--require jsdom-global/register
+--require source-map-support/register
+--require ./test/env
+--source-maps
+--recursive
+--full-trace
+test/**/*.spec.js*

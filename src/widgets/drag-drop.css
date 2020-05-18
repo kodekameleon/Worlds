@@ -1,0 +1,68 @@
+
+.drop-target {
+  position: relative;
+  border-radius: 7px;
+}
+
+.dragging {
+  .drop-target:not(.drag-origin) * {
+    pointer-events: none;
+  }
+
+  .drop-target {
+    &:not(.drag-origin)::before,
+    &:not(.drag-origin)::after {
+      content: "";
+      position: absolute;
+      width: calc(100% + 4px);
+      height: calc(100% + 4px);
+      top: -3px;
+      left: -3px;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+
+    &:not(.drag-origin)::before {
+      background-color: var(--color-drop-target);
+      border: 1px solid transparent;
+      opacity: 0.2;
+    }
+
+    &.drag-hover:not(.drag-origin)::before {
+      opacity: 0.4;
+    }
+
+    &:not(.drag-origin)::after {
+      border: 1px solid;
+    }
+  }
+}
+
+.drag-image {
+  position: fixed;
+  left: -600px;
+  top: 600px;
+  padding: 0;
+  background-color: transparent;
+}
+
+.drag-handle {
+  position: relative;
+  font-size: 0.8em;
+  height: 1em;
+
+  &::before {
+    font-family: "worlds-icons"; /* stylelint-disable-line */
+    position: absolute;
+    content: "\e002";
+    top: 0;
+    right: 0;
+    line-height: 1;
+    opacity: 0.8;
+  }
+}
+
+.drag-source[draggable="true"] {
+  cursor: grab;
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: kameleon-jsx/create-jsx.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: kameleon-jsx/create-jsx.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {getNamespaceUri} from "./namespaces";
+
+/**
+ * Create a thing for JSX
+ *
+ * @param tagOrFn
+ * @param props
+ * @param props.props     Delegated props
+ * @param props.class     A string, or list of strings, containing class names. For custom elements this will be
+ *                        flattened into a string before being passed to the element function.
+ * @param props.className Alias for props.class
+ * @param children
+ * @returns {HTMLElement}
+ */
+export function createJSX(tagOrFn, srcProps, ...children) {
+  // Ensure there is a valid props object
+  srcProps = srcProps || {};
+
+  // Process the classes from a string or list, merge the source and delegated classes.
+  const classes = processClassName(srcProps);
+
+  // Make a mutable copy of the props, merging in the delegated props if there are any.
+  const props = Object.assign({}, srcProps.props, srcProps, classes ? {class: classes, className: classes} : {});
+  delete props.props;
+
+  // Make sure that if a ref is required the ref object has been initialized.
+  if (props.hasOwnProperty("ref") &amp;&amp; !props.ref) {
+    throw "References must be initialized when creating elements with a reference";
+  }
+
+  let el;
+  if (typeof tagOrFn === "string") {
+    const {nsUri, tag} = getNamespaceUri(tagOrFn);
+    if (nsUri) {
+      el = document.createElementNS(nsUri, tag);
+    } else {
+      el = document.createElement(tagOrFn);
+    }
+
+    // Set the class for the element. Split the class into tokens so that repeated tokens are removed.
+    if (props.class) {
+      el.classList.add(...props.class.split(" "));
+    }
+
+    // Add the rest of the props to the element
+    for (const key of Object.keys(props)) {
+      switch (key) {
+        case "style": {
+          const styles = props[key];
+          if (typeof styles === "string") {
+            el.style.cssText = styles;
+          } else {
+            for (const style of Object.keys(styles)) {
+              el.style[style] = styles[style];
+            }
+          }
+          break;
+        }
+
+        case "class":
+        case "className":
+          // All of the class related attributes have been handled above
+          break;
+
+        case "ref":
+          // ref is a special case, handled later
+          break;
+
+        case key.indexOf("on:") === 0 &amp;&amp; key:
+          el.addEventListener(key.substr(3), props[key]);
+          break;
+
+        default:
+          // A custom attribute, custom attributes are only applied when they are provided in the
+          // source props, not when they are provided in the delegated props.
+          if (srcProps.hasOwnProperty(key) &amp;&amp; srcProps[key] !== undefined) {
+            el.setAttribute(key, props[key]);
+          }
+          break;
+      }
+    }
+    appendJSX(el, children);
+  } else if (typeof tagOrFn === "function") {
+    // If custom elements pass the children through on a subnode they can get
+    // nested inside arrays, so lets get rid of that nesting here.
+    children = children.flat(Infinity);
+
+    // Call the function to create the element or object
+    el = new tagOrFn(props, children);
+
+    // If the creator is a class, get the element by calling the render method.
+    if (el.render &amp;&amp; typeof el.render === "function") {
+      if (props.ref) {
+        props.ref.object = el;
+      }
+      el = el.render(props, children);
+    }
+  } else {
+    throw "JSX element must be a string for a standard element or a function";
+  }
+
+  if (props.ref) {
+    props.ref.element = el;
+  }
+
+  return el;
+}
+
+export function appendJSX(el, child) {
+  if (Array.isArray(child)) {
+    for (const descendent of child) {
+      appendJSX(el, descendent);
+    }
+  } else if (typeof child === "function") {
+    appendJSX(el, child());
+  } else if (typeof child === "object" &amp;&amp; child?.tagName === "FRAGMENT") {
+    // Strip out fragments and just add the children, reduce the childnodes into an array
+    appendJSX(el, [...child.childNodes].reduce((l, v) => [...l, v], []));
+  } else if (child !== undefined &amp;&amp; child !== null &amp;&amp; child !== false &amp;&amp; child !== true) {
+    el.append(child);
+  }
+}
+
+export function renderApp(app) {
+  const root = document.getElementById("root");
+  if (!root) {
+    throw "To render the application there must be an element with the id #root in the document";
+  }
+
+  root.innerHTML = "";
+  appendJSX(root, app);
+}
+
+function processClassName(props) {
+  let classes = props.class || props.className;
+  if (props.props?.class || props.props?.className) {
+    classes = [classes, props.props.class || props.props.className];
+  }
+  if (classes &amp;&amp; Array.isArray(classes)) {
+    return classes.flat(Infinity).reduce((l, v) => v &amp;&amp; v !== "" ? [...l, v] : l, []).join(" ");
+  }
+  return classes;
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="View.html">View</a></li></ul><h3>Classes</h3><ul><li><a href="Fragment.html">Fragment</a></li><li><a href="Language.html">Language</a></li><li><a href="Route.html">Route</a></li><li><a href="UndoStack.html">UndoStack</a></li><li><a href="View.Spline.html">Spline</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createJSX">createJSX</a></li><li><a href="global.html#DragDropSite">DragDropSite</a></li><li><a href="global.html#DragHandle">DragHandle</a></li><li><a href="global.html#DragImage">DragImage</a></li><li><a href="global.html#DragSource">DragSource</a></li><li><a href="global.html#DropTarget">DropTarget</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a>
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+.compass {
+  position: fixed;
+  bottom: 125px;
+  right: 75px;
+  height: 1px;
+  width: 1px;
+  background: transparent;
+
+  > svg {
+    overflow: visible;
+  }
+
+  .rotator {
+    transform: rotate(720deg);
+    transition: all 5s ease-in-out;
+  }
+
+  .ring {
+    stroke-width: 4;
+    stroke-dasharray: 2 0.7;
+    stroke: var(--menu-text-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+  }
+
+  .arrow {
+    stroke-width: 0.75;
+    fill: var(--menu-background);
+    stroke: var(--menu-outline-darker);
+    stroke-linejoin: miter;
+    stroke-miterlimit: 8;
+    transition: all var(--transition-normal);
+
+    &:hover {
+      fill: var(--menu-background-active);
+    }
+  }
+
+  text {
+    font-family: var(--font-fancy);
+    fill: var(--menu-outline-darker);
+    font-size: 70%;
+    font-weight: bolder;
+    text-anchor: middle;
+    dominant-baseline: central;
+    pointer-events: none;
+  }
+
+  .shadow {
+    fill: transparent;
+
+    .ring {
+      stroke-dasharray: 1 0;
+    }
+  }
+}

@@ -1,0 +1,165 @@
+.character-sheet {
+  .ability-score-block.dragging .ability-score-base {
+    pointer-events: none;
+  }
+
+  .ability-score-block {
+    position: relative;
+  }
+
+  .ability-score {
+    position: relative;
+
+    .drag-source {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .value-container {
+      width: 100%;
+    }
+
+    .value {
+      position: relative;
+      font-size: 0.8em;
+      border: 1px solid;
+      border-radius: 50%;
+      display: inline-block;
+      min-width: 2.4em;
+      height: 1.6em;
+      max-height: 2.4em;
+      margin-top: -1px;
+      padding: 0 0.25em;
+      transition: border-radius var(--transition-fast) linear, background-color var(--transition-fast);
+
+      &.editable {
+        cursor: pointer;
+      }
+
+      &:focus-within {
+        border-radius: 2px;
+        background-color: var(--color-background);
+
+        span {
+          opacity: 0;
+        }
+      }
+
+      input {
+        background: transparent;
+        position: absolute;
+        left: 0;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        z-index: -1;
+        border: none;
+        text-align: center;
+        opacity: 0;
+        pointer-events: none;
+
+        &:focus {
+          z-index: 1;
+          opacity: 1;
+          pointer-events: all;
+        }
+      }
+    }
+
+    .spinner {
+      position: absolute;
+      right: 0.3em;
+      top: 1.3em;
+      padding: 0;
+
+      .icon {
+        width: 1.4em;
+        height: 1.4em;
+        padding-bottom: 0.2em;
+      }
+    }
+
+    .ability-score-bonus {
+      height: calc(1.5em + 1px);
+    }
+
+    .spinner + .ability-score-bonus {
+      margin-left: -0.5em;
+    }
+
+    .ability-score-base {
+      position: relative;
+      top: 0;
+      width: 100%;
+      transition: top 1s ease-in-out;
+    }
+
+    .drag-image {
+      .value-container {
+        color: var(--text-color-dark);
+        background: transparent;
+        font-size: 2em;
+      }
+
+      .value {
+        margin-top: 0;
+      }
+    }
+
+    .drag-handle::before {
+      top: 1px;
+      right: 4px;
+    }
+  }
+
+  .ability-score-info-popup {
+    text-align: left;
+    white-space: nowrap;
+
+    &.popup-tip {
+      font-size: 0.8em;
+    }
+  }
+
+  .ability-score-method-selector {
+    position: absolute;
+    bottom: 100%;
+    width: 100vw;
+    height: 0;
+
+    & > div {
+      position: absolute;
+      bottom: 0;
+      width: fit-content;
+    }
+
+    .select {
+      font-size: 0.8em;
+      border: none;
+
+      button {
+        width: 100%;
+      }
+
+      ul {
+        left: -1px;
+        min-width: calc(100% + 2px);
+      }
+    }
+
+    .dice {
+      background-image: inline("dice.svg");
+      width: 4.5em;
+      background-size: contain;
+      background-repeat: no-repeat;
+      transition: transform var(--transition-fast) ease;
+      opacity: 0.9;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}

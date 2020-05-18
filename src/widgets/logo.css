@@ -1,0 +1,57 @@
+
+.logo {
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  width: 440px;
+  height: 120px;
+  transform: skewX(-60deg);
+  transform-origin: top left;
+  background: var(--menu-background);
+  box-shadow: 8px 4px 8px #aaa;
+
+  .logo-visuals {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: skewX(60deg);
+    transform-origin: top left;
+    pointer-events: none;
+
+    * {
+      pointer-events: none;
+    }
+  }
+
+  .logo-image {
+    display: inline-block;
+    width: 128px;
+  }
+
+  .logo-image > div {
+    /* noinspection CssInvalidFunction */
+    background-image: inline("kameleon.png");
+    background-size: cover;
+    width: 100%;
+    padding-top: 110%;
+  }
+
+  .logo-text {
+    font-family: var(--font-fancy);
+    display: inline-block;
+    vertical-align: top;
+    user-select: none;
+  }
+
+  .logo-text > div:first-child {
+    margin-left: -12px;
+    font-size: 48px;
+    color: var(--menu-text-active);
+  }
+
+  .logo-text > div:last-child {
+    margin-top: -16px;
+    font-size: 14px;
+    color: var(--menu-text-subtle);
+  }
+}

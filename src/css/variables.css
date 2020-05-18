@@ -1,0 +1,38 @@
+
+:root {
+  --font-fancy: "Spectral", serif;
+  --font-default: "Roboto", arial, sans-serif;
+  --font-size-default: 100%;
+
+  --color-attention: #b00;
+  --color-drop-target: #85a70a;
+
+  --color-background: #fff;
+  --color-background-dark: #6c6060;
+  --text-color: #6c6060;
+  --text-color-dark: #484040;
+  --text-color-placeholder: #aca9a9;
+  --text-color-light-on-dark: #ffefd5;
+  --text-heading-color: #822000;
+
+  --border-color-darkest: #363030;
+  --border-color-dark: #6c6060;
+  --border-color: #907474;
+  --border-color-light: #c8b9b9;
+  --border-radius: 4px;
+  --border-radius-tight: 2px;
+  --shadow-color: #6c6060;
+
+  --menu-background: #ffefd5;
+  --menu-background-active: #ffe6bd;
+  --menu-text-active: #85a70a;
+  --menu-text-subtle: #908282;
+  --menu-text-darker: #6c6060;
+  --menu-outline-subtle: #908282;
+  --menu-outline-darker: #6c6060;
+
+  --transition-fast: 0.2s;
+  --transition-normal: 0.6s;
+
+  --opacity-disabled: 0.6;
+}
