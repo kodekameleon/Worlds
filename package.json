@@ -1,7 +1,7 @@
 {
   "name": "worlds",
   "version": "0.0.1",
-  "description": "World mapping and drawing helper",
+  "description": "D&D tools and world builder",
   "main": "src/main.html",
   "scripts": {
     "build": "BABEL_ENV=build gulp build",

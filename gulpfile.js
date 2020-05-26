@@ -165,4 +165,4 @@ const styleLintFormatter = results => {
     )
   );
   return msgs.length === 0 ? "" : "\n" + msgs.join("\n");
-}
+};
