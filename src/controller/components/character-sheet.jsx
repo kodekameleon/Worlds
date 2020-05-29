@@ -1,3 +1,4 @@
+import {CharacterService} from "../api";
 import {FeatureIds} from "../../constants";
 import {Icon} from "../../widgets";
 import {messages} from "../messages";
@@ -24,6 +25,8 @@ export function CharacterSheet(props) {
   const undoStack = new UndoStack();
   const actionHandler = new ActionHandler(character, undoStack, render);
   let rootEl;
+
+  CharacterService.getClasses().then(response => console.log(response));
 
   return render();
 
