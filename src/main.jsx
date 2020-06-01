@@ -1,4 +1,5 @@
 import {CardsController} from "./controller/pages/cards-controller";
+import devenv$ from "../devenv";
 import {EncountersController} from "./controller/pages/encounters-controller";
 import {Logo} from "./widgets/logo";
 import {PartiesController} from "./controller/pages/parties-controller";
@@ -8,6 +9,11 @@ import {renderApp, Route} from "./kameleon-jsx";
 import "./main.css";
 
 window.addEventListener("load", main);
+
+console.log(devenv$);
+const newProfile = "$$PROFILE$$";
+const newProfile2 = "__PROFILE__";
+console.log(`${newProfile} ${newProfile2}`);
 
 function main() {
   // Send pointer unlock messages back to the element that has the lock
