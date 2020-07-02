@@ -1,5 +1,5 @@
+import $devenv from "../devenv";
 import {CardsController} from "./controller/pages/cards-controller";
-import devenv$ from "../devenv";
 import {EncountersController} from "./controller/pages/encounters-controller";
 import {Logo} from "./widgets/logo";
 import {PartiesController} from "./controller/pages/parties-controller";
@@ -8,12 +8,10 @@ import {NavItem, NavList} from "./widgets";
 import {renderApp, Route} from "./kameleon-jsx";
 import "./main.css";
 
-window.addEventListener("load", main);
+// If running in development mode initialize anything that needs it
+$devenv.init && $devenv.init();
 
-console.log(devenv$);
-const newProfile = "$$PROFILE$$";
-const newProfile2 = "__PROFILE__";
-console.log(`${newProfile} ${newProfile2}`);
+window.addEventListener("load", main);
 
 function main() {
   // Send pointer unlock messages back to the element that has the lock
@@ -52,4 +50,3 @@ function main() {
 
   renderApp(app);
 }
-

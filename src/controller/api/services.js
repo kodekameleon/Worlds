@@ -1,4 +1,6 @@
 
-export const SERVICE_PATHS = {
-  character: "https://character.api.kodekameleon.net/"
-};
+export class Services {
+  static getServiceUri(service, resource) {
+    return `${window.location.protocol}//${service}.api.${window.location.host}/v1/${resource}`;
+  }
+}

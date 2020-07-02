@@ -1,8 +1,8 @@
-import {SERVICE_PATHS} from "./services";
+import {Services} from "./services";
 
 export class CharacterService {
   static getClasses() {
-    return fetch(SERVICE_PATHS.character + "v1/classes", {})
+    return fetch(Services.getServiceUri("character", "classes"), {})
       .then((response) => {
         if (!response.ok) {
           throw response.status;
