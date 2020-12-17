@@ -4,11 +4,11 @@
   "description": "D&D tools and world builder",
   "main": "src/main.html",
   "scripts": {
-    "build": "BABEL_ENV=build gulp build",
+    "build": "cross-env BABEL_ENV=build gulp build",
     "clean": "gulp clean",
-    "start": "BABEL_ENV=build gulp start",
-    "test": "BABEL_ENV=test nyc mocha",
-    "makedoc": "BABEL_ENV=build gulp makedoc"
+    "start": "cross-env BABEL_ENV=build gulp start",
+    "test": "cross-env BABEL_ENV=test nyc mocha",
+    "makedoc": "cross-env BABEL_ENV=build gulp makedoc"
   },
   "repository": {
     "type": "git",
@@ -37,6 +37,7 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-truthy": "^1.0.0",
+    "cross-env": "^7.0.3",
     "cross-spawn": "^6.0.5",
     "deep-equal-in-any-order": "^1.0.27",
     "eslint": "^6.8.0",
